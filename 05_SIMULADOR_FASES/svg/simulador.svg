@@ -1,0 +1,337 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 950 430">
+
+    <!-- =====================================================
+         FONDO
+         ===================================================== -->
+
+    <rect
+        x="0"
+        y="0"
+        width="950"
+        height="430"
+        fill="#ffffff"/>
+
+
+    <!-- =====================================================
+         TÍTULOS
+         ===================================================== -->
+
+    <text
+        x="220"
+        y="30"
+        text-anchor="middle"
+        font-family="Arial"
+        font-size="16"
+        font-weight="bold">
+        DIAGRAMA FASORIAL
+    </text>
+
+    <text
+        x="690"
+        y="30"
+        text-anchor="middle"
+        font-family="Arial"
+        font-size="16"
+        font-weight="bold">
+        FORMAS DE ONDA
+    </text>
+
+
+    <!-- =====================================================
+         DIAGRAMA FASORIAL
+         Centro = (220,220)
+         Radio útil de fasores = 140
+         ===================================================== -->
+
+    <circle
+        cx="220"
+        cy="220"
+        r="145"
+        fill="#fafafa"
+        stroke="#aaaaaa"
+        stroke-width="1"/>
+
+    <!-- ejes -->
+
+    <line
+        x1="55"
+        y1="220"
+        x2="385"
+        y2="220"
+        stroke="#777777"
+        stroke-width="1"/>
+
+    <line
+        x1="220"
+        y1="55"
+        x2="220"
+        y2="385"
+        stroke="#cccccc"
+        stroke-width="1"/>
+
+
+    <!-- =====================================================
+         FASOR A
+         ===================================================== -->
+
+    <g id="fasorA">
+
+        <line
+            x1="220"
+            y1="220"
+            x2="360"
+            y2="220"
+            stroke="#111111"
+            stroke-width="4"/>
+
+        <polygon
+            points="360,220 347,213 347,227"
+            fill="#111111"/>
+
+    </g>
+
+    <text
+        id="etiquetaA"
+        x="370"
+        y="215"
+        font-family="Arial"
+        font-size="15"
+        font-weight="bold">
+        A
+    </text>
+
+
+    <!-- =====================================================
+         FASOR B
+         ===================================================== -->
+
+    <g id="fasorB">
+
+        <line
+            x1="220"
+            y1="220"
+            x2="150"
+            y2="99"
+            stroke="#315c9b"
+            stroke-width="4"/>
+
+        <polygon
+            points="150,99 151,115 164,107"
+            fill="#315c9b"/>
+
+    </g>
+
+    <text
+        id="etiquetaB"
+        x="135"
+        y="91"
+        fill="#315c9b"
+        font-family="Arial"
+        font-size="15"
+        font-weight="bold">
+        B
+    </text>
+
+
+    <!-- =====================================================
+         FASOR C
+         ===================================================== -->
+
+    <g id="fasorC">
+
+        <line
+            x1="220"
+            y1="220"
+            x2="150"
+            y2="341"
+            stroke="#994010"
+            stroke-width="4"/>
+
+        <polygon
+            points="150,341 164,333 151,325"
+            fill="#994010"/>
+
+    </g>
+
+    <text
+        id="etiquetaC"
+        x="135"
+        y="360"
+        fill="#994010"
+        font-family="Arial"
+        font-size="15"
+        font-weight="bold">
+        C
+    </text>
+
+
+    <!-- centro -->
+
+    <circle
+        cx="220"
+        cy="220"
+        r="5"
+        fill="#222222"/>
+
+
+    <!-- =====================================================
+         ÁREA DE FORMAS DE ONDA
+         x = 470 ... 900
+         y0 = 220
+         amplitud = 135
+         ===================================================== -->
+
+    <rect
+        x="470"
+        y="70"
+        width="430"
+        height="300"
+        fill="#fafcf8"
+        stroke="#555555"
+        stroke-width="1"/>
+
+
+    <!-- eje cero -->
+
+    <line
+        x1="470"
+        y1="220"
+        x2="900"
+        y2="220"
+        stroke="#aaaaaa"
+        stroke-width="1"/>
+
+
+    <!-- eje vertical -->
+
+    <line
+        x1="470"
+        y1="70"
+        x2="470"
+        y2="370"
+        stroke="#555555"
+        stroke-width="1"/>
+
+
+    <!-- =====================================================
+         ONDAS
+
+         Se dejan vacías intencionalmente.
+         simulador.js generará los puntos exactos:
+
+         A = sin(theta)
+         B = sin(theta - 120°)
+         C = sin(theta + 120°)
+
+         ===================================================== -->
+
+    <path
+        id="ondaA"
+        fill="none"
+        stroke="#111111"
+        stroke-width="3"
+        stroke-linejoin="round"
+        stroke-linecap="round"/>
+
+    <path
+        id="ondaB"
+        fill="none"
+        stroke="#315c9b"
+        stroke-width="3"
+        stroke-linejoin="round"
+        stroke-linecap="round"/>
+
+    <path
+        id="ondaC"
+        fill="none"
+        stroke="#994010"
+        stroke-width="3"
+        stroke-linejoin="round"
+        stroke-linecap="round"/>
+
+
+    <!-- =====================================================
+         MARCAS DEL PERIODO
+         ===================================================== -->
+
+    <line
+        x1="470"
+        y1="370"
+        x2="470"
+        y2="378"
+        stroke="#222222"/>
+
+    <line
+        x1="900"
+        y1="370"
+        x2="900"
+        y2="378"
+        stroke="#222222"/>
+
+    <text
+        x="900"
+        y="398"
+        text-anchor="middle"
+        font-family="Arial"
+        font-size="14">
+        T
+    </text>
+
+
+    <!-- =====================================================
+         LEYENDA
+         ===================================================== -->
+
+    <line
+        x1="545"
+        y1="410"
+        x2="570"
+        y2="410"
+        stroke="#111111"
+        stroke-width="3"/>
+
+    <text
+        x="578"
+        y="415"
+        font-family="Arial"
+        font-size="12">
+        Fase A
+    </text>
+
+
+    <line
+        x1="655"
+        y1="410"
+        x2="680"
+        y2="410"
+        stroke="#315c9b"
+        stroke-width="3"/>
+
+    <text
+        x="688"
+        y="415"
+        font-family="Arial"
+        font-size="12">
+        Fase B
+    </text>
+
+
+    <line
+        x1="765"
+        y1="410"
+        x2="790"
+        y2="410"
+        stroke="#994010"
+        stroke-width="3"/>
+
+    <text
+        x="798"
+        y="415"
+        font-family="Arial"
+        font-size="12">
+        Fase C
+    </text>
+
+</svg>

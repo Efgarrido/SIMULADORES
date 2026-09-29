@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Simulador de Secuencia de Fases</title>
+
+
+    <!-- =====================================================
+         HOJA DE ESTILOS COMÚN DE LOS SIMULADORES
+         ===================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="css/estilos.css">
+
+
+    <style>
+
+        /* =====================================================
+           SIMULADOR DE SECUENCIA DE FASES
+           ESTILOS EXCLUSIVOS DEL SIMULADOR
+           ===================================================== */
+
+
+        /* =====================================================
+           DIMENSIONES DEL SIMULADOR
+           ===================================================== */
+
+        .simulador-fases {
+
+            width: 1000px;
+        }
+
+
+        /* =====================================================
+           SVG
+           ===================================================== */
+
+        #svgSimulador {
+
+            display: block;
+
+            width: 100%;
+            height: 430px;
+
+            border: none;
+        }
+
+
+        /* =====================================================
+           CONTROLES SUPERIORES
+           ===================================================== */
+
+        .panel-controles-fases {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                1fr
+                1fr;
+
+            gap: 10px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .panel-controles-fases .panel-simulador {
+
+            min-height: 58px;
+        }
+
+
+        /* =====================================================
+           SECUENCIA DE FASES
+           ===================================================== */
+
+        .panel-controles-fases .grupo-horizontal {
+
+            gap: 28px;
+
+            height: 32px;
+        }
+
+
+        /* =====================================================
+           VELOCIDAD DE GIRO
+           ===================================================== */
+
+        .control-velocidad {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            height: 32px;
+        }
+
+
+        .control-velocidad .slider-simulador {
+
+            flex: 1;
+        }
+
+
+        .valor-velocidad {
+
+            min-width: 52px;
+
+            text-align: center;
+
+            font-size: 12px;
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+/* =====================================================
+   GRADUACIONES DEL CONTROL DE VELOCIDAD
+   ===================================================== */
+
+.slider-velocidad {
+
+    position: relative;
+}
+
+
+/* -----------------------------------------------------
+   RAYITAS VERTICALES
+   ----------------------------------------------------- */
+
+.marcas-velocidad {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    padding:
+        0
+        7px;
+
+    margin-top: 1px;
+
+    height: 6px;
+
+    pointer-events: none;
+}
+
+
+.marcas-velocidad span {
+
+    display: block;
+
+    width: 1px;
+    height: 5px;
+
+    background: #999999;
+}
+
+
+/* -----------------------------------------------------
+   NÚMEROS DE LA ESCALA
+   ----------------------------------------------------- */
+
+.escala-velocidad {
+
+    position: relative;
+
+    height: 11px;
+
+    margin-top: 0;
+
+    font-size: 9px;
+
+    color: #666666;
+}
+
+
+.escala-velocidad span {
+
+    position: absolute;
+
+    transform: translateX(-50%);
+}
+
+
+/*
+   Posiciones matemáticas correspondientes
+   al intervalo 10–120 °/s
+*/
+
+.escala-velocidad span:nth-child(1) {
+    left: 0%;
+    transform: translateX(0);
+}
+
+.escala-velocidad span:nth-child(2) {
+    left: 18.18%;
+}
+
+.escala-velocidad span:nth-child(3) {
+    left: 45.45%;
+}
+
+.escala-velocidad span:nth-child(4) {
+    left: 72.73%;
+}
+
+.escala-velocidad span:nth-child(5) {
+    left: 100%;
+    transform: translateX(-100%);
+}
+
+        /* =====================================================
+           ANIMACIÓN
+           ===================================================== */
+
+        .panel-controles-fases .zona-botones {
+
+            height: 32px;
+        }
+
+
+        /* =====================================================
+           INDICADORES INFERIORES
+           ===================================================== */
+
+.panel-indicadores-fases {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr
+        1fr;
+
+    gap: 10px;
+
+    margin-top: 8px;
+}
+
+
+.panel-indicadores-fases .panel-simulador {
+
+    grid-column: 2;
+}
+
+
+        .valores-desfase {
+
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            gap: 8px;
+
+            height: 32px;
+        }
+
+
+        .indicador-fase {
+
+            width: 82px;
+
+            text-align: center;
+        }
+
+
+        .indicador-fase-titulo {
+
+            font-size: 11px;
+            font-weight: bold;
+
+            line-height: 12px;
+        }
+
+
+.indicador-fase-valor {
+
+    height: 18px;
+
+    margin-top: 1px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    font-size: 11px;
+    font-weight: bold;
+
+    background: #eeeeee;
+
+    border: 1px solid #aaaaaa;
+
+    box-shadow:
+        inset 0 1px 2px rgba(0,0,0,0.22),
+        inset 0 -1px 1px rgba(255,255,255,0.85);
+}
+
+
+        .desfase-a {
+
+            color: #ef5350;
+        }
+
+
+        .desfase-b {
+
+            color: #4caf62;
+        }
+
+
+        .desfase-c {
+
+            color: #536dfe;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     CONTENEDOR PRINCIPAL
+     ========================================================= -->
+
+<div class="simulador simulador-fases">
+
+
+    <!-- =====================================================
+         TÍTULO PRINCIPAL
+         ===================================================== -->
+
+    <div class="titulo-simulador">
+
+        <h1>
+            SIMULADOR DE SECUENCIA DE FASES
+        </h1>
+
+        <p>
+            Representación fasorial y formas de onda
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         CONTROLES SUPERIORES
+         ===================================================== -->
+
+    <div class="panel-controles-fases">
+
+
+        <!-- =================================================
+             CUADRO 1 — SECUENCIA DE FASES
+             ================================================= -->
+
+        <fieldset class="panel-simulador">
+
+            <legend>
+                Secuencia de fases
+            </legend>
+
+
+            <div class="grupo-horizontal">
+
+
+                <label class="opcion-radio">
+
+                    <input
+                        type="radio"
+                        name="secuencia"
+                        value="ABC"
+                        id="secuenciaABC"
+                        checked>
+
+                    <span>ABC</span>
+
+                </label>
+
+
+                <label class="opcion-radio">
+
+                    <input
+                        type="radio"
+                        name="secuencia"
+                        value="ACB"
+                        id="secuenciaACB">
+
+                    <span>ACB</span>
+
+                </label>
+
+
+            </div>
+
+
+        </fieldset>
+
+
+
+        <!-- =================================================
+             CUADRO 2 — VELOCIDAD DE GIRO
+             ================================================= -->
+
+        <fieldset class="panel-simulador">
+
+            <legend>
+                Velocidad de giro
+            </legend>
+
+
+            <div class="control-velocidad">
+
+
+<div class="slider-simulador slider-velocidad">
+
+    <input
+        type="range"
+        id="velocidadGiro"
+        min="10"
+        max="120"
+        step="10"
+        value="30">
+
+    <!-- Graduaciones verticales -->
+
+    <div class="marcas-velocidad">
+
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+
+    </div>
+
+
+    <!-- Valores de referencia -->
+
+    <div class="escala-velocidad">
+
+        <span>10</span>
+        <span>30</span>
+        <span>60</span>
+        <span>90</span>
+        <span>120</span>
+
+    </div>
+
+</div>
+
+
+                <div
+                    id="valorVelocidad"
+                    class="valor-velocidad">
+
+                    30 °/s
+
+                </div>
+
+
+            </div>
+
+
+        </fieldset>
+
+
+
+        <!-- =================================================
+             CUADRO 3 — ANIMACIÓN
+             ================================================= -->
+
+        <fieldset class="panel-simulador">
+
+            <legend>
+                Animación
+            </legend>
+
+
+            <div class="zona-botones">
+
+
+                <button
+                    id="btnPausa"
+                    class="boton-simulador"
+                    type="button">
+
+                    PAUSA
+
+                </button>
+
+
+                <button
+                    id="btnReiniciar"
+                    class="boton-simulador"
+                    type="button">
+
+                    REINICIAR
+
+                </button>
+
+
+            </div>
+
+
+        </fieldset>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         ÁREA GRÁFICA
+         ===================================================== -->
+
+    <div class="area-simulacion">
+
+
+        <svg
+            id="svgSimulador"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 950 430">
+
+
+            <!-- =================================================
+                 FONDO
+                 ================================================= -->
+
+            <rect
+                x="0"
+                y="0"
+                width="950"
+                height="430"
+                fill="#ffffff"/>
+
+
+
+            <!-- =================================================
+                 TÍTULOS
+                 ================================================= -->
+
+            <text
+                x="220"
+                y="30"
+                text-anchor="middle"
+                font-family="Arial"
+                font-size="16"
+                font-weight="bold">
+
+                DIAGRAMA FASORIAL
+
+            </text>
+
+
+            <text
+                x="690"
+                y="30"
+                text-anchor="middle"
+                font-family="Arial"
+                font-size="16"
+                font-weight="bold">
+
+                FORMAS DE ONDA
+
+            </text>
+
+
+
+            <!-- =================================================
+                 DIAGRAMA FASORIAL
+                 Centro = (220,220)
+                 ================================================= -->
+
+            <circle
+                cx="220"
+                cy="220"
+                r="145"
+
+                fill="#fafafa"
+
+                stroke="#aaaaaa"
+                stroke-width="1"/>
+
+
+            <line
+                x1="55"
+                y1="220"
+                x2="385"
+                y2="220"
+
+                stroke="#777777"
+                stroke-width="1"/>
+
+
+            <line
+                x1="220"
+                y1="55"
+                x2="220"
+                y2="385"
+
+                stroke="#cccccc"
+                stroke-width="1"/>
+
+
+
+            <!-- =================================================
+                 FASOR A
+                 ================================================= -->
+
+            <g id="fasorA">
+
+                <line
+                    x1="220"
+                    y1="220"
+                    x2="360"
+                    y2="220"
+
+                    stroke="#ef5350"
+                    stroke-width="4"/>
+
+
+                <polygon
+                    points="360,220 347,213 347,227"
+                    fill="#ef5350"/>
+
+            </g>
+
+
+            <text
+                id="etiquetaA" fill="#ef5350"
+
+                x="370"
+                y="215"
+
+                font-family="Arial"
+                font-size="15"
+                font-weight="bold">
+
+                A
+
+            </text>
+
+
+
+            <!-- =================================================
+                 FASOR B
+                 ================================================= -->
+
+            <g id="fasorB">
+
+                <line
+                    x1="220"
+                    y1="220"
+                    x2="150"
+                    y2="99"
+
+                    stroke="#4caf62"
+                    stroke-width="4"/>
+
+
+                <polygon
+                    points="150,99 151,115 164,107"
+                    fill="#4caf62"/>
+
+            </g>
+
+
+            <text
+                id="etiquetaB"
+
+                x="135"
+                y="91"
+
+                fill="#4caf62"
+
+                font-family="Arial"
+                font-size="15"
+                font-weight="bold">
+
+                B
+
+            </text>
+
+
+
+            <!-- =================================================
+                 FASOR C
+                 ================================================= -->
+
+            <g id="fasorC">
+
+                <line
+                    x1="220"
+                    y1="220"
+                    x2="150"
+                    y2="341"
+
+                    stroke="#536dfe"
+                    stroke-width="4"/>
+
+
+                <polygon
+                    points="150,341 164,333 151,325"
+                    fill="#536dfe"/>
+
+            </g>
+
+
+            <text
+                id="etiquetaC"
+
+                x="135"
+                y="360"
+
+                fill="#536dfe"
+
+                font-family="Arial"
+                font-size="15"
+                font-weight="bold">
+
+                C
+
+            </text>
+
+
+
+            <!-- centro -->
+
+            <circle
+                cx="220"
+                cy="220"
+                r="5"
+                fill="#222222"/>
+
+
+
+            <!-- =================================================
+                 ÁREA DE FORMAS DE ONDA
+                 ================================================= -->
+
+            <rect
+                x="470"
+                y="70"
+                width="430"
+                height="300"
+
+                fill="#fafcf8"
+
+                stroke="#555555"
+                stroke-width="1"/>
+
+
+            <line
+                x1="470"
+                y1="220"
+                x2="900"
+                y2="220"
+
+                stroke="#aaaaaa"
+                stroke-width="1"/>
+
+
+            <line
+                x1="470"
+                y1="70"
+                x2="470"
+                y2="370"
+
+                stroke="#555555"
+                stroke-width="1"/>
+
+
+
+            <!-- =================================================
+                 ONDAS SENOIDALES
+                 ================================================= -->
+
+            <path
+                id="ondaA"
+
+                fill="none"
+
+                stroke="#ef5350"
+                stroke-width="3"
+
+                stroke-linejoin="round"
+                stroke-linecap="round"/>
+
+
+            <path
+                id="ondaB"
+
+                fill="none"
+
+                stroke="#4caf62"
+                stroke-width="3"
+
+                stroke-linejoin="round"
+                stroke-linecap="round"/>
+
+
+            <path
+                id="ondaC"
+
+                fill="none"
+
+                stroke="#536dfe"
+                stroke-width="3"
+
+                stroke-linejoin="round"
+                stroke-linecap="round"/>
+
+
+
+            <!-- =================================================
+                 CURSOR TEMPORAL
+                 ================================================= -->
+
+            <line
+                id="cursorTiempo"
+
+                x1="470"
+                y1="70"
+                x2="470"
+                y2="370"
+
+                stroke="#777777"
+                stroke-width="1"
+                stroke-dasharray="5 4"/>
+
+
+
+            <!-- =================================================
+                 PUNTOS INSTANTÁNEOS
+                 ================================================= -->
+
+            <circle
+                id="puntoA"
+                cx="470"
+                cy="220"
+                r="5"
+
+                fill="#ef5350"/>
+
+
+            <circle
+                id="puntoB"
+                cx="470"
+                cy="103"
+                r="5"
+
+                fill="#4caf62"/>
+
+
+            <circle
+                id="puntoC"
+                cx="470"
+                cy="337"
+                r="5"
+
+                fill="#536dfe"/>
+
+
+
+            <!-- =================================================
+                 MARCAS DEL PERIODO
+                 ================================================= -->
+
+            <line
+                x1="470"
+                y1="370"
+                x2="470"
+                y2="378"
+
+                stroke="#222222"/>
+
+
+            <line
+                x1="900"
+                y1="370"
+                x2="900"
+                y2="378"
+
+                stroke="#222222"/>
+
+
+            <text
+                x="900"
+                y="398"
+
+                text-anchor="middle"
+
+                font-family="Arial"
+                font-size="14">
+
+                T
+
+            </text>
+
+
+
+            <!-- =================================================
+                 LEYENDA DE FASES
+                 ================================================= -->
+
+            <line
+                x1="545"
+                y1="410"
+                x2="570"
+                y2="410"
+
+                stroke="#ef5350"
+                stroke-width="3"/>
+
+
+            <text
+                x="578" fill="#ef5350"
+                y="415"
+
+                font-family="Arial"
+                font-size="12">
+
+                Fase A
+
+            </text>
+
+
+            <line
+                x1="655"
+                y1="410"
+                x2="680"
+                y2="410"
+
+                stroke="#4caf62"
+                stroke-width="3"/>
+
+
+            <text
+                x="688" fill="#4caf62"
+                y="415"
+
+                font-family="Arial"
+                font-size="12">
+
+                Fase B
+
+            </text>
+
+
+            <line
+                x1="765"
+                y1="410"
+                x2="790"
+                y2="410"
+
+                stroke="#536dfe"
+                stroke-width="3"/>
+
+
+            <text
+                x="798" fill="#536dfe"
+                y="415"
+
+                font-family="Arial"
+                font-size="12">
+
+                Fase C
+
+            </text>
+
+
+        </svg>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         INDICADORES INFERIORES
+         ===================================================== -->
+
+    <div class="panel-indicadores-fases">
+
+
+        <fieldset class="panel-simulador">
+
+            <legend>
+                Ángulo instantáneo
+            </legend>
+
+
+            <div class="valores-desfase">
+
+
+                <!-- FASE A -->
+
+                <div class="indicador-fase">
+
+                    <div
+                        class="indicador-fase-titulo desfase-a">
+
+                        A
+
+                    </div>
+
+
+                    <div
+                        id="anguloA"
+                        class="indicador-fase-valor desfase-a">
+
+                        0°
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- FASE B -->
+
+                <div class="indicador-fase">
+
+                    <div
+                        class="indicador-fase-titulo desfase-b">
+
+                        B
+
+                    </div>
+
+
+                    <div
+                        id="anguloB"
+                        class="indicador-fase-valor desfase-b">
+
+                        120°
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- FASE C -->
+
+                <div class="indicador-fase">
+
+                    <div
+                        class="indicador-fase-titulo desfase-c">
+
+                        C
+
+                    </div>
+
+
+                    <div
+                        id="anguloC"
+                        class="indicador-fase-valor desfase-c">
+
+                        240°
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </fieldset>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT DEL SIMULADOR
+     ========================================================= -->
+
+<script src="js/simulador.js"></script>
+
+
+</body>
+
+</html>
