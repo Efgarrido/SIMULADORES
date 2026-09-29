@@ -1,0 +1,2670 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SIMULADOR RV - Versión 15</title>
+
+<link rel="stylesheet" href="css/estilos.css">
+<link rel="stylesheet" href="css/simulador.css">
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     CONTROLES SUPERIORES — VERSIÓN 9C
+     Estándar visual común de los simuladores
+========================================================= -->
+
+<section class="panel-controles panel-controles-9c">
+
+<div class="titulo-simulador">
+
+        <h1>
+
+            SIMULADOR RV – REGULADOR AUTOMÁTICO DE VOLTAJE
+
+        </h1>
+
+        <p>
+
+            Generador síncrono – Sistema de excitación – AVR – Potencia reactiva
+
+        </p>
+
+</div>
+
+<div class="fila-controles fila-controles-9c">
+
+<!-- POTENCIA ACTIVA DEMANDADA -->
+<fieldset class="grupo-control grupo-potencia-demandada">
+    <legend>Potencia activa demandada</legend>
+
+    <div class="control-potencia-con-valor">
+
+        <div class="zona-control-potencia">
+
+            <div class="etiqueta-variable">
+                P<sub>e</sub> (%)
+            </div>
+
+            <div class="slider-simulador">
+                <input
+                    type="range"
+                    id="sliderP"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value="100"
+                >
+
+                <div class="graduaciones-porcentaje">
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <div class="escala-slider escala-tres">
+                <span>0</span>
+                <span>50</span>
+                <span>100</span>
+            </div>
+
+        </div>
+
+        <div class="indicador-potencia-demandada">
+            <span id="valorP">100</span>
+        </div>
+
+    </div>
+
+</fieldset>
+
+
+<!-- POTENCIA REACTIVA DEMANDADA -->
+<fieldset class="grupo-control grupo-potencia-demandada">
+    <legend>Potencia reactiva demandada</legend>
+
+    <div class="control-potencia-con-valor">
+
+        <div class="zona-control-potencia">
+
+            <div class="etiquetasReactancia">
+                <span>X<sub>C</sub></span>
+                <span class="centroReactancia">Q = 0 (%)</span>
+                <span>X<sub>L</sub></span>
+            </div>
+
+            <div class="slider-simulador">
+                <input
+                    type="range"
+                    id="sliderQ"
+                    min="-100"
+                    max="100"
+                    step="1"
+                    value="0"
+                >
+
+                <div class="graduaciones-porcentaje">
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span><span></span><span></span><span></span><span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <div class="escala-slider escala-tres">
+                <span>-100</span>
+                <span>0</span>
+                <span>100</span>
+            </div>
+
+        </div>
+
+        <div class="indicador-potencia-demandada">
+            <span id="valorQ">0</span>
+        </div>
+
+    </div>
+
+</fieldset>
+
+
+<!-- MODO DE EXCITACIÓN -->
+<fieldset class="grupo-control grupo-modo">
+<legend>Modo de excitación</legend>
+
+<select id="modo" class="selector">
+<option value="auto">AVR AUTOMÁTICO</option>
+<option value="manual">MANUAL</option>
+</select>
+
+<div class="texto-ayuda-control">
+Control automático / manual
+</div>
+
+</fieldset>
+
+
+<!-- EXCITACIÓN MANUAL -->
+<fieldset class="grupo-control">
+<legend>Excitación manual</legend>
+
+<div class="etiqueta-variable">
+I<sub>f</sub> (%)
+</div>
+
+<div class="slider-simulador">
+<input
+    type="range"
+    id="sliderIf"
+    min="50"
+    max="150"
+    step="1"
+    value="100"
+    disabled
+>
+
+<div class="graduaciones-porcentaje">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span>
+</div>
+</div>
+
+<div class="escala-slider escala-tres">
+<span>50</span>
+<span>100</span>
+<span>150</span>
+</div>
+
+</fieldset>
+
+
+<!-- TENSIÓN DE REFERENCIA -->
+<fieldset class="grupo-control">
+<legend>Tensión de referencia</legend>
+
+<div class="etiqueta-variable">
+V<sub>ref</sub> (pu)
+</div>
+
+<div class="slider-simulador">
+<input
+    type="range"
+    id="sliderVref"
+    min="90"
+    max="110"
+    step="1"
+    value="100"
+>
+
+<div class="graduaciones-porcentaje">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span>
+</div>
+</div>
+
+<div class="escala-slider escala-tres">
+<span>0.90</span>
+<span>1.00</span>
+<span>1.10</span>
+</div>
+
+</fieldset>
+
+
+<!-- OPERACIÓN -->
+<fieldset class="grupo-control grupo-operacion">
+<legend>Operación</legend>
+
+<div class="botones controles-botones controles-botones-9c">
+
+<button id="aplicar">
+APLICAR
+</button>
+
+<button id="pausa" class="secundario">
+PAUSA
+</button>
+
+<button id="reiniciar" class="reinicio">
+REINICIAR
+</button>
+
+</div>
+
+</fieldset>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+     ZONA CENTRAL
+     La curva se conserva provisionalmente a la izquierda.
+========================================================= -->
+
+<div class="contenedor">
+
+<aside class="panel panel-curva">
+
+<div class="curvaCapacidad">
+
+<div class="tituloCurva">
+CURVA DE CAPACIDAD
+</div>
+
+<svg
+id="graficaCapacidad"
+viewBox="0 0 250 220"
+>
+
+<line x1="35" y1="110" x2="225" y2="110" class="ejeCurva"/>
+
+<polygon
+points="
+233,110
+223,105
+223,115
+"
+fill="#263238"
+/>
+
+<line x1="35" y1="215" x2="35" y2="0" class="ejeCurva"/>
+
+<polygon
+points="
+35,0
+30,10
+40,10
+"
+fill="#263238"
+/>
+
+<polygon
+points="
+35,215
+30,205
+40,205
+"
+fill="#263238"
+/>
+
+<text x="205" y="125" class="textoCurvaTitulo">
+P (pu)
+</text>
+
+<text x="18" y="28" class="textoCurvaTitulo">
++Q
+</text>
+
+<text x="18" y="198" class="textoCurvaTitulo">
+-Q
+</text>
+
+<text x="1" y="110" class="textoCurvaTitulo">
+Q (pu)
+</text>
+
+<path
+    id="curvaEstabilidadAngular"
+    class="curvaEstabilidadAngular"
+/>
+
+<path id="limiteTurbinaMin" class="limiteTurbina"/>
+<path id="limiteTurbinaMax" class="limiteTurbina"/>
+
+<path id="curvaEstatorReferencia" class="curvaEstator curvaReferencia"/>
+<path id="curvaRotorReferencia" class="curvaRotor curvaReferencia"/>
+<path id="curvaCabezalReferencia" class="curvaCabezal curvaReferencia"/>
+
+<path id="curvaEstator" class="curvaEstator"/>
+<path id="curvaRotor" class="curvaRotor"/>
+<path id="curvaCabezal" class="curvaCabezal"/>
+
+<!-- ETIQUETAS DE LOS LÍMITES DE LA CURVA DE CAPACIDAD -->
+
+<text
+    x="143"
+    y="100"
+    class="textoLimiteCapacidad etiquetaEstator"
+>
+    Límite de estator
+</text>
+
+<text
+    x="50"
+    y="40"
+    class="textoLimiteCapacidad etiquetaRotor"
+>
+    Límite de rotor
+</text>
+
+<text
+    x="105"
+    y="160"
+    class="textoLimiteCapacidad etiquetaCabezal"
+>
+    Límite de cabezales
+</text>
+
+<text
+    x="58"
+    y="180"
+    class="textoLimiteCapacidad etiquetaEstabilidad"
+>
+    Límite de estabilidad
+</text>
+
+<text x="48" y="200" class="textoLimiteCapacidad etiquetaTurbina">Pmin turbina</text>
+<text x="145" y="45" class="textoLimiteCapacidad etiquetaTurbina">Pmax turbina</text>
+
+<circle
+id="puntoOperacion"
+cx="135"
+cy="110"
+r="3"
+class="puntoOperacion"
+/>
+
+<text
+x="200"
+y="15"
+text-anchor="middle"
+class="textoCurva"
+>
+P² + Q² = S²
+</text>
+
+<text
+x="200"
+y="27"
+text-anchor="middle"
+class="textoCurva"
+>
+Smax = 1.0 pu
+</text>
+
+</svg>
+
+</div>
+
+</aside>
+
+<main class="escena">
+
+
+<svg viewBox="0 0 1250 650">
+
+
+<defs>
+
+
+<marker
+id="flechaRoja"
+markerWidth="10"
+markerHeight="10"
+refX="8"
+refY="3"
+orient="auto"
+>
+
+<path
+d="M0,0 L0,6 L9,3 z"
+fill="#b3261e"
+/>
+
+</marker>
+
+
+
+<marker
+id="flechaAzul"
+markerWidth="10"
+markerHeight="10"
+refX="8"
+refY="3"
+orient="auto"
+>
+
+<path
+d="M0,0 L0,6 L9,3 z"
+fill="#175a91"
+/>
+
+</marker>
+
+
+
+<linearGradient
+id="metal"
+x1="0"
+y1="0"
+x2="1"
+y2="0"
+>
+
+<stop offset="0%" stop-color="#555"/>
+<stop offset="20%" stop-color="#aaa"/>
+<stop offset="45%" stop-color="#eeeeee"/>
+<stop offset="70%" stop-color="#999"/>
+<stop offset="100%" stop-color="#555"/>
+
+</linearGradient>
+
+
+
+<linearGradient
+id="metalFrontal"
+x1="0"
+y1="0"
+x2="1"
+y2="0"
+>
+
+<stop offset="0%" stop-color="#777"/>
+<stop offset="45%" stop-color="#eeeeee"/>
+<stop offset="100%" stop-color="#777"/>
+
+</linearGradient>
+
+<!-- =====================================================
+     HALO DE LAS SALIDAS TRIFÁSICAS
+====================================================== -->
+
+<filter
+    id="haloTrifasico"
+    x="-50%"
+    y="-200%"
+    width="200%"
+    height="500%"
+    color-interpolation-filters="sRGB"
+>
+
+    <feGaussianBlur
+        in="SourceGraphic"
+        stdDeviation="5"
+        result="desenfoque"
+    />
+
+    <feMerge>
+        <feMergeNode in="desenfoque"/>
+        <feMergeNode in="SourceGraphic"/>
+    </feMerge>
+
+</filter>
+
+</defs>
+
+<rect
+x="490"
+y="30"
+width="530"
+height="300"
+rx="10"
+class="bloqueGenerador"
+/>
+
+<rect
+x="25"
+y="30"
+width="448"
+height="285"
+rx="10"
+class="bloqueExcitacion"
+/>
+
+
+<text
+x="255"
+y="57"
+text-anchor="middle"
+class="tituloBloque"
+>
+SISTEMA DE EXCITACIÓN
+</text>
+
+
+
+<rect
+x="45"
+y="345"
+width="200"
+height="155"
+rx="8"
+class="bloqueAmplificador"
+/>
+
+
+
+<text
+x="132"
+y="85"
+text-anchor="middle"
+class="textoPeq"
+>
+DEVANADO DE CAMPO
+</text>
+
+<text
+x="132"
+y="100"
+text-anchor="middle"
+class="textoPeq"
+>
+DE LA EXCITATRIZ
+</text>
+
+
+
+<path
+d="
+M105 135
+L105 143
+C89 143 89 154 105 154
+C121 154 121 165 105 165
+C89 165 89 176 105 176
+C121 176 121 187 105 187
+C89 187 89 198 105 198
+C121 198 121 209 105 209
+L105 225
+"
+class="devCampo"
+/>
+
+
+<path
+d="
+M105 135
+L105 105
+L65 105
+L65 360
+"
+class="lineaExcitacion"
+/>
+
+
+<path
+d="
+M105 225
+L105 380
+"
+class="lineaExcitacion"
+/>
+
+
+
+<path
+d="
+M155 135
+L155 143
+C139 143 139 154 155 154
+C171 154 171 165 155 165
+C139 165 139 176 155 176
+C171 176 171 187 155 187
+C139 187 139 198 155 198
+C171 198 171 209 155 209
+L155 225
+"
+class="devCampo"
+/>
+
+
+<path
+d="
+M155 135
+L155 105
+L300 105
+L300 140
+"
+class="lineaExcitacion"
+/>
+
+
+<path
+d="
+M155 215
+L155 265
+L300 265
+L300 210
+"
+class="lineaExcitacion"
+/>
+
+
+
+<text
+x="300"
+y="90"
+text-anchor="middle"
+class="textoPeq"
+>
+EXCITATRIZ DC
+</text>
+
+
+<text
+x="270"
+y="137"
+text-anchor="middle"
+class="tituloBloque"
+>
++
+</text>
+
+
+<circle
+cx="300"
+cy="175"
+r="35"
+class="maquinaDC"
+/>
+
+
+<text
+x="300"
+y="182"
+text-anchor="middle"
+class="tituloBloque"
+>
+DC
+</text>
+
+
+<text
+x="270"
+y="239"
+text-anchor="middle"
+class="tituloBloque"
+>
+−
+</text>
+
+
+<path
+id="conductorExcitacion"
+d="
+M300 140
+L300 105
+L405 105
+L569 105
+L569 145
+"
+class="lineaExcitacion"
+/>
+
+<!-- Prueba de flujo luminoso sobre el conductor positivo existente. -->
+<g id="flujoExcitacion" pointer-events="none" aria-hidden="true">
+    <line x1="-6" y1="0" x2="6" y2="0"/>
+    <line x1="-6" y1="0" x2="6" y2="0"/>
+    <line x1="-6" y1="0" x2="6" y2="0"/>
+    <line x1="-6" y1="0" x2="6" y2="0"/>
+</g>
+
+<!-- Primer pulso de corriente: excitatriz DC hacia el generador. -->
+<g id="pulsoExcitacion" transform="translate(300 140)" pointer-events="none" aria-hidden="true">
+    <circle r="8" fill="#ffb300" opacity="0.25"/>
+    <circle r="5" fill="#ffca28" opacity="0.65"/>
+    <circle r="2.5" fill="#fffde7"/>
+</g>
+
+
+<path
+id="conductorRetornoExcitacion"
+d="
+M300 210
+L300 265
+L465 265
+L465 125
+L553 125
+L553 145
+"
+class="lineaExcitacion"
+/>
+
+<g id="flujoRetornoExcitacion" pointer-events="none" aria-hidden="true">
+    <line x1="-6" y1="0" x2="6" y2="0"/>
+    <line x1="-6" y1="0" x2="6" y2="0"/>
+    <line x1="-6" y1="0" x2="6" y2="0"/>
+    <line x1="-6" y1="0" x2="6" y2="0"/>
+</g>
+
+
+<rect
+x="295"
+y="135"
+width="10"
+height="10"
+rx="1"
+fill="#111"
+/>
+
+
+<!-- =====================================================
+     HALO DE LAS TRES FASES
+====================================================== -->
+
+<!-- FASE A - HALO -->
+<line
+    id="haloFaseA"
+    x1="900"
+    y1="150"
+    x2="1070"
+    y2="150"
+    class="haloFase haloA"
+/>
+
+<!-- FASE A - CONDUCTOR -->
+<line
+    id="lineaFaseA"
+    x1="900"
+    y1="150"
+    x2="1070"
+    y2="150"
+    class="faseSalida faseA"
+/>
+
+
+<!-- FASE B - HALO -->
+<line
+    id="haloFaseB"
+    x1="925"
+    y1="185"
+    x2="1070"
+    y2="185"
+    class="haloFase haloB"
+/>
+
+<!-- FASE B - CONDUCTOR -->
+<line
+    id="lineaFaseB"
+    x1="925"
+    y1="185"
+    x2="1070"
+    y2="185"
+    class="faseSalida faseB"
+/>
+
+
+<!-- FASE C - HALO -->
+<line
+    id="haloFaseC"
+    x1="900"
+    y1="220"
+    x2="1070"
+    y2="220"
+    class="haloFase haloC"
+/>
+
+<!-- FASE C - CONDUCTOR -->
+<line
+    id="lineaFaseC"
+    x1="900"
+    y1="220"
+    x2="1070"
+    y2="220"
+    class="faseSalida faseC"
+/>
+
+
+<!-- =========================================================
+    GENERADOR SÍNCRONO LONGITUDINAL
+========================================================= -->
+
+<svg
+    id="svgAlternador"
+    x="510"
+    y="60"
+    width="470"
+    height="255"
+    viewBox="0 0 1200 650"
+    preserveAspectRatio="xMidYMid meet"
+>
+
+    <title>
+        Alternador síncrono — Corte longitudinal V6
+    </title>
+
+    <!-- =====================================================
+         DEFINICIONES
+    ====================================================== -->
+
+    <defs>
+
+        <!-- CARCASA -->
+        <linearGradient id="carcasaGrad"
+                        x1="0" y1="0"
+                        x2="1" y2="1">
+            <stop offset="0%" stop-color="#e4edf3"/>
+            <stop offset="45%" stop-color="#aab9c4"/>
+            <stop offset="100%" stop-color="#647785"/>
+        </linearGradient>
+
+        <!-- RODAMIENTOS -->
+        <linearGradient id="rodamientoGrad"
+                        x1="0" y1="0"
+                        x2="0" y2="1">
+            <stop offset="0%" stop-color="#f4f6f7"/>
+            <stop offset="45%" stop-color="#b8c0c5"/>
+            <stop offset="100%" stop-color="#626b71"/>
+        </linearGradient>
+
+        <!-- HIERRO DEL ROTOR -->
+        <linearGradient id="hierroGrad"
+                        x1="0" y1="0"
+                        x2="0" y2="1">
+            <stop offset="0%" stop-color="#f2f3f4"/>
+            <stop offset="45%" stop-color="#c4c9cd"/>
+            <stop offset="100%" stop-color="#7c858c"/>
+        </linearGradient>
+
+        <!-- EJE -->
+        <linearGradient id="ejeGrad"
+                        x1="0" y1="0"
+                        x2="0" y2="1">
+            <stop offset="0%" stop-color="#f5f5f5"/>
+            <stop offset="55%" stop-color="#aeb5ba"/>
+            <stop offset="100%" stop-color="#5f676d"/>
+        </linearGradient>
+
+        <!-- COBRE -->
+        <linearGradient id="cobreGrad"
+                        x1="0" y1="0"
+                        x2="1" y2="0">
+            <stop offset="0%" stop-color="#9d3b12"/>
+            <stop offset="45%" stop-color="#f7933d"/>
+            <stop offset="70%" stop-color="#d55d1c"/>
+            <stop offset="100%" stop-color="#8b3010"/>
+        </linearGradient>
+
+        <!-- LAMINADO DEL ESTATOR -->
+        <pattern id="patron-estator"
+                 width="8"
+                 height="436"
+                 patternUnits="userSpaceOnUse">
+
+            <line x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="436"
+                  stroke="#aaa69d"
+                  stroke-width="1"
+                  opacity="0.65"/>
+
+        </pattern>
+
+    </defs>
+
+
+    <!-- =====================================================
+         FONDO
+    ====================================================== -->
+
+    <rect x="0"
+          y="0"
+          width="1200"
+          height="650"
+          fill="none"/>
+
+
+    <!-- =====================================================
+         CONJUNTO ESTATOR
+    ====================================================== -->
+
+    <g id="conjunto-estator"
+       transform="translate(-100,-55)">
+
+
+        <!-- =================================================
+             BASE
+        ================================================== -->
+
+        <g id="soportes"
+           transform="translate(0,-50)"
+           fill="url(#carcasaGrad)"
+           stroke="#45545e"
+           stroke-width="3">
+
+            <path d="
+                M430 650
+                L970 650
+                L1010 705
+                L390 705
+                Z"/>
+
+            <rect x="370"
+                  y="705"
+                  width="660"
+                  height="24"
+                  rx="5"/>
+
+        </g>
+
+
+        <!-- =================================================
+             CARCASA
+        ================================================== -->
+
+        <g id="carcasa">
+
+            <rect x="300"
+                  y="110"
+                  width="800"
+                  height="540"
+                  rx="70"
+                  fill="url(#carcasaGrad)"
+                  stroke="#3d4c56"
+                  stroke-width="5"/>
+
+            <rect x="320"
+                  y="133"
+                  width="760"
+                  height="494"
+                  rx="55"
+                  fill="#dde2e5"
+                  stroke="#39464e"
+                  stroke-width="3"/>
+
+        </g>
+
+
+        <!-- =================================================
+             ESTATOR
+        ================================================== -->
+
+        <g id="estator">
+
+            <!-- LAMINADO SUPERIOR -->
+
+            <g id="laminado-superior">
+
+                <rect x="430"
+                      y="145"
+                      width="540"
+                      height="15"
+                      fill="#53636e"
+                      stroke="#40494f"
+                      stroke-width="3"/>
+
+                <line x1="430"
+                      y1="160"
+                      x2="970"
+                      y2="160"
+                      stroke="#39474f"
+                      stroke-width="2"/>
+
+            </g>
+
+
+            <!-- HIERRO CONTINUO -->
+
+            <g id="hierro-estator-fondo">
+
+                <rect x="430"
+                      y="162"
+                      width="540"
+                      height="436"
+                      fill="#c7c4bb"
+                      stroke="#666b6e"
+                      stroke-width="1.5"/>
+
+                <rect x="430"
+                      y="162"
+                      width="540"
+                      height="436"
+                      fill="url(#patron-estator)"/>
+
+            </g>
+
+
+            <!-- LAMINADO INFERIOR -->
+
+            <g id="laminado-inferior">
+
+                <line x1="430"
+                      y1="600"
+                      x2="970"
+                      y2="600"
+                      stroke="#39474f"
+                      stroke-width="2"/>
+
+                <rect x="430"
+                      y="600"
+                      width="540"
+                      height="15"
+                      fill="#53636e"
+                      stroke="#40494f"
+                      stroke-width="3"/>
+
+            </g>
+
+        </g>
+
+
+        <!-- =================================================
+             DEVANADO SUPERIOR
+        ================================================== -->
+
+        <g id="devanado-superior"
+           stroke="#30363a"
+           stroke-width="2">
+
+            <!-- FASE V -->
+
+            <g id="fase-V-superior"
+               fill="#4caf62">
+
+                <rect id="V1-superior" x="400" y="349.4" width="600" height="26" rx="2"/>
+                <rect id="V2-superior" x="400" y="314.7" width="600" height="26" rx="2"/>
+                <rect id="V3-superior" x="400" y="281.6" width="600" height="26" rx="2"/>
+                <rect id="V4-superior" x="400" y="281.6" width="600" height="26" rx="2"/>
+                <rect id="V5-superior" x="400" y="314.7" width="600" height="26" rx="2"/>
+                <rect id="V6-superior" x="400" y="349.4" width="600" height="26" rx="2"/>
+
+            </g>
+
+
+            <!-- FASE W -->
+
+            <g id="fase-W-superior"
+               fill="#536dfe">
+
+                <rect id="W1-superior" x="400" y="251.1" width="600" height="26" rx="2"/>
+                <rect id="W2-superior" x="400" y="224.2" width="600" height="26" rx="2"/>
+                <rect id="W3-superior" x="400" y="201.5" width="600" height="26" rx="2"/>
+                <rect id="W4-superior" x="400" y="183.9" width="600" height="26" rx="2"/>
+                <rect id="W5-superior" x="400" y="171.9" width="600" height="26" rx="2"/>
+                <rect id="W6-superior" x="400" y="165.8" width="600" height="26" rx="2"/>
+
+            </g>
+
+
+            <!-- FASE U -->
+
+            <g id="fase-U-superior"
+               fill="#ef5350">
+
+                <rect id="U6-superior" x="400" y="251.1" width="600" height="26" rx="2"/>
+                <rect id="U5-superior" x="400" y="224.2" width="600" height="26" rx="2"/>
+                <rect id="U4-superior" x="400" y="201.5" width="600" height="26" rx="2"/>
+                <rect id="U3-superior" x="400" y="183.9" width="600" height="26" rx="2"/>
+                <rect id="U2-superior" x="400" y="171.9" width="600" height="26" rx="2"/>
+                <rect id="U1-superior" x="400" y="165.8" width="600" height="26" rx="2"/>
+
+            </g>
+
+        </g>
+
+
+        <!-- =================================================
+             DEVANADO INFERIOR
+        ================================================== -->
+
+        <g id="devanado-inferior"
+           stroke="#30363a"
+           stroke-width="2">
+
+            <!-- FASE V -->
+
+            <g id="fase-V-inferior"
+               fill="#4caf62">
+
+                <rect id="V1-inferior" x="400" y="384.6" width="600" height="26" rx="2"/>
+                <rect id="V2-inferior" x="400" y="419.3" width="600" height="26" rx="2"/>
+                <rect id="V3-inferior" x="400" y="452.4" width="600" height="26" rx="2"/>
+                <rect id="V4-inferior" x="400" y="452.4" width="600" height="26" rx="2"/>
+                <rect id="V5-inferior" x="400" y="419.3" width="600" height="26" rx="2"/>
+                <rect id="V6-inferior" x="400" y="384.6" width="600" height="26" rx="2"/>
+
+            </g>
+
+
+            <!-- FASE U -->
+
+            <g id="fase-U-inferior"
+               fill="#ef5350">
+
+                <rect id="U1-inferior" x="400" y="482.9" width="600" height="26" rx="2"/>
+                <rect id="U2-inferior" x="400" y="509.8" width="600" height="26" rx="2"/>
+                <rect id="U3-inferior" x="400" y="532.5" width="600" height="26" rx="2"/>
+                <rect id="U4-inferior" x="400" y="550.1" width="600" height="26" rx="2"/>
+                <rect id="U5-inferior" x="400" y="562.1" width="600" height="26" rx="2"/>
+                <rect id="U6-inferior" x="400" y="568.2" width="600" height="26" rx="2"/>
+
+            </g>
+
+
+            <!-- FASE W -->
+
+            <g id="fase-W-inferior"
+               fill="#536dfe">
+
+                <rect id="W1-inferior" x="400" y="482.9" width="600" height="26" rx="2"/>
+                <rect id="W2-inferior" x="400" y="509.8" width="600" height="26" rx="2"/>
+                <rect id="W3-inferior" x="400" y="532.5" width="600" height="26" rx="2"/>
+                <rect id="W4-inferior" x="400" y="550.1" width="600" height="26" rx="2"/>
+                <rect id="W5-inferior" x="400" y="562.1" width="600" height="26" rx="2"/>
+                <rect id="W6-inferior" x="400" y="568.2" width="600" height="26" rx="2"/>
+
+            </g>
+
+        </g>
+
+    </g>
+
+
+    <!-- =====================================================
+         ROTOR COMPLETO
+    ====================================================== -->
+
+    <g id="rotor-completo">
+
+
+        <!-- =================================================
+             GEOMETRÍA A — 0° / 180°
+        ================================================== -->
+
+        <g id="geometria-A"
+           transform="translate(-100,-55)"
+           display="none">
+
+
+            <!-- NÚCLEO -->
+
+            <g id="nucleo-rotor">
+
+                <rect x="450"
+                      y="262"
+                      width="500"
+                      height="236"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"/>
+
+            </g>
+
+
+            <!-- POLO SUPERIOR -->
+
+            <g id="polo-superior">
+
+                <path d="
+                    M430 203
+                    L970 203
+                    L970 253
+                    L950 280
+                    L450 280
+                    L430 253
+                    Z"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"
+                      stroke-linejoin="round"/>
+
+            </g>
+
+
+            <!-- POLO INFERIOR -->
+
+            <g id="polo-inferior">
+
+                <path d="
+                    M450 480
+                    L950 480
+                    L970 507
+                    L970 557
+                    L430 557
+                    L430 507
+                    Z"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"
+                      stroke-linejoin="round"/>
+
+            </g>
+
+
+            <!-- EJE -->
+
+            <g id="eje">
+
+                <rect x="140"
+                      y="332"
+                      width="1020"
+                      height="96"
+                      fill="url(#ejeGrad)"
+                      stroke="#444"
+                      stroke-width="3"/>
+
+                <line x1="140"
+                      y1="380"
+                      x2="1160"
+                      y2="380"
+                      stroke="#999"
+                      stroke-width="1"
+                      stroke-dasharray="7 7"/>
+
+            </g>
+
+
+            <!-- DEVANADO DE CAMPO -->
+
+            <g id="devanado-campo"
+               fill="url(#cobreGrad)"
+               stroke="#77300f"
+               stroke-width="1.4">
+
+                <rect x="430" y="285.5" width="540" height="18" rx="3"/>
+                <rect x="430" y="304.5" width="540" height="18" rx="3"/>
+                <rect x="430" y="323.5" width="540" height="18" rx="3"/>
+                <rect x="430" y="342.5" width="540" height="18" rx="3"/>
+                <rect x="430" y="361.5" width="540" height="18" rx="3"/>
+
+                <rect x="430" y="380.5" width="540" height="18" rx="3"/>
+                <rect x="430" y="399.5" width="540" height="18" rx="3"/>
+                <rect x="430" y="418.5" width="540" height="18" rx="3"/>
+                <rect x="430" y="437.5" width="540" height="18" rx="3"/>
+                <rect x="430" y="456.5" width="540" height="18" rx="3"/>
+
+            </g>
+
+
+            <!-- 0° -->
+
+            <g id="vista-0">
+
+                <text x="700"
+                      y="230"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      font-family="Arial, Helvetica, sans-serif"
+                      font-size="42"
+                      font-weight="700"
+                      fill="#2e8b3c"
+                      stroke="#163d1d"
+                      stroke-width="0.8">S</text>
+
+                <text x="700"
+                      y="530"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      font-family="Arial, Helvetica, sans-serif"
+                      font-size="42"
+                      font-weight="700"
+                      fill="#d62828"
+                      stroke="#671414"
+                      stroke-width="0.8">N</text>
+
+            </g>
+
+
+            <!-- 180° -->
+
+            <g id="vista-180"
+               display="none">
+
+                <text x="700"
+                      y="230"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      font-family="Arial, Helvetica, sans-serif"
+                      font-size="42"
+                      font-weight="700"
+                      fill="#d62828"
+                      stroke="#671414"
+                      stroke-width="0.8">N</text>
+
+                <text x="700"
+                      y="530"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      font-family="Arial, Helvetica, sans-serif"
+                      font-size="42"
+                      font-weight="700"
+                      fill="#2e8b3c"
+                      stroke="#163d1d"
+                      stroke-width="0.8">S</text>
+
+            </g>
+
+        </g>
+
+
+        <!-- =================================================
+             GEOMETRÍA B — 90° / 270°
+        ================================================== -->
+
+        <g id="geometria-B"
+           transform="translate(-100,-55)"
+           display="none">
+
+
+            <!-- EJE -->
+
+            <g id="eje-B">
+
+                <rect x="140"
+                      y="332"
+                      width="1020"
+                      height="96"
+                      fill="url(#ejeGrad)"
+                      stroke="#444"
+                      stroke-width="3"/>
+
+                <line x1="140"
+                      y1="380"
+                      x2="1160"
+                      y2="380"
+                      stroke="#999"
+                      stroke-width="1"
+                      stroke-dasharray="7 7"/>
+
+            </g>
+
+
+            <!-- NÚCLEO -->
+
+            <g id="nucleo-rotor-B">
+
+                <rect x="450"
+                      y="315"
+                      width="500"
+                      height="130"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"/>
+
+            </g>
+
+
+            <!-- POLO LATERAL -->
+
+            <g id="polo-lateral-B">
+
+                <rect x="430"
+                      y="280"
+                      width="540"
+                      height="200"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"/>
+
+            </g>
+
+
+            <!-- 90° -->
+
+            <g id="vista-90">
+
+                <text x="700"
+                      y="380"
+                      text-anchor="middle"
+                      dominant-baseline="middle"
+                      font-family="Arial, Helvetica, sans-serif"
+                      font-size="42"
+                      font-weight="700"
+                      fill="#2e8b3c"
+                      stroke="#163d1d"
+                      stroke-width="0.8">S</text>
+
+            </g>
+
+
+            <!-- 270° -->
+
+            <g id="vista-270"
+            display="none">
+
+            <text x="700"
+                  y="380"
+                  text-anchor="middle"
+                  dominant-baseline="middle"
+                  font-family="Arial, Helvetica, sans-serif"
+                  font-size="42"
+                  font-weight="700"
+                  fill="#d62828"
+                  stroke="#671414"
+                  stroke-width="0.8">N</text>
+
+            </g>
+
+        </g>
+
+
+        <!-- =================================================
+             GEOMETRÍA C — 45° / 225°
+        ================================================== -->
+
+        <g id="geometria-C"
+           transform="translate(-100,-55)">
+
+
+            <!-- EJE -->
+
+            <g id="eje-C">
+
+                <rect x="140"
+                      y="332"
+                      width="1020"
+                      height="96"
+                      fill="url(#ejeGrad)"
+                      stroke="#444"
+                      stroke-width="3"/>
+
+                <line x1="140"
+                      y1="380"
+                      x2="1160"
+                      y2="380"
+                      stroke="#999"
+                      stroke-width="1"
+                      stroke-dasharray="7 7"/>
+
+            </g>
+
+
+            <!-- HIERRO SUPERIOR EXTERIOR -->
+
+            <g id="hierro-superior-exterior-C">
+
+                <rect x="430"
+                      y="203"
+                      width="540"
+                      height="120"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"/>
+
+            </g>
+
+
+            <!-- HIERRO SUPERIOR INTERIOR -->
+
+            <g id="hierro-superior-interior-C">
+
+                <rect x="430"
+                      y="323"
+                      width="540"
+                      height="19"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"/>
+
+            </g>
+
+
+            <!-- DEVANADO DE CAMPO CENTRAL -->
+
+            <g id="devanado-campo-C"
+               fill="url(#cobreGrad)"
+               stroke="#77300f"
+               stroke-width="1.4">
+
+                <rect x="430" y="342" width="540" height="8" rx="2"/>
+                <rect x="430" y="351" width="540" height="15" rx="2"/>
+                <rect x="430" y="367" width="540" height="15" rx="2"/>
+                <rect x="430" y="383" width="540" height="15" rx="2"/>
+                <rect x="430" y="399" width="540" height="15" rx="2"/>
+                <rect x="430" y="415" width="540" height="15" rx="2"/>
+                <rect x="430" y="431" width="540" height="15" rx="2"/>
+                <rect x="430" y="447" width="540" height="15" rx="2"/>
+                <rect x="430" y="463" width="540" height="15" rx="2"/>
+                <rect x="430" y="479" width="540" height="15" rx="2"/>
+
+            </g>
+
+
+            <!-- HIERRO INFERIOR INTERIOR -->
+
+            <g id="hierro-inferior-interior-C">
+
+                <rect x="430"
+                      y="494"
+                      width="540"
+                      height="44"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"/>
+
+            </g>
+
+
+            <!-- HIERRO INFERIOR EXTERIOR -->
+
+            <g id="hierro-inferior-exterior-C">
+
+                <rect x="430"
+                      y="538"
+                      width="540"
+                      height="19"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"/>
+
+            </g>
+
+
+            <!-- VISTA 45° -->
+
+            <g id="vista-45">
+
+                <!-- POLO S ARRIBA -->
+                <text x="700"
+                    y="260"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    font-family="Arial, Helvetica, sans-serif"
+                    font-size="34"
+                    font-weight="700"
+                    fill="#2e8b3c"
+                    stroke="#163d1d"
+                    stroke-width="0.8">S</text>
+
+                <!-- POLO N ABAJO -->
+                <text x="700"
+                    y="518"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    font-family="Arial, Helvetica, sans-serif"
+                    font-size="34"
+                    font-weight="700"
+                    fill="#d62828"
+                    stroke="#671414"
+                    stroke-width="0.8">N</text>
+
+            </g>
+
+
+            <!-- VISTA 225° -->
+
+            <g id="vista-225"
+            display="none">
+
+                <!-- POLO N ARRIBA -->
+                <text x="700"
+                    y="260"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    font-family="Arial, Helvetica, sans-serif"
+                    font-size="34"
+                    font-weight="700"
+                    fill="#d62828"
+                    stroke="#671414"
+                    stroke-width="0.8">N</text>
+
+                <!-- POLO S ABAJO -->
+                <text x="700"
+                    y="518"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    font-family="Arial, Helvetica, sans-serif"
+                    font-size="34"
+                    font-weight="700"
+                    fill="#2e8b3c"
+                    stroke="#163d1d"
+                    stroke-width="0.8">S</text>
+
+            </g>
+
+        </g>
+
+
+        <!-- =================================================
+             GEOMETRÍA C INVERSA — 135° / 315°
+        ================================================== -->
+
+        <g id="geometria-C-inversa"
+           transform="translate(-100,-55)"
+           display="none">
+
+
+            <!-- EJE -->
+
+            <g id="eje-C-inversa">
+
+                <rect x="140"
+                      y="332"
+                      width="1020"
+                      height="96"
+                      fill="url(#ejeGrad)"
+                      stroke="#444"
+                      stroke-width="3"/>
+
+                <line x1="140"
+                      y1="380"
+                      x2="1160"
+                      y2="380"
+                      stroke="#999"
+                      stroke-width="1"
+                      stroke-dasharray="7 7"/>
+
+            </g>
+
+
+            <!-- HIERRO SUPERIOR EXTERIOR -->
+
+            <g id="hierro-superior-exterior-C-inversa">
+
+                <rect x="430"
+                      y="203"
+                      width="540"
+                      height="19"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"/>
+
+            </g>
+
+
+            <!-- HIERRO SUPERIOR INTERIOR -->
+
+            <g id="hierro-superior-interior-C-inversa">
+
+                <rect x="430"
+                      y="222"
+                      width="540"
+                      height="44"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"/>
+
+            </g>
+
+
+            <!-- DEVANADO DE CAMPO -->
+
+            <g id="devanado-campo-C-inversa"
+               fill="url(#cobreGrad)"
+               stroke="#77300f"
+               stroke-width="1.4">
+
+                <rect x="430" y="266" width="540" height="15" rx="2"/>
+                <rect x="430" y="282" width="540" height="15" rx="2"/>
+                <rect x="430" y="298" width="540" height="15" rx="2"/>
+                <rect x="430" y="314" width="540" height="15" rx="2"/>
+                <rect x="430" y="330" width="540" height="15" rx="2"/>
+                <rect x="430" y="346" width="540" height="15" rx="2"/>
+                <rect x="430" y="362" width="540" height="15" rx="2"/>
+                <rect x="430" y="378" width="540" height="15" rx="2"/>
+                <rect x="430" y="394" width="540" height="15" rx="2"/>
+
+                <!-- MEDIA BOBINA -->
+                <rect x="430" y="410" width="540" height="8" rx="2"/>
+
+            </g>
+
+
+            <!-- HIERRO INFERIOR INTERIOR -->
+
+            <g id="hierro-inferior-interior-C-inversa">
+
+                <rect x="430"
+                      y="418"
+                      width="540"
+                      height="19"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"/>
+
+            </g>
+
+
+            <!-- POLO INFERIOR GRANDE -->
+
+            <g id="hierro-inferior-exterior-C-inversa">
+
+                <rect x="430"
+                      y="437"
+                      width="540"
+                      height="120"
+                      fill="url(#hierroGrad)"
+                      stroke="#50575c"
+                      stroke-width="3"/>
+
+            </g>
+
+
+            <!-- VISTA 135° -->
+
+            <g id="vista-135"
+            display="none">
+
+                <!-- POLO N ARRIBA -->
+                <text x="700"
+                    y="242"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    font-family="Arial, Helvetica, sans-serif"
+                    font-size="34"
+                    font-weight="700"
+                    fill="#d62828"
+                    stroke="#671414"
+                    stroke-width="0.8">N</text>
+
+                <!-- POLO S ABAJO -->
+                <text x="700"
+                    y="500"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    font-family="Arial, Helvetica, sans-serif"
+                    font-size="34"
+                    font-weight="700"
+                    fill="#2e8b3c"
+                    stroke="#163d1d"
+                    stroke-width="0.8">S</text>
+
+            </g>
+
+
+            <!-- VISTA 315° -->
+
+            <g id="vista-315"
+            display="none">
+
+                <!-- POLO S ARRIBA -->
+                <text x="700"
+                    y="242"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    font-family="Arial, Helvetica, sans-serif"
+                    font-size="34"
+                    font-weight="700"
+                    fill="#2e8b3c"
+                    stroke="#163d1d"
+                    stroke-width="0.8">S</text>
+
+                <!-- POLO N ABAJO -->
+                <text x="700"
+                    y="500"
+                    text-anchor="middle"
+                    dominant-baseline="middle"
+                    font-family="Arial, Helvetica, sans-serif"
+                    font-size="34"
+                    font-weight="700"
+                    fill="#d62828"
+                    stroke="#671414"
+                    stroke-width="0.8">N</text>
+
+            </g>
+
+        </g>
+
+
+    </g>
+
+
+    <!-- =====================================================
+         ANILLOS ROZANTES
+    ====================================================== -->
+
+    <g id="anillos-rozantes"
+       transform="translate(-100,-55)">
+
+        <rect x="195"
+              y="305"
+              width="30"
+              height="150"
+              rx="5"
+              fill="url(#cobreGrad)"
+              stroke="#77300f"
+              stroke-width="3"/>
+
+        <rect x="235"
+              y="305"
+              width="30"
+              height="150"
+              rx="5"
+              fill="url(#cobreGrad)"
+              stroke="#77300f"
+              stroke-width="3"/>
+
+    </g>
+
+
+    <!-- =====================================================
+         ESCOBILLAS
+    ====================================================== -->
+
+    <g id="escobillas"
+       transform="translate(-100,-55)">
+
+        <rect x="198"
+              y="275"
+              width="24"
+              height="32"
+              rx="3"
+              fill="#343434"
+              stroke="#111111"
+              stroke-width="2"/>
+
+        <rect x="238"
+              y="275"
+              width="24"
+              height="32"
+              rx="3"
+              fill="#343434"
+              stroke="#111111"
+              stroke-width="2"/>
+
+    </g>
+
+
+    <!-- =====================================================
+         RODAMIENTOS
+    ====================================================== -->
+
+    <g id="rodamientos"
+       transform="translate(-100,-55)">
+
+        <g id="rodamiento-izquierdo">
+
+            <rect x="320"
+                  y="305"
+                  width="45"
+                  height="150"
+                  rx="8"
+                  fill="url(#rodamientoGrad)"
+                  stroke="#40484d"
+                  stroke-width="3"/>
+
+        </g>
+
+
+        <g id="rodamiento-derecho">
+
+            <rect x="1035"
+                  y="305"
+                  width="45"
+                  height="150"
+                  rx="8"
+                  fill="url(#rodamientoGrad)"
+                  stroke="#40484d"
+                  stroke-width="3"/>
+
+        </g>
+
+    </g>
+
+</svg>
+
+
+<text
+x="750"
+y="55"
+text-anchor="middle"
+class="tituloBloque"
+>
+GENERADOR SÍNCRONO
+</text>
+
+
+<text
+x="535"
+y="100"
+text-anchor="middle"
+class="textoValor"
+id="textoIfLinea"
+>
+If = 1.000 pu
+</text>
+
+
+<text
+x="550"
+y="240"
+text-anchor="middle"
+class="textoPeq"
+>
+ANILLOS
+</text>
+
+
+<text
+x="550"
+y="254"
+text-anchor="middle"
+class="textoPeq"
+>
+ROZANTES
+</text>
+
+
+
+<text x="1040" y="142" class="texto">A</text>
+
+<text x="1040" y="177" class="texto">B</text>
+
+<text x="1040" y="212" class="texto">C</text>
+
+
+<text
+x="955"
+y="140"
+text-anchor="middle"
+class="textoValor"
+id="textoVoltaje"
+>
+V = 1.000 pu
+</text>
+
+
+
+<rect
+x="1070"
+y="30"
+width="160"
+height="300"
+rx="10"
+class="carga"
+/>
+
+
+<text
+x="1150"
+y="60"
+text-anchor="middle"
+class="tituloBloque"
+>
+CARGA
+</text>
+
+
+<text
+x="1150"
+y="85"
+text-anchor="middle"
+class="textoValor"
+>
+P = seleccionada
+</text>
+
+<text
+x="1150"
+y="105"
+text-anchor="middle"
+class="textoValor"
+>
+Q = variable
+</text>
+
+<text
+x="1150"
+y="122"
+text-anchor="middle"
+class="textoValor"
+>
+Halo = condición de Q
+</text>
+
+
+
+<g id="simboloR">
+
+<polyline
+points="
+1100,180
+1110,165
+1120,195
+1130,165
+1140,195
+1150,165
+1160,195
+1170,180
+"
+class="simboloCarga"
+/>
+
+<text
+x="1135"
+y="225"
+text-anchor="middle"
+class="texto"
+>
+R
+</text>
+
+</g>
+
+
+
+<g id="simboloXL" style="display:none">
+
+<path
+d="
+M1095 180
+L1105 180
+C1105 160 1122 160 1122 180
+C1122 160 1139 160 1139 180
+C1139 160 1156 160 1156 180
+C1156 160 1173 160 1173 180
+L1185 180
+"
+class="simboloCarga"
+/>
+
+<text
+x="1140"
+y="225"
+text-anchor="middle"
+class="texto"
+>
+X<tspan baseline-shift="sub" font-size="11">L</tspan>
+</text>
+
+</g>
+
+
+
+<g id="simboloXC" style="display:none">
+
+<line
+x1="1095"
+y1="180"
+x2="1125"
+y2="180"
+class="simboloCarga"
+/>
+
+<line
+x1="1125"
+y1="155"
+x2="1125"
+y2="205"
+class="simboloCarga"
+/>
+
+<line
+x1="1155"
+y1="155"
+x2="1155"
+y2="205"
+class="simboloCarga"
+/>
+
+<line
+x1="1155"
+y1="180"
+x2="1185"
+y2="180"
+class="simboloCarga"
+/>
+
+<text
+x="1140"
+y="225"
+text-anchor="middle"
+class="texto"
+>
+X<tspan baseline-shift="sub" font-size="11">C</tspan>
+</text>
+
+</g>
+
+
+
+<text
+x="1150"
+y="270"
+text-anchor="middle"
+class="textoValor"
+id="textoPCarga"
+>
+P = 100 %
+</text>
+
+
+<text
+x="1150"
+y="295"
+text-anchor="middle"
+class="textoValor"
+id="textoQCarga"
+>
+Q = 0.0 %
+</text>
+
+
+
+<text
+x="170"
+y="370"
+text-anchor="middle"
+class="texto"
+>
+AMPLIFICADOR
+</text>
+
+
+<polygon
+points="
+60,360
+60,420
+130,390
+"
+fill="#e5eff8"
+stroke="#263238"
+stroke-width="3"
+/>
+
+
+<text
+x="87"
+y="396"
+text-anchor="middle"
+class="tituloBloque"
+>
+A
+</text>
+
+
+<text
+x="55"
+y="435"
+class="tituloBloque"
+>
++
+</text>
+
+
+<text
+x="120"
+y="435"
+class="tituloBloque"
+>
+−
+</text>
+
+
+<text
+x="5"
+y="455"
+class="textoValor"
+id="textoVi"
+>
+Vi = 0.000
+</text>
+
+
+<text
+x="0"
+y="335"
+class="textoValor"
+id="textoVe"
+>
+Ve = 1.000
+</text>
+
+
+
+<rect
+x="275"
+y="345"
+width="320"
+height="135"
+rx="8"
+class="bloqueEstabilizador"
+/>
+
+
+<text
+x="495"
+y="392"
+text-anchor="middle"
+class="texto"
+>
+TRANSFORMADOR DE
+</text>
+
+
+<text
+x="495"
+y="409"
+text-anchor="middle"
+class="texto"
+>
+ESTABILIZACIÓN
+</text>
+
+
+<path
+d="
+M335 370
+L335 374
+C335 384 345 384 345 374
+C345 364 355 364 355 374
+C355 384 365 384 365 374
+C365 364 375 364 375 374
+C375 384 385 384 385 374
+C385 364 395 364 395 374
+C395 384 405 384 405 374
+L405 370
+"
+class="bobinaEst"
+/>
+
+
+<path
+d="
+M335 412
+L335 408
+C335 398 345 398 345 408
+C345 418 355 418 355 408
+C355 398 365 398 365 408
+C365 418 375 418 375 408
+C375 398 385 398 385 408
+C385 418 395 418 395 408
+C395 398 405 398 405 408
+L405 412
+"
+class="bobinaEst"
+/>
+
+
+<path
+d="
+M335 370
+L335 265
+"
+class="lineaExcitacion"
+/>
+
+
+<path
+d="
+M405 370
+L405 265
+"
+class="lineaExcitacion"
+/>
+
+
+<circle cx="335" cy="265" r="5" fill="#b3261e"/>
+<circle cx="405" cy="265" r="5" fill="#b3261e"/>
+<circle cx="335" cy="370" r="5" fill="#b3261e"/>
+<circle cx="405" cy="370" r="5" fill="#b3261e"/>
+
+
+<path
+d="
+M335 412
+L335 505
+L75 505
+L75 415
+"
+class="lineaControl"
+marker-end="url(#flechaAzul)"
+/>
+
+
+
+<rect
+x="810"
+y="365"
+width="290"
+height="105"
+rx="10"
+class="bloqueDetector"
+/>
+
+
+<text
+x="820"
+y="410"
+class="texto"
+>
+DETECTOR
+</text>
+
+
+<text
+x="820"
+y="430"
+class="texto"
+>
+DE TENSIÓN
+</text>
+
+
+<rect
+x="925"
+y="385"
+width="80"
+height="50"
+fill="white"
+stroke="#263238"
+stroke-width="2"
+/>
+
+
+<text
+x="965"
+y="415"
+text-anchor="middle"
+class="tituloBloque"
+>
+V∿
+</text>
+
+
+<!-- =====================================================
+     MEDICIÓN TRIFÁSICA HACIA EL DETECTOR DE TENSIÓN
+
+     Cada fase tiene:
+     1. Halo luminoso detrás
+     2. Conductor sólido delante
+====================================================== -->
+
+
+<!-- =====================================================
+     FASE A
+====================================================== -->
+
+<!-- HALO FASE A -->
+<path
+    id="haloMedicionA"
+    d="M945 150 L945 385"
+    class="haloFase haloA"
+/>
+
+<!-- CONDUCTOR FASE A -->
+<path
+    id="medicionFaseA"
+    d="M945 150 L945 385"
+    class="lineaMedicion faseA"
+/>
+
+
+<!-- =====================================================
+     FASE B
+====================================================== -->
+
+<!-- HALO FASE B -->
+<path
+    id="haloMedicionB"
+    d="M965 185 L965 385"
+    class="haloFase haloB"
+/>
+
+<!-- CONDUCTOR FASE B -->
+<path
+    id="medicionFaseB"
+    d="M965 185 L965 385"
+    class="lineaMedicion faseB"
+/>
+
+
+<!-- =====================================================
+     FASE C
+====================================================== -->
+
+<!-- HALO FASE C -->
+<path
+    id="haloMedicionC"
+    d="M985 220 L985 385"
+    class="haloFase haloC"
+/>
+
+<!-- CONDUCTOR FASE C -->
+<path
+    id="medicionFaseC"
+    d="M985 220 L985 385"
+    class="lineaMedicion faseC"
+/>
+
+
+<circle cx="945" cy="150" r="4" fill="#111"/>
+<circle cx="965" cy="185" r="4" fill="#111"/>
+<circle cx="985" cy="220" r="4" fill="#111"/>
+
+<circle cx="945" cy="385" r="4" fill="#111"/>
+<circle cx="965" cy="385" r="4" fill="#111"/>
+<circle cx="985" cy="385" r="4" fill="#111"/>
+
+
+<text
+x="1020"
+y="420"
+class="textoValor"
+>
+V = V<tspan baseline-shift="super" font-size="11">0</tspan> + ΔV
+</text>
+
+
+
+<rect
+x="810"
+y="490"
+width="320"
+height="105"
+rx="10"
+class="bloqueComparador"
+/>
+
+
+<text
+x="820"
+y="565"
+class="texto"
+>
+COMPARADOR
+</text>
+
+
+<text
+x="820"
+y="585"
+class="texto"
+>
+DE TENSIÓN
+</text>
+
+
+<circle
+cx="965"
+cy="545"
+r="28"
+fill="white"
+stroke="#263238"
+stroke-width="3"
+/>
+
+
+<text
+x="965"
+y="550"
+text-anchor="middle"
+class="tituloBloque"
+>
+Σ
+</text>
+
+
+<path
+d="
+M1120 545
+L993 545
+"
+class="lineaControl"
+marker-end="url(#flechaAzul)"
+/>
+
+
+<text
+x="1020"
+y="535"
+class="textoValor"
+id="textoVref"
+>
+Vref = 1.000 pu
+</text>
+
+
+<path
+d="
+M965 435
+L965 517
+"
+class="lineaControl"
+marker-end="url(#flechaAzul)"
+/>
+
+
+<path
+d="
+M110 505
+L110 398
+"
+class="lineaControl"
+/>
+
+
+<circle
+cx="110"
+cy="505"
+r="4"
+fill="#175a91"
+/>
+
+
+<path
+d="
+M405 412
+L405 545
+L937 545
+"
+class="lineaControl"
+/>
+
+
+<text
+x="845"
+y="535"
+class="textoValor"
+id="textoError"
+>
+e = 0.000 pu
+</text>
+
+
+</svg>
+
+
+
+<div
+class="estado"
+id="estado"
+>
+TENSIÓN NOMINAL
+</div>
+
+
+</main>
+
+</div>
+
+<!-- =========================================================
+     INDICADORES INFERIORES
+========================================================= -->
+
+<section class="indicadores indicadores-inferiores">
+
+
+    <!-- TENSIÓN TERMINAL -->
+
+    <div class="indicador">
+
+        <div class="titulo">
+            TENSIÓN TERMINAL
+        </div>
+
+        <div class="valor">
+            <span id="displayV">1.000</span>
+            <span class="unidad">pu</span>
+        </div>
+
+    </div>
+
+
+    <!-- CORRIENTE DE EXCITACIÓN -->
+
+    <div class="indicador">
+
+        <div class="titulo">
+            CORRIENTE DE EXCITACIÓN
+        </div>
+
+        <div class="valor">
+            <span id="displayIf">1.000</span>
+            <span class="unidad">pu</span>
+        </div>
+
+    </div>
+
+
+    <!-- POTENCIA ACTIVA -->
+
+    <div class="indicador">
+
+        <div class="titulo">
+            POTENCIA ACTIVA REAL (P)
+        </div>
+
+        <div class="valor">
+            <span id="displayP">100.0</span>
+            <span class="unidad">%</span>
+        </div>
+
+    </div>
+
+
+    <!-- POTENCIA REACTIVA -->
+
+    <div class="indicador">
+
+        <div class="titulo">
+            POTENCIA REACTIVA REAL (Q)
+        </div>
+
+        <div class="valor">
+            <span id="displayQ">0.0</span>
+            <span class="unidad">%</span>
+        </div>
+
+    </div>
+
+
+    <!-- FACTOR DE POTENCIA -->
+
+    <div class="indicador">
+
+        <div class="titulo">
+            FACTOR DE POTENCIA (FP)
+        </div>
+
+        <div class="valor">
+            <span id="displayFP">1.00</span>
+        </div>
+
+        <div
+            class="estadoExcitacion"
+            id="estadoExcitacion"
+        >
+            EXCITACIÓN NORMAL
+        </div>
+
+    </div>
+
+
+</section>
+
+<script src="js/simulador.js"></script>
+
+</body>
+
+</html>

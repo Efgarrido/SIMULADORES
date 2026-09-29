@@ -1,0 +1,685 @@
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#edf2f7;
+    color:#1f2937;
+}
+
+
+/* =====================================================
+   CABECERA
+===================================================== */
+
+header{
+    background:#123f60;
+    color:white;
+    padding:9px 30px;
+}
+
+header h1{
+    margin:0;
+    font-size:20px;
+}
+
+
+/* =====================================================
+   ESTRUCTURA GENERAL
+===================================================== */
+
+.layout{
+    display:grid;
+    grid-template-columns:260px 1fr;
+    gap:16px;
+    padding:16px;
+}
+
+.panel,
+.simulador{
+    background:white;
+    border-radius:14px;
+    box-shadow:0 3px 12px rgba(0,0,0,.10);
+}
+
+.panel{
+    padding:16px;
+}
+
+.simulador{
+    padding:14px;
+}
+
+
+/* =====================================================
+   CONDICIÓN
+===================================================== */
+
+.modo{
+    padding:8px 10px;
+    background:#eef6fc;
+    border-radius:8px;
+    margin-bottom:11px;
+    font-size:13px;
+}
+
+.modo strong{
+    color:#0d6da3;
+}
+
+
+/* =====================================================
+   PERTURBACIÓN
+===================================================== */
+
+.tituloPerturbacion{
+    margin-top:6px;
+    margin-bottom:14px;
+    text-align:center;
+    font-size:19px;
+}
+
+
+/* =====================================================
+   CONTROL
+===================================================== */
+
+.control{
+    margin-bottom:14px;
+}
+
+.control label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:9px;
+    text-align:center;
+    font-size:13px;
+}
+
+input[type="range"]{
+    width:100%;
+}
+
+.valorCarga{
+    text-align:center;
+    font-size:27px;
+    font-weight:bold;
+    color:#123f60;
+    margin-top:5px;
+}
+
+
+/* =====================================================
+   BOTONES
+===================================================== */
+
+.botonesControl{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:6px;
+    margin-bottom:12px;
+}
+
+button{
+    width:100%;
+    border:0;
+    padding:9px 4px;
+    border-radius:7px;
+    font-size:12px;
+    cursor:pointer;
+    white-space:nowrap;
+}
+
+.accion{
+    background:#1684ce;
+    color:white;
+}
+
+.pausa{
+    background:#f0b429;
+    color:#1f2937;
+}
+
+.reset{
+    background:#dce4ea;
+    color:#1f2937;
+}
+
+
+/* =====================================================
+   GRÁFICAS
+===================================================== */
+
+.graficaPanel{
+    margin-top:9px;
+    padding:7px;
+    background:#f8fafc;
+    border:1px solid #d7e0e6;
+    border-radius:9px;
+}
+
+.graficaTitulo{
+    font-size:12px;
+    font-weight:bold;
+    text-align:center;
+    margin-bottom:5px;
+    color:#263640;
+}
+
+.graficaCanvas{
+    display:block;
+    width:100%;
+    height:135px;
+    background:white;
+    border:1px solid #d5dde5;
+    border-radius:5px;
+}
+
+
+/* =====================================================
+   INDICADORES
+===================================================== */
+
+.indicadoresSuperiores{
+    display:grid;
+    grid-template-columns:1fr 1.7fr 1fr;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.instrumento{
+    background:#f6f9fb;
+    border:1px solid #dbe3e9;
+    padding:5px 12px;
+    border-radius:10px;
+    text-align:center;
+}
+
+.instrumento .titulo{
+    font-size:13px;
+    color:#000;
+}
+
+.instrumento .numero{
+    margin-top:2px;
+    font-size:18px;
+    font-weight:bold;
+    color:#000;
+}
+
+.balanceSuperior{
+    background:#f8fafc;
+    border:1px solid #d7e0e6;
+    border-radius:10px;
+    padding:4px 12px;
+    text-align:center;
+}
+
+.balanceTitulo{
+    font-size:13px;
+    color:#000;
+    margin-bottom:1px;
+}
+
+.balanceLinea{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:13px;
+    font-size:17px;
+    font-weight:bold;
+}
+
+.balanceDato{
+    min-width:74px;
+}
+
+.balanceSigno{
+    font-size:18px;
+    font-weight:bold;
+    min-width:18px;
+}
+
+.balanceEstado{
+    margin-top:1px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+
+/* =====================================================
+   ESCENA
+===================================================== */
+
+.escena{
+    border:1px solid #d5dde5;
+    border-radius:12px;
+    background:#fafcfd;
+    overflow:hidden;
+}
+
+svg{
+    display:block;
+    width:100%;
+    height:auto;
+}
+
+.textoSVG{
+    font-family:Arial,Helvetica,sans-serif;
+    fill:#263640;
+}
+
+.etiquetaSVG{
+    font-size:15px;
+    font-weight:bold;
+}
+
+.textoPeq{
+    font-size:13px;
+}
+
+.mecanico{
+    stroke:#263640;
+    stroke-width:5;
+    fill:none;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+
+/* =====================================================
+   VOLUTA / FLUJO DE AGUA
+===================================================== */
+
+.volutaExterior{
+    fill:none;
+    stroke:#8ed5f2;
+    stroke-width:52;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    opacity:.42;
+}
+
+.volutaBorde{
+    fill:none;
+    stroke:#455b67;
+    stroke-width:4;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    opacity:.85;
+}
+
+.flujoVoluta{
+    fill:none;
+    stroke:#279dd6;
+    stroke-width:8;
+    stroke-linecap:round;
+    stroke-dasharray:26 18;
+    animation:movimientoVoluta 1.15s linear infinite;
+}
+
+.flujoCircular{
+    fill:none;
+    stroke:#279dd6;
+    stroke-width:6;
+    stroke-linecap:round;
+    stroke-dasharray:18 14;
+    opacity:.72;
+    animation:movimientoCircular 1s linear infinite;
+}
+
+
+/* =====================================================
+   FLUJO HACIA EL ROTOR - VERSIÓN EF
+
+   La trayectoria permanece fija.
+   Las partículas siempre viajan:
+
+   PERIFERIA -> ROTOR
+===================================================== */
+
+.flujoRadialGuia{
+    fill:none;
+    stroke:#7bc8e8;
+    stroke-width:4;
+    stroke-linecap:round;
+    opacity:.30;
+}
+
+.particulaAgua{
+    fill:#279dd6;
+    stroke:#147cad;
+    stroke-width:1;
+}
+
+
+@keyframes movimientoVoluta{
+
+    from{
+        stroke-dashoffset:44;
+    }
+
+    to{
+        stroke-dashoffset:0;
+    }
+
+}
+
+
+@keyframes movimientoCircular{
+
+    from{
+        stroke-dashoffset:32;
+    }
+
+    to{
+        stroke-dashoffset:0;
+    }
+
+}
+
+
+/* =====================================================
+   DISTRIBUIDOR
+===================================================== */
+
+.anilloRegulacion{
+    fill:none;
+    stroke:#f39a18;
+    stroke-width:23;
+}
+
+.bielaAlabe{
+    stroke:#b8872e;
+    stroke-width:5;
+    stroke-linecap:round;
+}
+
+.pivoteAlabe{
+    fill:#ffd21f;
+    stroke:#8c6b14;
+    stroke-width:2;
+}
+
+.alabeFink{
+    fill:#f08a2b;
+    stroke:#c66816;
+    stroke-width:2;
+}
+
+.acopleAnillo{
+    fill:#9ed4c7;
+    stroke:#263640;
+    stroke-width:3;
+}
+
+
+/* =====================================================
+   ROTOR
+===================================================== */
+
+.rotor{
+    transform-origin:250px 340px;
+    animation:girar 1s linear infinite;
+}
+
+@keyframes girar{
+
+    from{
+        transform:rotate(0deg);
+    }
+
+    to{
+        transform:rotate(360deg);
+    }
+
+}
+
+
+/* =====================================================
+   WATT
+===================================================== */
+
+.soporteWatt{
+    fill:#7f929d;
+    stroke:#263640;
+    stroke-width:3;
+}
+
+.pivoteWatt{
+    fill:#263640;
+    stroke:#111;
+    stroke-width:2;
+}
+
+.centroPivote{
+    fill:#aab7be;
+}
+
+
+/* =====================================================
+   RETROALIMENTACIÓN
+===================================================== */
+
+.varillaRetro{
+    stroke:#263640;
+    stroke-width:5;
+    fill:none;
+    stroke-linecap:round;
+}
+
+.rodilloRetro{
+    fill:#aeb9bf;
+    stroke:#263640;
+    stroke-width:4;
+}
+
+.levaRetro{
+    fill:url(#rayadoLeva);
+    stroke:#263640;
+    stroke-width:4;
+    stroke-linejoin:round;
+}
+
+
+/* =====================================================
+   VÁLVULA
+===================================================== */
+
+.camisaValvula{
+    fill:url(#rayado);
+    stroke:#263640;
+    stroke-width:2;
+}
+
+.cavidadAceite{
+    fill:#f3dc13;
+    stroke:#263640;
+    stroke-width:2;
+}
+
+.pistonValvula{
+    fill:#cfd4d7;
+    stroke:#657078;
+    stroke-width:2;
+}
+
+.ejeInterno{
+    stroke:#111;
+    stroke-width:7;
+}
+
+
+/* =====================================================
+   PUERTOS
+===================================================== */
+
+.puertoPresion{
+    stroke:#f0d300;
+    stroke-width:28;
+    fill:none;
+    stroke-linecap:butt;
+}
+
+.puertoRetorno{
+    stroke:#e2d9a5;
+    stroke-width:28;
+    fill:none;
+    stroke-linecap:butt;
+    opacity:.45;
+}
+
+.puertoTrabajo{
+    stroke:#e5deaf;
+    stroke-width:28;
+    fill:none;
+    stroke-linecap:butt;
+    opacity:.45;
+}
+
+.lineaActivaPresion{
+    stroke:#ffd400;
+    stroke-width:28;
+    fill:none;
+    stroke-linecap:butt;
+}
+
+.lineaActivaRetorno{
+    stroke:#d4b000;
+    stroke-width:28;
+    fill:none;
+    stroke-linecap:butt;
+}
+
+
+/* =====================================================
+   TUBERÍAS
+===================================================== */
+
+.tuberiaServoReposo{
+    stroke:#e5deaf;
+    stroke-width:28;
+    fill:none;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    opacity:.42;
+}
+
+.tuberiaServoPresion{
+    stroke:#ffd400;
+    stroke-width:28;
+    fill:none;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.tuberiaServoRetorno{
+    stroke:#d4b000;
+    stroke-width:28;
+    fill:none;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+
+/* =====================================================
+   PARTÍCULAS DE ACEITE
+===================================================== */
+
+.particulaPresion{
+    fill:#fff4a8;
+    stroke:#d7a900;
+    stroke-width:1;
+}
+
+.particulaRetorno{
+    fill:#d6b628;
+    stroke:#8d7410;
+    stroke-width:1;
+}
+
+
+/* =====================================================
+   SERVOMOTOR
+===================================================== */
+
+.camaraBase{
+    fill:#e6c82b;
+}
+
+.camaraPresion{
+    fill:#ffd51f;
+}
+
+.camaraRetorno{
+    fill:#d8be29;
+}
+
+.pistonServoVisual{
+    fill:#d1d9de;
+    stroke:#657985;
+    stroke-width:3;
+}
+
+
+/* =====================================================
+   INDICADOR
+===================================================== */
+
+.accionBox{
+    fill:white;
+    stroke:#cad5dc;
+    stroke-width:2;
+}
+
+.luz{
+    fill:#cbd2d6;
+}
+
+.luzActiva{
+    fill:#ffd11a;
+}
+
+.puntoMovil{
+    fill:#d94b3d;
+    stroke:#263640;
+    stroke-width:2;
+}
+
+
+/* =====================================================
+   MENSAJE
+===================================================== */
+
+.mensaje{
+    margin-top:12px;
+    padding:10px 12px;
+    border-left:5px solid #1684ce;
+    background:#edf7ff;
+    min-height:58px;
+}
+
+.estado{
+    font-weight:bold;
+    margin-bottom:4px;
+    font-size:14px;
+}
+
+.explicacion{
+    font-size:13px;
+}
+
+
+@media(max-width:1000px){
+
+    .layout{
+        grid-template-columns:1fr;
+    }
+
+    .indicadoresSuperiores{
+        grid-template-columns:1fr;
+    }
+
+}

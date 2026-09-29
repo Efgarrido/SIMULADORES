@@ -1,0 +1,710 @@
+/* ============================================================
+   ESTILOS GENERALES PARA SIMULADORES
+   CANDIDATO A CSS MAESTRO
+   ============================================================ */
+
+
+/* ============================================================
+   01. CONFIGURACIÓN GENERAL
+   ============================================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #eeeeee;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 13px;
+
+    color: #222222;
+}
+
+
+/* ============================================================
+   02. CONTENEDOR GENERAL DEL SIMULADOR
+   ============================================================ */
+
+.simulador {
+    margin: 30px auto;
+
+    background: #f5f5f5;
+
+    border: 1px solid #999999;
+    border-radius: 3px;
+
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.25);
+
+    padding: 14px;
+}
+
+
+/* ============================================================
+   03. TÍTULO PRINCIPAL
+   ============================================================ */
+
+.titulo-simulador {
+    text-align: center;
+
+    margin-bottom: 12px;
+}
+
+.titulo-simulador h1 {
+    margin: 0;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    color: #222222;
+}
+
+.titulo-simulador p {
+    margin:
+        4px
+        0
+        0
+        0;
+
+    font-size: 12px;
+    font-weight: normal;
+
+    color: #555555;
+}
+
+
+/* ============================================================
+   04. ÁREA PRINCIPAL DE SIMULACIÓN
+   ============================================================ */
+
+.area-simulacion {
+    width: 100%;
+
+    background: #ffffff;
+
+    border: 1px solid #999999;
+
+    padding: 10px;
+}
+
+
+/* ============================================================
+   05. PANELES DE CONTROL
+   ============================================================ */
+
+.panel-simulador {
+    margin: 0;
+
+    padding:
+        4px
+        10px
+        6px
+        10px;
+
+    min-width: 0;
+
+    background: #f5f5f5;
+
+    border: 1px solid #999999;
+
+    border-radius: 3px;
+}
+
+
+/* ------------------------------------------------------------
+   ENCABEZADO DEL PANEL
+   ------------------------------------------------------------ */
+
+.panel-simulador legend {
+    padding:
+        0
+        6px;
+
+    font-size: 13px;
+
+    font-weight: bold;
+    font-style: italic;
+
+    color: #333333;
+
+    background: #f5f5f5;
+}
+
+
+/* ============================================================
+   06. FILAS DE CONTROL
+   ============================================================ */
+
+.fila-control {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    min-height: 28px;
+}
+
+.fila-control + .fila-control {
+    margin-top: 4px;
+}
+
+
+/* ============================================================
+   07. GRUPOS HORIZONTALES
+   ============================================================ */
+
+.grupo-horizontal {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 24px;
+}
+
+
+/* ============================================================
+   08. RADIO BUTTONS
+   ============================================================ */
+
+.opcion-radio {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    min-height: 20px;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+
+    color: #222222;
+}
+
+.opcion-radio input[type="radio"] {
+    position: static;
+
+    width: 13px;
+    height: 13px;
+
+    margin: 0;
+
+    opacity: 1;
+
+    accent-color: #555555;
+
+    cursor: pointer;
+}
+
+.opcion-radio span {
+    font-size: 13px;
+
+    font-weight: normal;
+}
+
+
+/* ============================================================
+   09. CHECKBOX
+   ============================================================ */
+
+.opcion-check {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    min-height: 20px;
+
+    cursor: pointer;
+
+    white-space: nowrap;
+}
+
+.opcion-check input[type="checkbox"] {
+    position: static;
+
+    width: 13px;
+    height: 13px;
+
+    margin: 0;
+
+    opacity: 1;
+
+    accent-color: #555555;
+
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   10. SELECTORES
+   ============================================================ */
+
+.selector-simulador {
+    height: 24px;
+
+    min-width: 150px;
+
+    padding:
+        1px
+        25px
+        1px
+        6px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 12px;
+
+    color: #222222;
+
+    background:
+        linear-gradient(
+            #ffffff,
+            #dddddd
+        );
+
+    border: 1px solid #888888;
+
+    border-radius: 2px;
+
+    cursor: pointer;
+}
+
+.selector-simulador:hover {
+    border-color: #666666;
+}
+
+
+/* ============================================================
+   11. ETIQUETA DE SLIDER
+   ============================================================ */
+
+.etiqueta-slider {
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    margin-bottom: 5px;
+
+    font-size: 12px;
+}
+
+
+/* ============================================================
+   12. CONTENEDOR DEL SLIDER
+   ============================================================ */
+
+.slider-simulador {
+    position: relative;
+
+    width: 100%;
+
+    padding:
+        0
+        3px;
+}
+
+.slider-simulador input[type="range"] {
+    display: block;
+
+    width: 100%;
+    height: 20px;
+
+    margin: 0;
+
+    -webkit-appearance: none;
+    appearance: none;
+
+    background: transparent;
+
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   13. PISTA DEL SLIDER — CHROME / SAFARI
+   ============================================================ */
+
+.slider-simulador input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+
+    height: 5px;
+
+    background: #d0d0d0;
+
+    border: 1px solid #8b8b8b;
+
+    border-radius: 2px;
+
+    box-shadow:
+        inset 0 1px 1px rgba(0, 0, 0, 0.15);
+}
+
+
+/* ============================================================
+   14. CURSOR DEL SLIDER — CHROME / SAFARI
+   ============================================================ */
+
+.slider-simulador input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+
+    width: 14px;
+    height: 18px;
+
+    margin-top: -7px;
+
+    background:
+        linear-gradient(
+            to right,
+            #f5f5f5 0%,
+            #dedede 50%,
+            #bdbdbd 100%
+        );
+
+    border: 1px solid #777777;
+
+    border-radius: 2px;
+
+    box-shadow:
+        1px 1px 1px rgba(0, 0, 0, 0.25);
+}
+
+
+/* ============================================================
+   15. SLIDER — FIREFOX
+   ============================================================ */
+
+.slider-simulador input[type="range"]::-moz-range-track {
+    width: 100%;
+
+    height: 5px;
+
+    background: #d0d0d0;
+
+    border: 1px solid #8b8b8b;
+
+    border-radius: 2px;
+}
+
+.slider-simulador input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 18px;
+
+    background:
+        linear-gradient(
+            to right,
+            #f5f5f5,
+            #bdbdbd
+        );
+
+    border: 1px solid #777777;
+
+    border-radius: 2px;
+
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   16. ESCALA DEL SLIDER
+   ============================================================ */
+
+.escala-slider {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: -1px;
+
+    padding:
+        0
+        1px;
+
+    font-size: 10px;
+
+    color: #666666;
+}
+
+
+/* ============================================================
+   17. BOTONES CIRCULARES + / -
+   ============================================================ */
+
+.boton-circular {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    width: 25px;
+    height: 25px;
+
+    padding: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 20px;
+    font-weight: bold;
+
+    line-height: 20px;
+
+    color: #333333;
+
+    background:
+        linear-gradient(
+            #ffffff,
+            #c9c9c9
+        );
+
+    border: 1px solid #777777;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.25);
+
+    cursor: pointer;
+}
+
+.boton-circular:hover {
+    background:
+        linear-gradient(
+            #ffffff,
+            #dddddd
+        );
+}
+
+.boton-circular:active {
+    background:
+        linear-gradient(
+            #bbbbbb,
+            #eeeeee
+        );
+
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.30);
+}
+
+
+/* ============================================================
+   18. AJUSTES INCREMENTALES
+   ============================================================ */
+
+.ajuste-incremental {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.valor-central {
+    min-width: 46px;
+
+    text-align: center;
+
+    font-size: 13px;
+    font-weight: bold;
+}
+
+
+/* ============================================================
+   19. ZONA DE BOTONES
+   ============================================================ */
+
+.zona-botones {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 0;
+}
+
+
+/* ============================================================
+   20. BOTONES PRINCIPALES
+   ============================================================ */
+
+.boton-simulador {
+    min-width: 100px;
+
+    height: 27px;
+
+    padding:
+        2px
+        12px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 11px;
+    font-weight: normal;
+
+    color: #222222;
+
+    background:
+        linear-gradient(
+            #ffffff,
+            #dddddd
+        );
+
+    border: 1px solid #888888;
+
+    border-radius: 2px;
+
+    box-shadow: none;
+
+    cursor: pointer;
+}
+
+.boton-simulador:hover {
+    background:
+        linear-gradient(
+            #ffffff,
+            #eeeeee
+        );
+}
+
+.boton-simulador:active {
+    background:
+        linear-gradient(
+            #cccccc,
+            #eeeeee
+        );
+
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.30);
+}
+
+
+/* ============================================================
+   21. INDICADORES
+   ============================================================ */
+
+.indicador {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 10px;
+
+    min-height: 26px;
+
+    padding:
+        3px
+        6px;
+
+    background: #ffffff;
+
+    border: 1px solid #b0b0b0;
+
+    border-radius: 2px;
+}
+
+.indicador-valor {
+    font-weight: bold;
+
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   22. ESTADO DEL SIMULADOR
+   ============================================================ */
+
+.estado-valor {
+    font-weight: bold;
+
+    text-align: center;
+}
+
+
+/* ============================================================
+   23. ELEMENTOS DESHABILITADOS
+   ============================================================ */
+
+button:disabled,
+select:disabled,
+input:disabled {
+    opacity: 0.5;
+
+    cursor: default;
+}
+
+
+/* ============================================================
+   24. FOCO DE CONTROLES
+   ============================================================ */
+
+button:focus-visible,
+select:focus-visible,
+input:focus-visible {
+    outline: 2px solid #666666;
+
+    outline-offset: 2px;
+}
+
+
+/* ============================================================
+   25. UTILIDADES DE ALINEACIÓN
+   ============================================================ */
+
+.centrado {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.texto-centro {
+    text-align: center;
+}
+
+.texto-negrita {
+    font-weight: bold;
+}
+
+
+/* ============================================================
+   26. ESPACIADOS COMUNES
+   ============================================================ */
+
+.margen-superior {
+    margin-top: 8px;
+}
+
+.margen-inferior {
+    margin-bottom: 8px;
+}

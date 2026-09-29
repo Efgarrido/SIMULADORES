@@ -1,0 +1,602 @@
+/* ============================================================
+   SIMULADOR TURBINA – GENERADOR – CARGA
+   ESTILOS ESPECÍFICOS
+   ============================================================ */
+
+
+/* ============================================================
+   01. DIMENSIONES DEL SIMULADOR
+   ============================================================ */
+
+.simulador {
+    width: 1200px;
+}
+
+
+/* ============================================================
+   02. DISTRIBUCIÓN PRINCIPAL
+   ============================================================ */
+
+.contenido-simulador {
+    width: 100%;
+}
+
+
+/* ============================================================
+   03. CONTROLES SUPERIORES
+   ============================================================ */
+
+.controls {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr
+        1fr
+        1.60fr;
+
+    gap: 8px;
+
+    margin-bottom: 10px;
+}
+
+
+.control-box {
+    min-width: 0;
+    min-height: 72px;
+
+    padding: 5px 8px 6px 8px;
+
+    background: #f5f5f5;
+
+    border: 1px solid #999999;
+    border-radius: 3px;
+}
+
+
+/* ============================================================
+   04. VARIABLE DEL CONTROL
+   Pm / Pe / J
+   ============================================================ */
+
+.variable-control {
+    display: block;
+
+    width: 100%;
+
+    margin: 0 0 2px 0;
+
+    text-align: center;
+
+    font-size: 12px;
+    font-weight: normal;
+
+    color: #222222;
+}
+
+
+/* ============================================================
+   05. GRADUACIONES DE Pm Y Pe
+   Cada división representa 10 %
+   ============================================================ */
+
+.graduaciones-porcentaje {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: flex-start;
+
+    /*
+       7 px corresponden aproximadamente a la mitad
+       del ancho del cursor del slider.
+
+       De esta manera las marcas extremas coinciden
+       con los centros de las posiciones 0 % y 100 %.
+    */
+
+    margin:
+        -4px
+        7px
+        0
+        7px;
+
+    height: 7px;
+
+    pointer-events: none;
+}
+
+
+.graduaciones-porcentaje span {
+    display: block;
+
+    width: 1px;
+    height: 5px;
+
+    margin: 0;
+    padding: 0;
+
+    background: #777777;
+}
+
+
+/* ------------------------------------------------------------
+   MARCAS PRINCIPALES
+   0 %, 50 % y 100 %
+   ------------------------------------------------------------ */
+
+.graduaciones-porcentaje span:first-child,
+.graduaciones-porcentaje span:nth-child(6),
+.graduaciones-porcentaje span:last-child {
+    height: 7px;
+
+    background: #555555;
+}
+
+
+/* ============================================================
+   06. AJUSTE DE ESCALA DE LOS CONTROLES
+   ============================================================ */
+
+.control-box .escala-slider {
+
+    position: relative;
+
+    display: block;
+
+    width: 100%;
+
+    height: 12px;
+
+    margin-top: 0;
+
+    padding: 0 7px;
+
+}
+
+.control-box .escala-slider span {
+
+    position: absolute;
+
+}
+
+/* 0 */
+
+.control-box .escala-slider span:first-child {
+
+    left: 7px;
+
+    transform: translateX(-50%);
+
+}
+
+/* 50 */
+
+.control-box .escala-slider span:nth-child(2) {
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+}
+
+/* 100 */
+
+.control-box .escala-slider span:last-child {
+
+    right: 7px;
+
+    transform: translateX(50%);
+
+}
+
+
+/* ============================================================
+   07. BOTONES DE OPERACIÓN
+   ============================================================ */
+
+.buttons {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    width: 100%;
+    height: 100%;
+
+    flex-wrap: nowrap;
+}
+
+
+/* ------------------------------------------------------------
+   DISTRIBUCIÓN DE LOS BOTONES
+   ------------------------------------------------------------ */
+
+.buttons .boton-simulador {
+    min-width: 0;
+    white-space: nowrap;
+}
+
+
+/* ------------------------------------------------------------
+   INTERRUPTOR
+   Botón particular del simulador
+   ------------------------------------------------------------ */
+
+#breakerBtn {
+    flex: 1.45;
+
+    height: 26px;
+
+    padding: 0 8px;
+
+    font-size: 11px;
+}
+
+
+/* ------------------------------------------------------------
+   PAUSA
+   Botón particular del simulador
+   ------------------------------------------------------------ */
+
+#pauseBtn {
+    flex: 0.8;
+
+    height: 26px;
+
+    padding: 0 8px;
+
+    font-size: 11px;
+}
+
+
+/* ------------------------------------------------------------
+   REINICIAR
+   Conserva directamente el formato definido
+   en estilos.css, igual que Fourier
+   ------------------------------------------------------------ */
+
+#resetBtn {
+    flex: 0.9;
+}
+
+
+/* ============================================================
+   ESTADO DEL INTERRUPTOR
+   ============================================================ */
+
+/* Interruptor CERRADO */
+.boton-simulador.success {
+    color: #ffffff;
+    font-weight: bold;
+
+    background:
+        linear-gradient(
+            #e57373,
+            #c94f4f
+        );
+
+    border-color: #9f3b3b;
+}
+
+
+/* Interruptor ABIERTO */
+.boton-simulador.danger {
+    color: #ffffff;
+    font-weight: bold;
+
+    background:
+        linear-gradient(
+            #81c784,
+            #57a85a
+        );
+
+    border-color: #3f8242;
+}
+
+
+/* ============================================================
+   08. ESCENA
+   ============================================================ */
+
+.scene-wrap {
+    width: 100%;
+
+    margin-bottom: 12px;
+}
+
+
+.scene-wrap svg {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    background: #ffffff;
+
+    border: 1px solid #999999;
+    border-radius: 3px;
+}
+
+
+/* ============================================================
+   09. INSTRUMENTOS
+   ============================================================ */
+
+.instrument-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, 1fr);
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+}
+
+
+.instrument {
+    min-height: 0;
+    height: 44px;
+
+    padding: 4px 7px;
+
+    text-align: center;
+
+    background: #f5f5f5;
+
+    border: 1px solid #999999;
+    border-radius: 3px;
+}
+
+
+.instrument .name {
+    font-size: 12px;
+    font-weight: bold;
+    font-style: italic;
+    color: #222222;
+}
+
+
+.instrument .num {
+    margin-top: 2px;
+
+    padding: 2px 4px;
+
+    font-size: 12px;
+    font-weight: bold;
+
+    color: #111111;
+
+    background: #e3e3e3;
+
+    border: 1px inset #b5b5b5;
+    border-radius: 2px;
+}
+
+
+/* ============================================================
+   10. BALANCES
+   ============================================================ */
+
+.balance {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 8px;
+}
+
+
+.balance-box {
+    padding: 8px;
+
+    text-align: center;
+
+    background: #f5f5f5;
+
+    border: 1px solid #999999;
+    border-radius: 3px;
+}
+
+
+.balance-valor {
+    margin-top: 5px;
+
+    font-size: 18px;
+}
+
+
+/* ============================================================
+   11. ECUACIÓN DINÁMICA
+   ============================================================ */
+
+.eq {
+    margin-top: 10px;
+
+    padding: 10px;
+
+    text-align: center;
+
+    font-size: 20px;
+    font-weight: normal;
+
+    color: #222222;
+
+    background: #ffffff;
+
+    border: 1px solid #999999;
+    border-radius: 3px;
+}
+
+
+.status {
+    margin-top: 6px;
+
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
+/* ============================================================
+   12. NOTA DIDÁCTICA
+   ============================================================ */
+
+.note {
+    margin-top: 8px;
+
+    font-size: 12px;
+
+    line-height: 1.4;
+
+    color: #555555;
+}
+
+
+/* ============================================================
+   13. RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1250px) {
+
+    .simulador {
+        width: calc(100% - 30px);
+    }
+
+}
+
+
+@media (max-width: 950px) {
+
+    .controls {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+
+    .instrument-grid {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+
+    .balance {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .controls {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .instrument-grid {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+}
+
+/* ============================================================
+   GRADUACIONES DEL SELECTOR DE INERCIA J
+   20 – 40 – 60 – 80 – 100 – 120 – 140
+   ============================================================ */
+
+.graduaciones-inercia {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin:
+        -4px
+        7px
+        0
+        7px;
+
+    height: 7px;
+
+    pointer-events: none;
+}
+
+
+.graduaciones-inercia span {
+    display: block;
+
+    width: 1px;
+    height: 5px;
+
+    background: #777777;
+}
+
+
+/* Marcas 20, 80 y 140 */
+
+.graduaciones-inercia span:first-child,
+.graduaciones-inercia span:nth-child(4),
+.graduaciones-inercia span:last-child {
+    height: 7px;
+
+    background: #555555;
+}
+
+
+/* ============================================================
+   ESCALA NUMÉRICA DE J
+   ============================================================ */
+
+.escala-inercia {
+    position: relative;
+
+    height: 12px;
+
+    margin:
+        0
+        7px;
+
+    font-size: 10px;
+
+    color: #666666;
+}
+
+
+.escala-inercia span {
+    position: absolute;
+}
+
+
+/* 20 */
+
+.escala-inercia span:first-child {
+    left: 0;
+
+    transform: translateX(-50%);
+}
+
+
+/* 80 */
+
+.escala-inercia span:nth-child(2) {
+    left: 50%;
+
+    transform: translateX(-50%);
+}
+
+
+/* 140 */
+
+.escala-inercia span:last-child {
+    right: 0;
+
+    transform: translateX(50%);
+}
