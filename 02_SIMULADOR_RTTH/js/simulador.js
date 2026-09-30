@@ -1,6 +1,6 @@
 /* =========================================================
    SIMULADOR RV
-   VERSIÓN 14
+   VERSIÓN 16
 ========================================================= */
 
 
@@ -28,151 +28,60 @@ let Ve = 1.0;
 
 let Vst = 0.0;
 
-// Pulso visual sobre el conductor existente; no interviene en el modelo.
-const conductorExcitacion = document.getElementById("conductorExcitacion");
-const pulsoExcitacion = document.getElementById("pulsoExcitacion");
-const flujoExcitacion = document.getElementById("flujoExcitacion");
-const segmentosFlujoExcitacion = flujoExcitacion.querySelectorAll("line");
-let avanceFlujoExcitacion = 0;
-
-function posicionarFlujoExcitacion(){
-    segmentosFlujoExcitacion.forEach((segmento, indice) => {
-        const distancia = (avanceFlujoExcitacion +
-            indice * longitudConductorExcitacion / 4) % longitudConductorExcitacion;
-        const punto = conductorExcitacion.getPointAtLength(distancia);
-        const anterior = conductorExcitacion.getPointAtLength(Math.max(0, distancia - 4));
-        const siguiente = conductorExcitacion.getPointAtLength(
-            Math.min(longitudConductorExcitacion, distancia + 4));
-        const angulo = Math.atan2(siguiente.y - anterior.y, siguiente.x - anterior.x)
-            * 180 / Math.PI;
-        segmento.setAttribute("transform",
-            `translate(${punto.x} ${punto.y}) rotate(${angulo})`);
-    });
-}
-
-function actualizarFlujoExcitacion(segundos){
-    if(pausado) return;
-    // Misma velocidad anterior: 20 unidades en 0.5 s, independiente de If.
-    avanceFlujoExcitacion = (avanceFlujoExcitacion + 70 * segundos)
-        % longitudConductorExcitacion;
-    posicionarFlujoExcitacion();
-}
-const longitudConductorExcitacion = conductorExcitacion.getTotalLength();
-const [haloExteriorPulso, haloInteriorPulso, nucleoPulso] =
-    pulsoExcitacion.querySelectorAll("circle");
-const esperaPulsoExcitacion = 1.6; // Segundos; independiente de If.
-let avancePulsoExcitacion = 0;
-let pulsoExcitacionEnEspera = false;
-let esperaTranscurridaPulsoExcitacion = 0;
-
-// If controla solo el halo rojo; el trazo blanco y su movimiento no cambian.
-// Flujo independiente sobre el conductor de retorno.
-const conductorRetornoExcitacion = document.getElementById("conductorRetornoExcitacion");
-const segmentosFlujoRetornoExcitacion = document.querySelectorAll("#flujoRetornoExcitacion line");
-const longitudConductorRetornoExcitacion = conductorRetornoExcitacion.getTotalLength();
-let avanceFlujoRetornoExcitacion = 0;
-
-function posicionarFlujoRetornoExcitacion(){
-    segmentosFlujoRetornoExcitacion.forEach((segmento, indice) => {
-        const distancia = longitudConductorRetornoExcitacion - (avanceFlujoRetornoExcitacion +
-            indice * longitudConductorRetornoExcitacion / 4) % longitudConductorRetornoExcitacion;
-        const punto = conductorRetornoExcitacion.getPointAtLength(distancia);
-        const anterior = conductorRetornoExcitacion.getPointAtLength(Math.max(0, distancia - 4));
-        const siguiente = conductorRetornoExcitacion.getPointAtLength(
-            Math.min(longitudConductorRetornoExcitacion, distancia + 4));
-        const angulo = Math.atan2(siguiente.y - anterior.y, siguiente.x - anterior.x)
-            * 180 / Math.PI;
-        segmento.setAttribute("transform",
-            `translate(${punto.x} ${punto.y}) rotate(${angulo})`);
-    });
-}
-
-function actualizarFlujoRetornoExcitacion(segundos){
-    if(pausado) return;
-    // Retorno a 70 unidades/s, independiente de If.
-    avanceFlujoRetornoExcitacion = (avanceFlujoRetornoExcitacion + 70 * segundos)
-        % longitudConductorRetornoExcitacion;
-    posicionarFlujoRetornoExcitacion();
-}
-function actualizarHaloFlujoRetornoExcitacion(){
-    const nivel = (limitar(If, IF_MIN, IF_MAX) - IF_MIN) / (IF_MAX - IF_MIN);
-    const desenfoque = 2 + 10 * nivel;
-    const opacidad = 0.20 + 0.80 * nivel;
-    segmentosFlujoRetornoExcitacion.forEach(segmento => {
-        segmento.style.filter =
-            `drop-shadow(0 0 2px rgba(255, 0, 0, ${opacidad}))
-            drop-shadow(0 0 5px rgba(255, 0, 0, ${opacidad}))
-            drop-shadow(0 0 ${desenfoque}px rgba(255, 0, 0, ${opacidad}))`;
-    });
-}
-
-function actualizarHaloFlujoExcitacion(){
-    const nivel = (limitar(If, IF_MIN, IF_MAX) - IF_MIN) / (IF_MAX - IF_MIN);
-    const desenfoque = 2 + 10 * nivel;
-    const opacidad = 0.20 + 0.80 * nivel;
-    segmentosFlujoExcitacion.forEach(segmento => {
-        segmento.style.filter =
-            `drop-shadow(0 0 2px rgba(255, 0, 0, ${opacidad}))
-            drop-shadow(0 0 5px rgba(255, 0, 0, ${opacidad}))
-            drop-shadow(0 0 ${desenfoque}px rgba(255, 0, 0, ${opacidad}))`;
-    });
-}
-
-function actualizarLuminosidadPulsoExcitacion(){
-    // If solo modifica la apariencia del pulso, nunca sus tiempos.
-    const nivel = (limitar(If, IF_MIN, IF_MAX) - IF_MIN) / (IF_MAX - IF_MIN);
-    const intensidadHalo = nivel * nivel;
-    haloExteriorPulso.setAttribute("r", 5 + 12 * intensidadHalo);
-    haloExteriorPulso.setAttribute("opacity", 0.05 + 0.80 * intensidadHalo);
-    haloExteriorPulso.style.filter = "blur(1.5px)";
-    haloInteriorPulso.setAttribute("r", 3.5 + 6 * intensidadHalo);
-    haloInteriorPulso.setAttribute("opacity", 0.15 + 0.85 * nivel);
-    haloInteriorPulso.style.filter = "blur(0.6px)";
-    // El radio del núcleo permanece en sus 2.5 unidades originales.
-    nucleoPulso.setAttribute("opacity", 0.35 + 0.65 * nivel);
-}
-
-function reiniciarPulsoExcitacion(){
-    avancePulsoExcitacion = 0;
-    pulsoExcitacionEnEspera = false;
-    esperaTranscurridaPulsoExcitacion = 0;
-    const punto = conductorExcitacion.getPointAtLength(0);
-    pulsoExcitacion.setAttribute("transform", `translate(${punto.x} ${punto.y})`);
-    pulsoExcitacion.setAttribute("visibility", "visible");
-    actualizarLuminosidadPulsoExcitacion();
-}
-
-function actualizarPulsoExcitacion(segundos){
-    if(pausado){
-        return;
-    }
-
-    actualizarLuminosidadPulsoExcitacion();
-
-    if(pulsoExcitacionEnEspera){
-        esperaTranscurridaPulsoExcitacion += segundos;
-        if(esperaTranscurridaPulsoExcitacion + 1e-9 >= esperaPulsoExcitacion){
-            reiniciarPulsoExcitacion();
-        }
-        return;
-    }
-
-    // Velocidad original constante, independiente de If.
-    avancePulsoExcitacion = Math.min(
-        avancePulsoExcitacion + 120 * segundos,
-        longitudConductorExcitacion
-    );
-    const punto = conductorExcitacion.getPointAtLength(avancePulsoExcitacion);
-    pulsoExcitacion.setAttribute("transform", `translate(${punto.x} ${punto.y})`);
-
-    if(avancePulsoExcitacion >= longitudConductorExcitacion){
-        pulsoExcitacion.setAttribute("visibility", "hidden");
-        pulsoExcitacionEnEspera = true;
-        esperaTranscurridaPulsoExcitacion = 0;
-    }
-}
-
 let pausado = false;
+
+// Flujo visual V1: longitud proporcional a If; velocidad fija.
+const gruposFlujoDegradadoExcitacion = [
+    ["flujoDegradadoExcitacion", "conductorExcitacion", false],
+    ["flujoDegradadoRetornoExcitacion", "conductorRetornoExcitacion", true]
+].map(([id, conductorId, retorno]) => {
+    const PERIOD = 120, MAXLEN = 44;
+    const grupo = document.getElementById(id);
+    const d = document.getElementById(conductorId).getAttribute("d");
+    grupo.style.setProperty("--dir", retorno ? "reverse" : "normal");
+    for(let len = MAXLEN; len >= 4; len -= 4){
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", d);
+        path.setAttribute("stroke-dasharray", len + " " + (PERIOD - len));
+        // Misma alineación de cabeza y cola de setFlow() en V1.
+        path.style.setProperty("--o", retorno ? "0px" : (len - MAXLEN) + "px");
+        grupo.appendChild(path);
+    }
+    return grupo;
+});
+
+function actualizarLongitudFlujoDegradadoExcitacion(){
+    const PERIOD = 120, MAXLEN = 60 * If;
+    gruposFlujoDegradadoExcitacion.forEach(grupo => {
+        const retorno = grupo.style.getPropertyValue("--dir") === "reverse";
+        Array.from(grupo.children).forEach((path, indice) => {
+            // Escalar las 11 capas originales sin recrearlas ni reiniciar su animación.
+            const len = MAXLEN * (11 - indice) / 11;
+            path.setAttribute("stroke-dasharray", len + " " + (PERIOD - len));
+            path.style.setProperty("--o", retorno ? "0px" : (len - MAXLEN) + "px");
+        });
+    });
+}
+
+function actualizarPausaFlujoDegradadoExcitacion(){
+    gruposFlujoDegradadoExcitacion.forEach(grupo => {
+        grupo.getAnimations({subtree: true}).forEach(animacion => {
+            if(pausado) animacion.pause();
+            else animacion.play();
+        });
+    });
+}
+
+function reiniciarFlujoDegradadoExcitacion(){
+    actualizarLongitudFlujoDegradadoExcitacion();
+    gruposFlujoDegradadoExcitacion.forEach(grupo => {
+        grupo.getAnimations({subtree: true}).forEach(animacion => {
+            animacion.currentTime = 0;
+            animacion.play();
+        });
+    });
+}
+
 
 
 
@@ -630,6 +539,8 @@ function(){
     pausado =
     !pausado;
 
+    actualizarPausaFlujoDegradadoExcitacion();
+
 
 
     if(pausado){
@@ -695,14 +606,9 @@ function reiniciar(){
 
     pausado = false;
 
-    reiniciarPulsoExcitacion();
+    reiniciarFlujoDegradadoExcitacion();
 
-    actualizarHaloFlujoExcitacion();
-    avanceFlujoExcitacion = 0;
-    posicionarFlujoExcitacion();
-    avanceFlujoRetornoExcitacion = 0;
-    posicionarFlujoRetornoExcitacion();
-    actualizarHaloFlujoRetornoExcitacion();
+
 
 
     sliderP.value = 100;
@@ -1631,12 +1537,8 @@ function(){
     if(!pausado){
 
         simularPaso();
+        actualizarLongitudFlujoDegradadoExcitacion();
 
-        actualizarPulsoExcitacion(dt);
-        actualizarHaloFlujoExcitacion();
-        actualizarFlujoExcitacion(dt);
-        actualizarHaloFlujoRetornoExcitacion();
-        actualizarFlujoRetornoExcitacion(dt);
 
     }
 
@@ -1650,10 +1552,8 @@ function(){
    INICIALIZACIÓN
 ========================================================= */
 
-posicionarFlujoExcitacion();
-actualizarHaloFlujoExcitacion();
-posicionarFlujoRetornoExcitacion();
-actualizarHaloFlujoRetornoExcitacion();
+
+actualizarLongitudFlujoDegradadoExcitacion();
 
 actualizarSimboloCarga(0);
 
