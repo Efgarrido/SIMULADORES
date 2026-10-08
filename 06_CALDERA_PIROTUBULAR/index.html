@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador — Generador de Vapor Pirotubular</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/simulador.css">
+    <link rel="stylesheet" href="css/caldera-escena.css">
+</head>
+<body>
+    <main class="simulador" id="simuladorCaldera">
+        <section id="panelControles" class="panel-controles">
+            <div class="titulo-simulador">
+                <h1>SIMULADOR — GENERADOR DE VAPOR PIROTUBULAR</h1>
+            </div>
+            <div class="fila-controles-con-menu">
+                <button type="button" id="btnProcedimientos" aria-label="Abrir procedimientos" aria-controls="panelProcedimientos">☰</button>
+                <div class="fila-controles">
+                    <fieldset id="estacionAlimentacion" class="grupo-control estacion-alimentacion" tabindex="-1">
+                        <legend>Válvula de alimentación FV-1</legend>
+                        <div class="escala-apertura" role="img" aria-label="Apertura de alimentación: 0 %">
+                            <div class="graduaciones-apertura"></div>
+                            <span class="numero-apertura inicio">0</span><span class="numero-apertura medio">50</span><span class="numero-apertura fin">100</span>
+                            <span id="marcadorApertura" class="marcador-apertura"></span>
+                        </div>
+                        <output id="lecturaApertura">0 %</output>
+                        <div class="botones-alimentacion">
+                            <button type="button" id="btnManualAgua" class="boton-simulador modo-alimentacion modo-seleccionado" aria-pressed="true" aria-label="Modo manual">M</button>
+                            <button type="button" id="btnAumentarAgua" class="boton-simulador" aria-label="Aumentar apertura un punto porcentual">+</button>
+                            <button type="button" id="btnReducirAgua" class="boton-simulador" aria-label="Reducir apertura un punto porcentual">−</button>
+                            <button type="button" id="btnAutomaticoAgua" class="boton-simulador modo-alimentacion" disabled title="Modo automático de FV-1" aria-label="Modo automático de FV-1">A</button>
+                        </div>
+                    </fieldset>
+                    <fieldset id="estacionAire" class="grupo-control estacion-alimentacion" tabindex="-1">
+                        <legend>Compuerta de aire FZ-1</legend>
+                        <div class="escala-apertura" role="img" aria-label="Apertura de aire: 0 %">
+                            <div class="graduaciones-apertura"></div>
+                            <span class="numero-apertura inicio">0</span><span class="numero-apertura medio">50</span><span class="numero-apertura fin">100</span>
+                            <span id="marcadorAperturaAire" class="marcador-apertura"></span>
+                        </div>
+                        <output id="lecturaAperturaAire">0 %</output>
+                        <div class="botones-alimentacion">
+                            <button type="button" id="btnManualAire" class="boton-simulador modo-alimentacion modo-seleccionado" aria-pressed="true" aria-label="Modo manual">M</button>
+                            <button type="button" id="btnAumentarAire" class="boton-simulador" aria-label="Aumentar apertura un punto porcentual">+</button>
+                            <button type="button" id="btnReducirAire" class="boton-simulador" aria-label="Reducir apertura un punto porcentual">−</button>
+                            <button type="button" id="btnAutomaticoAire" class="boton-simulador modo-alimentacion" disabled aria-pressed="false" title="Modo automático de FZ-1" aria-label="Modo automático de FZ-1">A</button>
+                        </div>
+                    </fieldset>
+                    <fieldset id="estacionCombustible" class="grupo-control estacion-alimentacion" tabindex="-1">
+                        <legend>Válvula de combustible FV-2</legend>
+                        <div class="escala-apertura" role="img" aria-label="Apertura de combustible: 0 %">
+                            <div class="graduaciones-apertura"></div>
+                            <span class="numero-apertura inicio">0</span><span class="numero-apertura medio">50</span><span class="numero-apertura fin">100</span>
+                            <span id="marcadorAperturaCombustible" class="marcador-apertura"></span>
+                        </div>
+                        <output id="lecturaAperturaCombustible">0 %</output>
+                        <div class="botones-alimentacion">
+                            <button type="button" id="btnManualCombustible" class="boton-simulador modo-alimentacion modo-seleccionado" aria-pressed="true" aria-label="Modo manual">M</button>
+                            <button type="button" id="btnAumentarCombustible" class="boton-simulador" aria-label="Aumentar apertura un punto porcentual">+</button>
+                            <button type="button" id="btnReducirCombustible" class="boton-simulador" aria-label="Reducir apertura un punto porcentual">−</button>
+                            <button type="button" id="btnAutomaticoCombustible" class="boton-simulador modo-alimentacion" disabled aria-pressed="false" title="Modo automático de FV-2" aria-label="Modo automático de FV-2">A</button>
+                        </div>
+                    </fieldset>
+                    <fieldset id="estacionVapor" class="grupo-control estacion-alimentacion" tabindex="-1">
+                        <legend>Válvula de vapor FV-3</legend>
+                        <div class="escala-apertura" role="img" aria-label="Apertura de vapor: 0 %">
+                            <div class="graduaciones-apertura"></div>
+                            <span class="numero-apertura inicio">0</span><span class="numero-apertura medio">50</span><span class="numero-apertura fin">100</span>
+                            <span id="marcadorAperturaVapor" class="marcador-apertura"></span>
+                        </div>
+                        <output id="lecturaAperturaVapor">0 %</output>
+                        <div class="botones-alimentacion">
+                            <button type="button" id="btnManualVapor" class="boton-simulador modo-alimentacion modo-seleccionado" aria-pressed="true" aria-label="Modo manual">M</button>
+                            <button type="button" id="btnAumentarVapor" class="boton-simulador" aria-label="Aumentar apertura un punto porcentual">+</button>
+                            <button type="button" id="btnReducirVapor" class="boton-simulador" aria-label="Reducir apertura un punto porcentual">−</button>
+                            <button type="button" id="btnAutomaticoVapor" class="boton-simulador modo-alimentacion" disabled title="Control automático pendiente" aria-label="Control automático pendiente">A</button>
+                        </div>
+                    </fieldset>
+                    <fieldset class="grupo-control panel-encendido">
+                        <legend>Encendido</legend>
+                        <div class="mandos-encendido">
+                            <div class="grupo-encendido" role="group" aria-label="Piloto">
+                                <strong>PILOTO</strong>
+                                <div class="botones-encendido">
+                                    <button type="button" id="btnEncenderPiloto" class="mando-encendido mando-verde" aria-label="Encender piloto" title="Encender piloto" disabled><span aria-hidden="true">1</span></button>
+                                    <button type="button" id="btnApagarPiloto" class="mando-encendido mando-rojo" aria-label="Apagar piloto" title="Apagar piloto" disabled><span aria-hidden="true">0</span></button>
+                                </div>
+                            </div>
+                            <div class="grupo-encendido" role="group" aria-label="Quemador">
+                                <strong>QUEMADOR</strong>
+                                <div class="botones-encendido">
+                                    <button type="button" id="btnEncenderQuemador" class="mando-encendido mando-verde" aria-label="Encender quemador" title="Encender quemador" disabled><span aria-hidden="true">1</span></button>
+                                    <button type="button" id="btnApagarQuemador" class="mando-encendido mando-rojo" aria-label="Apagar quemador" title="Apagar quemador" disabled><span aria-hidden="true">0</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="operacion-con-alarma">
+                        <fieldset class="grupo-control grupo-operacion">
+                            <legend>Operación</legend>
+                            <div class="controles-botones" role="group" aria-label="Operación del simulador">
+                                <button type="button" id="btnAplicar" class="boton-simulador boton-operacion">APLICAR</button>
+                                <button type="button" id="btnPausa" class="boton-simulador boton-operacion">PAUSA</button>
+                                <button type="button" id="btnReiniciar" class="boton-simulador boton-operacion boton-reinicio">REINICIAR</button>
+                            </div>
+                        </fieldset>
+                        <button type="button" id="btnAlarmas" class="alarma-indicador" aria-label="Abrir alarmas" title="Alarmas"></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PANTALLA 1 — PROCESO -->
+        <section id="pantallaProceso" class="pantalla">
+            <div class="cuadro-proceso">
+                <p class="leyenda-operacion-escena">Haz clic sobre "APLICAR" y después sobre los equipos para operarlos</p>
+            <div id="proteccionesTrip">
+                <p id="estadoDisparo" role="status" aria-live="polite">Caldera restablecida</p>
+                <div class="mandos-disparo" role="group" aria-label="Disparo de la caldera">
+                    <button type="button" id="btnDispararCaldera" class="boton-simulador" aria-label="Disparar caldera" title="Disparar caldera" disabled>DISPARAR CALDERA</button>
+                    <button type="button" id="btnRestablecerDisparo" aria-describedby="estadoDisparo" class="boton-simulador" aria-label="Restablecer disparo" title="Restablecer disparo" disabled>RESTABLECER DISPARO</button>
+                </div>
+            </div>
+                <svg id="calderaSVG" viewBox="-60 0 1230 600"></svg>
+            </div>
+            <div id="indicadoresHMI">
+                <fieldset class="panel-simulador panel-grafica">
+                    <legend>Nivel de agua</legend>
+                    <canvas id="graficaDisponible1" class="grafica-hmi"></canvas>
+                </fieldset>
+                <fieldset class="panel-simulador panel-grafica">
+                    <legend>Flujo de agua</legend>
+                    <canvas id="graficaDisponible2" class="grafica-hmi"></canvas>
+                </fieldset>
+                <fieldset class="panel-simulador panel-grafica">
+                    <legend>Flujo de aire</legend>
+                    <canvas id="graficaDisponible3" class="grafica-hmi"></canvas>
+                </fieldset>
+                <fieldset class="panel-simulador panel-grafica">
+                    <legend>Flujo de combustible</legend>
+                    <canvas id="graficaDisponible4" class="grafica-hmi"></canvas>
+                </fieldset>
+                <fieldset class="panel-simulador panel-grafica">
+                    <legend>Presión y temperatura</legend>
+                    <canvas id="graficaDisponible5" class="grafica-hmi"></canvas>
+                </fieldset>
+                <fieldset class="panel-simulador panel-grafica">
+                    <legend>Flujo de vapor</legend>
+                    <canvas id="graficaDisponible6" class="grafica-hmi"></canvas>
+                </fieldset>
+            </div>
+            <fieldset id="registradorEventos" class="panel-simulador registrador-eventos">
+                <legend>REGISTRADOR DE EVENTOS</legend>
+                <div id="contenidoRegistradorEventos"></div>
+            </fieldset>
+        </section>
+
+        <!-- PANTALLA 2 — TENDENCIAS -->
+        <section id="pantallaTendencias" class="pantalla" hidden>
+            <div id="areaTendencias"></div>
+        </section>
+
+        <!-- PANTALLA 3 — ALARMAS -->
+        <section id="pantallaAlarmas" class="pantalla" hidden>
+            <header>
+                <h2 id="tituloAlarmas">ALARMAS</h2>
+                <button type="button" id="btnCerrarAlarmas" aria-label="Cerrar alarmas">×</button>
+            </header>
+            <div id="anunciadorAlarmas">
+                <div class="ventanas-alarmas" role="group" aria-label="Anunciador de alarmas">
+                    <button type="button" id="seleccionarAlarmaNivelBajo" class="ventana-alarma" aria-label="NIVEL BAJO: Normal">NIVEL BAJO</button>
+                    <button type="button" id="seleccionarAlarmaNivelMuyBajo" class="ventana-alarma" aria-label="NIVEL MUY BAJO: Normal">NIVEL MUY BAJO</button>
+                    <button type="button" id="seleccionarAlarmaNivelAlto" class="ventana-alarma" aria-label="NIVEL ALTO: Normal">NIVEL ALTO</button>
+                    <button type="button" id="seleccionarAlarmaNivelMuyAlto" class="ventana-alarma" aria-label="NIVEL MUY ALTO: Normal">NIVEL MUY ALTO</button>
+                    <button type="button" id="seleccionarAlarmaPresionAlta" class="ventana-alarma" aria-label="PRESIÓN ALTA: Normal">PRESIÓN ALTA</button>
+                    <button type="button" id="seleccionarAlarmaPresionMuyAlta" class="ventana-alarma" aria-label="PRESIÓN MUY ALTA: Normal">PRESIÓN MUY ALTA</button>
+                    <button type="button" id="seleccionarAlarmaPerdidaFlama" class="ventana-alarma" aria-label="AUSENCIA DE FLAMA: Normal">AUSENCIA DE FLAMA</button>
+                    <button type="button" id="seleccionarAlarmaFaltaAire" class="ventana-alarma" aria-label="FALTA DE AIRE: Normal">FALTA DE AIRE</button>
+                    <button type="button" id="seleccionarAlarmaFaltaCombustible" class="ventana-alarma" aria-label="FALTA DE COMBUSTIBLE: Normal">FALTA DE COMBUSTIBLE</button>
+                </div>
+                <div class="mandos-anunciador">
+                    <button type="button" id="btnReconocerAlarmas" class="boton-simulador" aria-label="Reconocer avisos pendientes" disabled>RECONOCER</button>
+                    <button type="button" id="btnPruebaLamparas" class="boton-simulador" aria-label="Prueba de lámparas">PRUEBA DE LÁMPARAS</button>
+                </div>
+                <div class="detalle-alarma" aria-live="polite">
+                    <strong id="nombreAlarmaSeleccionada"></strong>
+                    <p id="estadoAlarmaSeleccionada"></p>
+                    <p id="tiempoAlarmaSeleccionada"></p>
+                    <p id="detalleAlarmaSeleccionada"></p>
+                </div>
+            </div>
+            <div id="registroEventos"></div>
+        </section>
+
+        <!-- PANEL LATERAL — PROCEDIMIENTOS -->
+        <aside id="panelProcedimientos" class="panel-procedimientos" aria-labelledby="tituloProcedimientos">
+            <header>
+                <h2 id="tituloProcedimientos">Procedimientos de operación</h2>
+                <button type="button" id="btnCerrarProcedimientos" aria-label="Cerrar procedimientos">×</button>
+            </header>
+            <p class="guia-introduccion">Esta guía muestra una secuencia didáctica básica de arranque. En instalaciones reales se deben conocer y seguir los procedimientos específicos del equipo instalado.</p>
+            <div class="guia-selector">
+                <label for="selectorProcedimiento">Procedimiento</label>
+                <select id="selectorProcedimiento">
+                    <option value="arranque" selected>Arranque</option>
+                    <option value="paro">Paro</option>
+                </select>
+            </div>
+            <div class="guia-pestanas" role="tablist" aria-label="Pasos del procedimiento de arranque">
+                <button type="button" id="guia-tab-0" role="tab" aria-controls="guia-paso-0" aria-selected="true" tabindex="0">Paso 0</button>
+                <button type="button" id="guia-tab-1" role="tab" aria-controls="guia-paso-1" aria-selected="false" tabindex="-1">Paso 1</button>
+                <button type="button" id="guia-tab-2" role="tab" aria-controls="guia-paso-2" aria-selected="false" tabindex="-1">Paso 2</button>
+                <button type="button" id="guia-tab-3" role="tab" aria-controls="guia-paso-3" aria-selected="false" tabindex="-1">Paso 3</button>
+                <button type="button" id="guia-tab-4" role="tab" aria-controls="guia-paso-4" aria-selected="false" tabindex="-1">Paso 4</button>
+                <button type="button" id="guia-tab-5" role="tab" aria-controls="guia-paso-5" aria-selected="false" tabindex="-1">Paso 5</button>
+            </div>
+            <div id="guiaPestanasParo" class="guia-pestanas" role="tablist" aria-label="Pasos del procedimiento de paro" hidden>
+                <button type="button" id="guia-paro-tab-0" role="tab" aria-controls="guia-paro-paso-0" aria-selected="true" aria-label="Paso 0, incompleto" tabindex="0">Paso 0</button>
+                <button type="button" id="guia-paro-tab-1" role="tab" aria-controls="guia-paro-paso-1" aria-selected="false" aria-label="Paso 1, incompleto" tabindex="-1">Paso 1</button>
+                <button type="button" id="guia-paro-tab-2" role="tab" aria-controls="guia-paro-paso-2" aria-selected="false" aria-label="Paso 2, incompleto" tabindex="-1">Paso 2</button>
+                <button type="button" id="guia-paro-tab-3" role="tab" aria-controls="guia-paro-paso-3" aria-selected="false" aria-label="Paso 3, incompleto" tabindex="-1">Paso 3</button>
+                <button type="button" id="guia-paro-tab-4" role="tab" aria-controls="guia-paro-paso-4" aria-selected="false" aria-label="Paso 4, incompleto" tabindex="-1">Paso 4</button>
+                <button type="button" id="guia-paro-tab-5" role="tab" aria-controls="guia-paro-paso-5" aria-selected="false" aria-label="Paso 5, incompleto" tabindex="-1">Paso 5</button>
+            </div>
+            <div id="contenidoProcedimiento" class="guia-contenido">
+                <section id="guia-paso-0" role="tabpanel" aria-labelledby="guia-tab-0" tabindex="0">
+                    <h3>Paso 0 — Verificaciones previas</h3>
+                    <label class="guia-actividad" for="guia-check-0-0"><input type="checkbox" id="guia-check-0-0"> <span>Verificar la posición de las válvulas de la caldera (dren y vento abiertos, valvulas y compuertas cerradas).</span></label>
+                    <label class="guia-actividad" for="guia-check-0-1"><input type="checkbox" id="guia-check-0-1"> <span>Verificar que los instrumentos locales indiquen correctamente.</span></label>
+                    <label class="guia-actividad" for="guia-check-0-2"><input type="checkbox" id="guia-check-0-2"> <span>Verificar que no existan licencias abiertas para trabajos de mantenimiento.</span></label>
+                    <label class="guia-actividad" for="guia-check-0-3"><input type="checkbox" id="guia-check-0-3"> <span>Informar al personal involucrado que se realizará el arranque de la caldera.</span></label>
+                    <p class="guia-contador" aria-live="polite">0 de 4 actividades marcadas</p>
+                </section>
+                <section id="guia-paso-1" role="tabpanel" aria-labelledby="guia-tab-1" tabindex="0" hidden>
+                    <h3>Paso 1 — Disponibilidad de servicios</h3>
+                    <label class="guia-actividad" for="guia-check-1-0"><input type="checkbox" id="guia-check-1-0"> <span>Verificar la alimentación eléctrica de los equipos de control y protección y de los equipos asociados, bombas y ventiladores.</span></label>
+                    <label class="guia-actividad" for="guia-check-1-1"><input type="checkbox" id="guia-check-1-1"> <span>Verificar que los niveles de agua y combustible sean suficientes.</span></label>
+                    <p class="guia-contador" aria-live="polite">0 de 2 actividades marcadas</p>
+                </section>
+                <section id="guia-paso-2" role="tabpanel" aria-labelledby="guia-tab-2" tabindex="0" hidden>
+                    <h3>Paso 2 — Llenado de la caldera</h3>
+                    <label class="guia-actividad" for="guia-check-2-0"><input type="checkbox" id="guia-check-2-0"> <span>Arrancar la BAA y verificar su correcta operación.</span></label>
+                    <label class="guia-actividad" for="guia-check-2-1"><input type="checkbox" id="guia-check-2-1"> <span>Establecer flujo de agua a la caldera con la válvula FV-1.</span></label>
+                    <label class="guia-actividad" for="guia-check-2-2"><input type="checkbox" id="guia-check-2-2"> <span>Cerrar la válvula de drenaje.</span></label>
+                    <label class="guia-actividad" for="guia-check-2-3"><input type="checkbox" id="guia-check-2-3"> <span>Llenar la caldera hasta alcanzar 0 % de nivel relativo.</span></label>
+                    <label class="guia-actividad" for="guia-check-2-4"><input type="checkbox" id="guia-check-2-4"> <span>Cerrar válvula FV-1 y parar la BAA .</span></label>
+                    <p class="guia-nota">Control automático de nivel: función pendiente en el simulador.</p>
+                    <p class="guia-contador" aria-live="polite">0 de 5 actividades marcadas</p>
+                </section>
+                <section id="guia-paso-3" role="tabpanel" aria-labelledby="guia-tab-3" tabindex="0" hidden>
+                    <h3>Paso 3 — Purga del hogar</h3>
+                    <label class="guia-actividad" for="guia-check-3-0"><input type="checkbox" id="guia-check-3-0"> <span>Comprobar que piloto y quemador estén apagados, con CV y FV-2 cerradas.</span></label>
+                    <label class="guia-actividad" for="guia-check-3-1"><input type="checkbox" id="guia-check-3-1"> <span>Arrancar el VTF y verificar su correcta operación.</span></label>
+                    <label class="guia-actividad" for="guia-check-3-2"><input type="checkbox" id="guia-check-3-2"> <span>Con la compuerta de aire FZ-1 ajustar la apertura al 30 %; comprobando flujo de aire.</span></label>
+                    <label class="guia-actividad" for="guia-check-3-3"><input type="checkbox" id="guia-check-3-3"> <span>Realizar la purga del hogar conforme a las indicaciones del fabricante.</span></label>
+                    <label class="guia-actividad" for="guia-check-3-3"><input type="checkbox" id="guia-check-3-4"> <span>Al concluir la purga reducir la apertura al 13% y pasar modo AUTO (A) el selector FZ-1.</span></label>
+                    <p class="guia-nota">Tiempo de referencia: 3 a 5 minutos. La duración aplicable depende del procedimiento del fabricante.</p>
+                    <p class="guia-contador" aria-live="polite">0 de 5 actividades marcadas</p>
+                </section>
+                <section id="guia-paso-4" role="tabpanel" aria-labelledby="guia-tab-4" tabindex="0" hidden>
+                    <h3>Paso 4 — Encendido</h3>
+                    <label class="guia-actividad" for="guia-check-4-0"><input type="checkbox" id="guia-check-4-0"> <span>Arrancar BBA. de combustible.</span></label>
+                    <label class="guia-actividad" for="guia-check-4-0"><input type="checkbox" id="guia-check-4-1"> <span>Restablecer la protección de disparo de la caldera.</span></label>
+                    <label class="guia-actividad" for="guia-check-4-1"><input type="checkbox" id="guia-check-4-2"> <span>Abrir válvula de corte CV.</span></label>
+                    <label class="guia-actividad" for="guia-check-4-2"><input type="checkbox" id="guia-check-4-3"> <span>Encender el piloto del quemador y comprobar la presencia de flama.</span></label>
+                    <label class="guia-actividad" for="guia-check-4-3"><input type="checkbox" id="guia-check-4-4"> <span>Encender el quemador principal y comprobar la presencia de flama.</span></label>
+                    <label class="guia-actividad" for="guia-check-4-4"><input type="checkbox" id="guia-check-4-5"> <span>Apagar el piloto.</span></label>
+                    <p class="guia-nota">Protecciones y encendido: funciones pendientes en el simulador.</p>
+                    <p class="guia-contador" aria-live="polite">0 de 6 actividades marcadas</p>
+                </section>
+                <section id="guia-paso-5" role="tabpanel" aria-labelledby="guia-tab-5" tabindex="0" hidden>
+                    <h3>Paso 5 — Calentamiento y puesta en servicio</h3>
+                    <label class="guia-actividad" for="guia-check-5-0"><input type="checkbox" id="guia-check-5-0"> <span>Controlar temperatura conforme a la curva de calentamiento del fabricante.</span></label>
+                    <label class="guia-actividad" for="guia-check-5-1"><input type="checkbox" id="guia-check-5-1"> <span>Al llegar a la temperatura a 100 °C y observa que empieza a bajar el nivel, cerrar venteo.</span></label>
+                    <label class="guia-actividad" for="guia-check-5-0"><input type="checkbox" id="guia-check-5-2"> <span>Controlar presión conforme a la curva de calentamiento del fabricante.</span></label>
+                    <label class="guia-actividad" for="guia-check-5-0"><input type="checkbox" id="guia-check-5-3"> <span>Al llegar la presión a 5.0 bar(g) arrancar la BAA y pasar modo AUTO (A) el selector FV-1.</span></label>
+                    <label class="guia-actividad" for="guia-check-5-0"><input type="checkbox" id="guia-check-5-4"> <span>Controlar niveles, flujos, temperatura y presión conforme a la curva de calentamiento del fabricante.</span></label>
+                    <label class="guia-actividad" for="guia-check-5-0"><input type="checkbox" id="guia-check-5-5"> <span>Al llegar la presión a 6.0 bar(g) pasar modo AUTO (A) el selector FV-2.</span></label>
+                    <label class="guia-actividad" for="guia-check-5-1"><input type="checkbox" id="guia-check-5-6"> <span>Al llegar la presión a 6.5 bar(g) abrir un 10% el selector FV-3 verificar los parámetros de operación.</span></label>
+                    <label class="guia-actividad" for="guia-check-5-1"><input type="checkbox" id="guia-check-5-7"> <span>Al llegar la presión a 6.99 bar(g) abrir o cerrar el selector FV-3 segun la demanda de vapor y verificar los parámetros de operación.</span></label>
+                    <p class="guia-nota">Calentamiento y generación de vapor: funciones pendientes en el simulador.</p>
+                    <p class="guia-contador" aria-live="polite">0 de 8 actividades marcadas</p>
+                </section>
+            </div>
+            <div id="contenidoProcedimientoParo" class="guia-contenido" hidden>
+                <section id="guia-paro-paso-0" role="tabpanel" aria-labelledby="guia-paro-tab-0" tabindex="0"></section>
+                <section id="guia-paro-paso-1" role="tabpanel" aria-labelledby="guia-paro-tab-1" tabindex="0" hidden></section>
+                <section id="guia-paro-paso-2" role="tabpanel" aria-labelledby="guia-paro-tab-2" tabindex="0" hidden></section>
+                <section id="guia-paro-paso-3" role="tabpanel" aria-labelledby="guia-paro-tab-3" tabindex="0" hidden></section>
+                <section id="guia-paro-paso-4" role="tabpanel" aria-labelledby="guia-paro-tab-4" tabindex="0" hidden></section>
+                <section id="guia-paro-paso-5" role="tabpanel" aria-labelledby="guia-paro-tab-5" tabindex="0" hidden></section>
+            </div>
+            <p class="guia-aclaracion">Las marcas corresponden al alumno; no son una validación automática.</p>
+            <div class="guia-navegacion">
+                <button type="button" id="guiaAnterior" class="boton-simulador" disabled>Anterior</button>
+                <button type="button" id="guiaSiguiente" class="boton-simulador">Siguiente</button>
+            </div>
+            <div class="guia-limpieza"><button type="button" id="guiaLimpiar" class="boton-simulador">Limpiar checklist</button></div>
+        </aside>
+    </main>
+    <script src="js/guia-arranque.js"></script>
+    <script src="js/agua-saturacion.js?v=if97-1"></script>
+    <script src="js/caldera-presurizacion.js?v=balance-mve-1"></script>
+    <script src="js/simulador.js?v=balance-mve-1"></script>
+    <script src="js/caldera-escena.js?v=agua-balance-100-1"></script>
+</body>
+</html>

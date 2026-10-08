@@ -1,0 +1,294 @@
+/* ============================================================
+   ESCENA DE PROCESO — CALDERA PIROTUBULAR
+   Estados, colores y animaciones del dibujo (#calderaSVG).
+   Se carga DESPUÉS de simulador.css.
+   ============================================================ */
+
+/* ---------- 01. PALETA ---------- */
+#calderaSVG {
+    --ce-parado: #d71920;
+    --ce-marcha: #1f8f2e;
+    --ce-tubo-vacio: #ee8a2c;
+    --ce-agua: #2f86c0;
+    --ce-vapor: #c4dcee;
+    --ce-combustible: #f2c21b;
+    --ce-borde: #1c1c1c;
+}
+
+/* ---------- 02. COLOR POR ESTADO (válvulas y equipos) ---------- */
+#calderaSVG .color-estado {
+    fill: var(--ce-parado);
+    transition: fill 0.35s ease;
+}
+
+#calderaSVG [data-estado="abierta"] .color-estado,
+#calderaSVG [data-estado="marcha"] .color-estado {
+    fill: var(--ce-marcha);
+}
+
+#calderaSVG .e-borde,
+#calderaSVG .v-cuerpo,
+#calderaSVG .v-domo {
+    stroke: var(--ce-borde);
+    stroke-width: 2;
+    stroke-linejoin: round;
+}
+
+#calderaSVG .v-trazo {
+    stroke: var(--ce-borde);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+}
+
+#calderaSVG .v-tapa {
+    fill: var(--ce-borde);
+}
+
+/* ---------- 03. TUBERÍAS ---------- */
+#calderaSVG .tuberia .t-borde,
+#calderaSVG .tuberia .t-fluido {
+    fill: none;
+    stroke-linejoin: miter;
+    stroke-linecap: butt;
+}
+
+#calderaSVG .tuberia .t-borde {
+    stroke: var(--ce-borde);
+}
+
+#calderaSVG .tuberia .t-fluido {
+    stroke: var(--ce-tubo-vacio);
+    transition: stroke 0.6s ease;
+}
+
+#calderaSVG .tuberia[data-fluido="agua"] .t-fluido {
+    stroke: var(--ce-agua);
+}
+
+#calderaSVG .tuberia[data-fluido="vapor"] .t-fluido {
+    stroke: var(--ce-vapor);
+}
+
+#calderaSVG .tuberia[data-fluido="combustible"] .t-fluido {
+    stroke: var(--ce-combustible);
+}
+
+/* ---------- 04. AGUA, VAPOR, VISOR ---------- */
+#calderaSVG #vapor-espacio {
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+#calderaSVG #agua-nivel,
+#calderaSVG #visor-agua {
+    transition: y 1.2s ease-in-out, height 1.2s ease-in-out;
+}
+
+/* ---------- 05. INSTRUMENTOS ---------- */
+#calderaSVG .m-cara {
+    fill: #ffffff;
+    stroke: #333333;
+    stroke-width: 1.2;
+}
+
+#calderaSVG .m-marcas line {
+    stroke: #444444;
+    stroke-width: 1;
+}
+
+#calderaSVG .m-aguja {
+    stroke: #222222;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+}
+
+#calderaSVG #aguja-presion,
+#calderaSVG #aguja-temperatura {
+    transition: none;
+}
+
+/* ---------- 06. LLAMA Y GASES ---------- */
+#calderaSVG #llama {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+#calderaSVG #llama[data-estado="piloto"],
+#calderaSVG #llama[data-estado="principal"] {
+    opacity: 1;
+}
+
+#calderaSVG #llama .llama-forma {
+    transform-box: fill-box;
+    transform-origin: left center;
+    transform: scale(0.1, 0.3);
+    transition: transform 0.8s ease;
+}
+
+#calderaSVG #llama[data-estado="piloto"] .llama-forma {
+    transform: scale(0.1, 0.3);
+}
+
+#calderaSVG #llama[data-estado="principal"] .llama-forma {
+    transform-box: view-box;
+    transform-origin: 410px 412px;
+    transform: scale(var(--llama-longitud, 0.98), var(--llama-ancho, 0.95));
+    /* Tamaño fijo para esta etapa didáctica del quemador. */
+    animation: none;
+    transition: none;
+}
+
+@keyframes ce-parpadeo {
+    from { transform: scale(1, 1); }
+    to   { transform: scale(0.96, 0.9); }
+}
+
+#calderaSVG #gases {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+#calderaSVG #gases[data-activo="si"] {
+    opacity: 1;
+    animation: ce-pulso-gas 1.4s ease-in-out infinite;
+}
+
+@keyframes ce-pulso-gas {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.55; }
+}
+
+/* ---------- 07. GIRO DE EQUIPOS EN MARCHA ---------- */
+#calderaSVG .aspas {
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+#calderaSVG [data-estado="marcha"] .aspas {
+    animation: ce-giro 0.9s linear infinite;
+}
+
+#calderaSVG #E07-BAA[data-estado="marcha"] .aspas {
+    animation-direction: reverse;
+}
+
+@keyframes ce-giro {
+    to { transform: rotate(360deg); }
+}
+
+/* ---------- 08. INTERACCIÓN ---------- */
+#calderaSVG .zona-clic {
+    fill: transparent;
+}
+
+#calderaSVG .interactivo {
+    cursor: pointer;
+}
+
+#calderaSVG .interactivo:hover,
+#calderaSVG .interactivo:focus-visible {
+    outline: none;
+    filter: drop-shadow(0 0 4px rgba(0, 110, 255, 0.95));
+}
+
+#calderaSVG .interactivo.resaltado {
+    animation: ce-resalte 1s ease-in-out infinite;
+}
+
+@keyframes ce-resalte {
+    0%, 100% { filter: drop-shadow(0 0 2px rgba(255, 170, 0, 0.9)); }
+    50%      { filter: drop-shadow(0 0 9px rgba(255, 170, 0, 1)); }
+}
+
+/* ---------- 09. ETIQUETAS ---------- */
+#calderaSVG .etiquetas text {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    fill: #333333;
+    text-anchor: middle;
+    paint-order: stroke;
+    stroke: #ffffff;
+    stroke-width: 3px;
+    stroke-linejoin: round;
+    pointer-events: none;
+}
+
+/* ---------- 10. ACCESIBILIDAD ---------- */
+@media (prefers-reduced-motion: reduce) {
+    #calderaSVG * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* ---------- 11. LECTURAS HMI (nivel, presión, temperatura y caudales) ---------- */
+#calderaSVG .indicador-hmi {
+    font-family: Arial, Helvetica, sans-serif;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+#calderaSVG .indicador-hmi .hmi-fondo {
+    fill: #f7f9fa;
+    stroke: #92999e;
+    stroke-width: 1;
+}
+
+#calderaSVG .indicador-hmi .hmi-nombre {
+    font-size: 9px;
+    fill: #555d63;
+}
+
+#calderaSVG .indicador-hmi .hmi-valor {
+    font-size: 11px;
+    font-weight: bold;
+    fill: #263238;
+}
+
+/* Alimentación regulable: apertura intermedia con corte fijo en el centro. */
+#calderaSVG .apertura-verde { stop-color: var(--ce-marcha); }
+#calderaSVG .apertura-rojo { stop-color: var(--ce-parado); }
+#calderaSVG [data-elemento="valvulaAgua"][data-estado="parcial"] .color-estado,
+#calderaSVG [data-elemento="valvulaCombustible"][data-estado="parcial"] .color-estado,
+#calderaSVG [data-elemento="valvulaVapor"][data-estado="parcial"] .color-estado {
+    fill: url(#ce-g-apertura-agua);
+}
+
+/* Compuerta fija del ducto VTF: estados preparados, sin animación ni interacción. */
+#calderaSVG .compuerta-vtf { pointer-events: none; }
+#calderaSVG .compuerta-vtf-marco {
+    fill: #ededed;
+    stroke: #1c1c1c;
+    stroke-width: 1.5;
+}
+#calderaSVG .compuerta-vtf-hojas {
+    fill: var(--ce-parado);
+    stroke: #1c1c1c;
+    stroke-width: 1;
+    stroke-linejoin: round;
+}
+#calderaSVG .compuerta-vtf[data-estado="abierta"] .compuerta-vtf-hojas { fill: var(--ce-marcha); }
+#calderaSVG .compuerta-vtf[data-estado="intermedia"] .compuerta-vtf-hojas { fill: url(#vtf-compuerta-intermedia); }
+#calderaSVG .compuerta-vtf-verde { stop-color: var(--ce-marcha); }
+#calderaSVG .compuerta-vtf-rojo { stop-color: var(--ce-parado); }
+#calderaSVG .compuerta-vtf-enlace {
+    fill: none;
+    stroke: #1c1c1c;
+    stroke-width: 1.2;
+}
+#calderaSVG .compuerta-vtf-pivotes {
+    fill: #eeeeee;
+    stroke: #1c1c1c;
+    stroke-width: 1;
+}
+
+/* Compuerta operable y aire: sin animación propia ni desplazamiento de hojas. */
+#calderaSVG .compuerta-vtf.interactivo { pointer-events: all; }
+#calderaSVG .aire-vtf { pointer-events: none; }
+#calderaSVG .aire-vtf path { fill: none; stroke: #f5faff; stroke-width: 2; stroke-linecap: round; }
+
+/* Efecto limitado a los tramos existentes, detrás del VTF y sin animación propia. */
+#calderaSVG .combustible-visual { pointer-events: none; }
+#calderaSVG .combustible-visual path {
+    fill: none; stroke: #fffce4; stroke-width: 2; stroke-dasharray: 5 22; stroke-linecap: butt;
+}

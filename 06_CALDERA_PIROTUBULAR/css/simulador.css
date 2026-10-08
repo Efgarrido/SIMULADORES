@@ -1,0 +1,1606 @@
+/* ============================================================
+   SIMULADOR RV — REGULADOR AUTOMÁTICO DE VOLTAJE
+   ESTILOS ESPECÍFICOS DEL SIMULADOR
+   ============================================================ */
+
+
+/* ============================================================
+   01. INDICADORES
+   ============================================================ */
+
+.indicadores{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+
+    gap:10px;
+
+    padding:12px;
+
+    background:#dce5ec;
+}
+
+.indicador{
+    background:white;
+
+    border:2px solid #78909c;
+    border-radius:8px;
+
+    text-align:center;
+
+    padding:7px;
+}
+
+.indicador .titulo{
+    font-size:13px;
+    font-weight:bold;
+
+    color:#455a64;
+}
+
+.indicador .valor{
+    font-size:27px;
+    font-weight:bold;
+
+    margin-top:3px;
+
+    color:#102a43;
+}
+
+.indicador .unidad{
+    font-size:13px;
+
+    color:#607d8b;
+}
+
+
+/* ============================================================
+   02. ESTADO DE EXCITACIÓN
+   ============================================================ */
+
+.estadoExcitacion{
+    font-size:13px;
+    font-weight:bold;
+
+    margin-top:3px;
+
+    color:#455a64;
+}
+
+
+/* ============================================================
+   03. ZONA CENTRAL
+   ============================================================ */
+
+.contenedor{
+    display:grid;
+
+    grid-template-columns:460px minmax(0,1fr);
+
+    gap:10px;
+
+    padding:8px 12px 0;
+}
+
+.panel{
+    background:white;
+
+    border:1px solid #b0bec5;
+    border-radius:8px;
+
+    padding:13px;
+}
+
+
+/* ============================================================
+   04. CURVA DE CAPACIDAD
+   ============================================================ */
+
+.panel-curva{
+    padding:8px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.curvaCapacidad{
+    margin-top:0;
+
+    background:#ffffff;
+
+    border:1px solid #b0bec5;
+    border-radius:8px;
+
+    padding:8px;
+}
+
+.tituloCurva{
+    text-align:center;
+
+    font-size:14px;
+    font-weight:bold;
+
+    color:#16324f;
+
+    margin-bottom:5px;
+}
+
+#graficaCapacidad{
+    width:100%;
+    height:auto;
+
+    max-height:none;
+
+    display:block;
+}
+
+.ejeCurva{
+    stroke:#263238;
+    stroke-width:2;
+
+    fill:none;
+}
+
+.curvaEstator{
+    stroke:#175a91;
+    stroke-width:1.5;
+
+    fill:none;
+
+    stroke-linecap:round;
+}
+
+.curvaRotor{
+    stroke:#b3261e;
+    stroke-width:1.5;
+
+    fill:none;
+
+    stroke-linecap:round;
+}
+
+.curvaCabezal{
+    stroke:#1f9d55;
+    stroke-width:1.5;
+
+    fill:none;
+
+    stroke-linecap:round;
+}
+
+.curvaEstabilidadAngular{
+    stroke:#d000d0;
+    stroke-width:1.2;
+    stroke-dasharray:5 4;
+    fill:none;
+    stroke-linecap:round;
+}
+
+.limiteTurbina{
+    stroke:#e67e22;
+    stroke-width:1.2;
+    fill:none;
+}
+
+.curvaReferencia{
+    stroke-width:0.8;
+    stroke-dasharray:4 4;
+    fill:none;
+    opacity:0.55;
+}
+
+.textoLimiteCapacidad{
+    font-size:9px;
+    font-weight:500;
+}
+
+.etiquetaEstator{
+    fill:#175a91;
+}
+
+.etiquetaRotor{
+    fill:#b3261e;
+}
+
+.etiquetaCabezal{
+    fill:#1f9d55;
+}
+
+.etiquetaEstabilidad{
+    fill:#d000d0;
+}
+
+.etiquetaTurbina{
+    fill:#e67e22;
+}
+
+.textoCurva{
+    font-size:10px;
+
+    fill:#37474f;
+}
+
+.textoCurvaTitulo{
+    font-size:11px;
+    font-weight:bold;
+
+    fill:#16324f;
+}
+
+.puntoOperacion{
+    stroke:white;
+    stroke-width:1.5;
+}
+
+
+/* ============================================================
+   05. ESCENA PRINCIPAL
+   ============================================================ */
+
+.escena{
+    background:white;
+
+    border:1px solid #b0bec5;
+    border-radius:8px;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.escena > svg{
+    display:block;
+
+    width:100%;
+    height:auto;
+
+    max-height:540px;
+}
+
+
+/* ============================================================
+   06. BLOQUES DEL DIAGRAMA
+   ============================================================ */
+
+.bloqueExcitacion{
+    fill:#e8f3fb;
+
+    stroke:#568ec2;
+    stroke-width:2;
+
+    stroke-dasharray:7 5;
+}
+
+.bloqueGenerador{
+    fill:#edf8e8;
+
+    stroke:#5d9448;
+    stroke-width:2;
+
+    stroke-dasharray:7 5;
+}
+
+.bloqueDetector{
+    fill:#f3ecff;
+
+    stroke:#8a6fb5;
+    stroke-width:2;
+
+    stroke-dasharray:7 5;
+}
+
+.bloqueComparador{
+    fill:#fff1df;
+
+    stroke:#d89a45;
+    stroke-width:2;
+
+    stroke-dasharray:7 5;
+}
+
+.bloqueEstabilizador{
+    fill:#f2f3e9;
+
+    stroke:#7b8065;
+    stroke-width:2;
+
+    stroke-dasharray:6 4;
+}
+
+.bloqueAmplificador{
+    fill:#fff0f5;
+
+    stroke:#d46a92;
+    stroke-width:2;
+
+    stroke-dasharray:7 5;
+}
+
+.carga{
+    fill:#fff1f1;
+
+    stroke:#b85c5c;
+    stroke-width:2;
+
+    stroke-dasharray:6 4;
+}
+
+
+/* ============================================================
+   07. MÁQUINAS
+   ============================================================ */
+
+.maquinaDC{
+    fill:#f3f5f7;
+
+    stroke:#263238;
+    stroke-width:3;
+}
+
+.estator{
+    fill:#d9dde0;
+
+    stroke:#263238;
+    stroke-width:3;
+}
+
+.rotor{
+    fill:#dfe8f5;
+
+    stroke:#263238;
+    stroke-width:2;
+}
+
+.escobilla{
+    fill:#333333;
+
+    stroke:#111111;
+    stroke-width:1.5;
+}
+
+
+/* ============================================================
+   08. LÍNEAS DEL DIAGRAMA
+   ============================================================ */
+
+.lineaExcitacion{
+    stroke:#b3261e;
+    stroke-width:4;
+
+    fill:none;
+
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.lineaPotencia{
+    stroke:#202124;
+    stroke-width:3;
+
+    fill:none;
+}
+
+.lineaControl{
+    stroke:#175a91;
+    stroke-width:3;
+
+    fill:none;
+}
+
+.devCampo{
+    stroke:#b3261e;
+    stroke-width:4;
+
+    fill:none;
+
+    stroke-linecap:round;
+}
+
+.bobinaEst{
+    stroke:#173f70;
+    stroke-width:4;
+
+    fill:none;
+
+    stroke-linecap:round;
+}
+
+.simboloCarga{
+    stroke:#934545;
+    stroke-width:4;
+
+    fill:none;
+
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+
+/* ============================================================
+   09. TEXTOS DEL SVG
+   ============================================================ */
+
+.texto{
+    font-size:15px;
+    font-weight:bold;
+
+    fill:#263238;
+}
+
+.textoPeq{
+    font-size:12px;
+
+    fill:#37474f;
+}
+
+.textoValor{
+    font-size:13px;
+    font-weight:bold;
+
+    fill:#102a43;
+}
+
+.tituloBloque{
+    font-size:17px;
+    font-weight:bold;
+
+    fill:#102a43;
+}
+
+
+/* ============================================================
+   10. ESTADO DE OPERACIÓN
+   ============================================================ */
+
+.estado{
+    position:absolute;
+
+    right:18px;
+    bottom:4px;
+
+    min-width:220px;
+
+    text-align:center;
+
+    padding:8px 14px;
+
+    border-radius:6px;
+
+    font-weight:bold;
+
+    background:#d5e8d4;
+
+    border:1px solid #6a9a68;
+}
+
+
+/* ============================================================
+   11. PANEL SUPERIOR DE CONTROLES
+   ============================================================ */
+
+.panel-controles{
+    margin:8px 12px 0;
+
+    padding:7px 10px 9px;
+
+    background:#f5f5f5;
+
+    border:1px solid #b8b8b8;
+    border-radius:5px;
+}
+
+
+/* ============================================================
+   12. FILA DE CONTROLES
+   ============================================================ */
+
+.fila-controles{
+    display:grid;
+
+    grid-template-columns:
+        minmax(175px,1fr)
+        minmax(205px,1.12fr)
+        minmax(185px,1fr)
+        minmax(175px,1fr)
+        minmax(175px,1fr)
+        minmax(250px,1.15fr);
+
+    gap:8px;
+
+    align-items:stretch;
+}
+
+
+/* ============================================================
+   13. GRUPOS DE CONTROL
+   ============================================================ */
+
+.grupo-control{
+    min-width:0;
+
+    margin:0;
+
+    padding:8px 10px 6px;
+
+    border:1px solid #b7b7b7;
+    border-radius:4px;
+
+    background:#f7f7f7;
+}
+
+.grupo-control legend{
+    padding:0 5px;
+
+    font-size:13px;
+
+    font-weight:bold;
+    font-style:italic;
+
+    color:#303030;
+}
+
+
+/* ============================================================
+   14. ETIQUETAS DE VARIABLES
+   ============================================================ */
+
+.etiqueta-variable{
+    height:17px;
+
+    margin-bottom:2px;
+
+    text-align:center;
+
+    font-size:12px;
+    font-weight:bold;
+
+    color:#404040;
+}
+
+
+/* ============================================================
+   15. ETIQUETAS XC — Q=0 — XL
+   ============================================================ */
+
+.grupo-control .etiquetasReactancia{
+    display:flex;
+
+    justify-content:space-between;
+    align-items:center;
+
+    height:17px;
+
+    margin:0 0 2px;
+
+    font-size:13px;
+    line-height:17px;
+
+    font-weight:bold;
+
+    color:#303030;
+}
+
+.grupo-control .centroReactancia{
+    font-size:13px;
+    font-weight:bold;
+
+    color:#303030;
+}
+
+
+/* ============================================================
+   16. GRADUACIONES DE LOS SLIDERS
+   Cada división representa una posición uniforme
+   ============================================================ */
+
+.graduaciones-porcentaje {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: flex-start;
+
+    /*
+       7 px corresponden aproximadamente a la mitad
+       del ancho del cursor del slider.
+
+       De esta manera las marcas extremas coinciden
+       con los centros de las posiciones mínima y máxima.
+    */
+
+    margin:
+        0
+        7px
+        0
+        7px;
+
+    height: 7px;
+
+    pointer-events: none;
+}
+
+
+.graduaciones-porcentaje span {
+    display: block;
+
+    width: 1px;
+    height: 5px;
+
+    margin: 0;
+    padding: 0;
+
+    background: #777777;
+}
+
+
+/* ------------------------------------------------------------
+   MARCAS PRINCIPALES
+   Extremo izquierdo — centro — extremo derecho
+   ------------------------------------------------------------ */
+
+.graduaciones-porcentaje span:first-child,
+.graduaciones-porcentaje span:nth-child(6),
+.graduaciones-porcentaje span:last-child {
+    height: 7px;
+
+    background: #555555;
+}
+
+
+/* ============================================================
+   17. AJUSTE DE ESCALA DE LOS CONTROLES
+   ============================================================ */
+
+.grupo-control .escala-slider {
+    position: relative;
+
+    display: block;
+
+    width: 100%;
+    height: 12px;
+
+    margin-top: 0;
+
+    padding: 0 7px;
+}
+
+
+.grupo-control .escala-slider span {
+    position: absolute;
+}
+
+
+/* Extremo izquierdo */
+
+.grupo-control .escala-slider span:first-child {
+    left: 7px;
+
+    transform: translateX(-50%);
+}
+
+
+/* Centro */
+
+.grupo-control .escala-slider span:nth-child(2) {
+    left: 50%;
+
+    transform: translateX(-50%);
+}
+
+
+/* Extremo derecho */
+
+.grupo-control .escala-slider span:last-child {
+    right: 7px;
+
+    transform: translateX(50%);
+}
+/* ============================================================
+   16. MODO DE EXCITACIÓN
+   ============================================================ */
+
+.grupo-modo{
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+}
+
+.grupo-modo .selector{
+    width:100%;
+
+    height:27px;
+
+    padding:3px 6px;
+
+    border:1px solid #9e9e9e;
+    border-radius:2px;
+
+    background:#ffffff;
+
+    font-size:11px;
+}
+
+.texto-ayuda-control{
+    margin-top:7px;
+
+    text-align:center;
+
+    font-size:9px;
+
+    color:#707070;
+}
+
+
+/* ============================================================
+   17. OPERACIÓN
+   ============================================================ */
+
+.grupo-operacion{
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+}
+
+.controles-botones{
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:5px;
+
+    width:100%;
+    height:100%;
+
+    margin:0;
+}
+
+
+/* ============================================================
+   18. BOTONES DE OPERACIÓN
+   ============================================================ */
+
+.controles-botones button{
+    flex:1;
+
+    min-width:0;
+
+    height:27px;
+
+    padding:2px 12px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size:11px;
+    font-weight:normal;
+
+    color:#222222;
+
+    background:
+        linear-gradient(
+            #ffffff,
+            #dddddd
+        );
+
+    border:1px solid #888888;
+    border-radius:2px;
+
+    box-shadow:
+        0 1px 1px rgba(0,0,0,0.20);
+
+    cursor:pointer;
+
+    white-space:nowrap;
+}
+
+
+/*
+   Los tres botones utilizan exactamente
+   el mismo formato visual.
+*/
+
+.controles-botones #btnAplicar,
+.controles-botones #btnPausa,
+.controles-botones #btnReiniciar{
+    color:#222222;
+
+    background:
+        linear-gradient(
+            #ffffff,
+            #dddddd
+        );
+
+    border-color:#888888;
+}
+
+.controles-botones button:hover{
+    background:
+        linear-gradient(
+            #ffffff,
+            #eeeeee
+        );
+}
+
+.controles-botones button:active{
+    transform:none;
+
+    background:
+        linear-gradient(
+            #cccccc,
+            #eeeeee
+        );
+
+    box-shadow:
+        inset 0 1px 2px rgba(0,0,0,0.30);
+}
+
+
+/* ============================================================
+   19. POTENCIAS DEMANDADAS
+   SLIDER + INDICADOR LATERAL
+   ============================================================ */
+
+.grupo-potencia-demandada .control-potencia-con-valor{
+    display:grid;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        44px;
+
+    gap:8px;
+
+    align-items:center;
+
+    width:100%;
+}
+
+.grupo-potencia-demandada .zona-control-potencia{
+    min-width:0;
+
+    width:100%;
+}
+
+
+/* ============================================================
+   20. INDICADOR LATERAL DE DEMANDA
+   ============================================================ */
+
+.grupo-potencia-demandada .indicador-potencia-demandada{
+    width:44px;
+    height:42px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+    justify-content:center;
+
+    background:#ffffff;
+
+    border:1px solid #8f8f8f;
+    border-radius:3px;
+
+    box-shadow:
+        inset 0 1px 2px rgba(0,0,0,0.08),
+        0 1px 1px rgba(0,0,0,0.10);
+
+    color:#222222;
+
+    font-size:15px;
+    line-height:16px;
+
+    font-weight:bold;
+}
+
+
+/* ============================================================
+   21. AJUSTES ESPECÍFICOS P Y Q
+   ============================================================ */
+
+.grupo-potencia-demandada .etiqueta-variable{
+    height:17px;
+
+    margin-bottom:2px;
+
+    text-align:center;
+}
+
+.grupo-potencia-demandada .etiquetasReactancia{
+    height:17px;
+
+    margin:0 0 2px;
+
+    font-size:13px;
+    line-height:17px;
+}
+
+
+/* ============================================================
+   22. VALORES OCULTOS
+   ============================================================ */
+
+.valor-oculto{
+    display:none;
+}
+
+
+/* ============================================================
+   23. INDICADORES INFERIORES
+   Formato estándar
+   ============================================================ */
+
+.indicadores-inferiores {
+    display: grid;
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 8px;
+
+    margin:
+        8px
+        12px
+        10px;
+
+    padding: 0;
+
+    background: transparent;
+}
+
+
+/* ============================================================
+   CUERPO DEL INDICADOR
+   ============================================================ */
+
+.indicadores-inferiores .indicador {
+    display: block;
+
+    min-width: 0;
+    min-height: 0;
+
+    height: 44px;
+
+    padding:
+        4px
+        7px;
+
+    text-align: center;
+
+    background: #f5f5f5;
+
+    border: 1px solid #999999;
+    border-radius: 3px;
+}
+
+
+/* ============================================================
+   TÍTULO
+   ============================================================ */
+
+.indicadores-inferiores .indicador .titulo {
+    display: block;
+
+    width: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    text-align: center;
+
+    font-size: 12px;
+    font-weight: bold;
+    font-style: italic;
+
+    color: #222222;
+}
+
+
+/* ============================================================
+   VALOR
+   ============================================================ */
+
+.indicadores-inferiores .indicador .valor {
+    display: block;
+
+    width: 100%;
+
+    margin-top: 2px;
+
+    padding:
+        2px
+        4px;
+
+    text-align: center;
+
+    font-size: 12px;
+    font-weight: bold;
+    line-height: normal;
+
+    color: #111111;
+
+    background: #e3e3e3;
+
+    border: 1px inset #b5b5b5;
+    border-radius: 2px;
+}
+
+
+/* ============================================================
+   UNIDAD
+   ============================================================ */
+
+.indicadores-inferiores .indicador .unidad {
+    font-size: inherit;
+    font-weight: inherit;
+
+    color: inherit;
+}
+
+
+/* ============================================================
+   ESTADO DE EXCITACIÓN
+   ============================================================ */
+
+.indicadores-inferiores .estadoExcitacion {
+    display: none;
+}
+
+
+/* ============================================================
+   24. AJUSTE ENTRE CONTROLES Y ZONA CENTRAL
+   ============================================================ */
+
+.panel-controles + .contenedor{
+    padding-top:8px;
+}
+
+
+/* ============================================================
+   25. RESPONSIVIDAD
+   ============================================================ */
+
+@media(max-width:1350px){
+
+    .fila-controles{
+        grid-template-columns:
+            repeat(3,minmax(0,1fr));
+    }
+
+    .grupo-operacion{
+        min-height:72px;
+    }
+}
+
+
+@media(max-width:1000px){
+
+    .contenedor{
+        grid-template-columns:210px minmax(0,1fr);
+    }
+
+    .indicadores-inferiores{
+        grid-template-columns:
+            repeat(5,minmax(0,1fr));
+    }
+}
+
+
+@media(max-width:850px){
+
+    .fila-controles{
+        grid-template-columns:
+            repeat(2,minmax(0,1fr));
+    }
+}
+
+
+@media(max-width:560px){
+
+    .fila-controles{
+        grid-template-columns:1fr;
+    }
+}
+
+/* =========================================================
+   SALIDAS TRIFÁSICAS DEL GENERADOR
+========================================================= */
+
+.faseSalida {
+    fill: none;
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+.faseA {
+    stroke: #ef5350;
+}
+
+.faseB {
+    stroke: #4caf62;
+}
+
+.faseC {
+    stroke: #536dfe;
+}
+
+/* =========================================================
+   SALIDAS Y MEDICIÓN TRIFÁSICA DEL GENERADOR
+========================================================= */
+
+.faseSalida,
+.lineaMedicion {
+    fill: none;
+    stroke-width: 4;
+    stroke-linecap: round;
+}
+
+.faseA {
+    stroke: #ef5350;
+}
+
+.faseB {
+    stroke: #4caf62;
+}
+
+.faseC {
+    stroke: #536dfe;
+}
+
+/* =========================================================
+   HALO LUMINOSO DE LAS FASES
+========================================================= */
+
+.haloFase {
+
+    fill: none;
+
+    stroke-width: 14;
+
+    stroke-linecap: round;
+
+    opacity: 0.60;
+
+    filter: blur(5px);
+
+    pointer-events: none;
+}
+
+
+.haloA {
+    stroke: #ef5350;
+}
+
+.haloB {
+    stroke: #4caf62;
+}
+
+.haloC {
+    stroke: #536dfe;
+}
+
+/* Prueba de flujo luminoso de excitación — V13. */
+#pulsoExcitacion {
+    display: none;
+}
+
+#flujoExcitacion line {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 3.5px rgba(255, 0, 0, 0.525));
+}
+
+#flujoRetornoExcitacion line {
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 3.5px rgba(255, 0, 0, 0.525));
+}
+
+
+/* Cabecera y acceso al menu junto a la fila de controles. */
+#simuladorCaldera .fila-controles-con-menu {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+}
+
+#simuladorCaldera .cuadro-proceso {
+    margin: 8px 12px 0;
+    height: 510px;
+    background: #ffffff;
+    border: 1px solid #b8b8b8;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+#simuladorCaldera .cuadro-proceso #calderaSVG {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+
+#panelProcedimientos {
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* Ancho intrínseco de la fila de pestañas, estable entre pasos. */
+    width: max-content;
+    min-width: min(420px, 100vw);
+    max-width: min(560px, 100vw);
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+    background: #f5f5f5;
+    border-right: 1px solid #999999;
+    padding: 14px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#panelProcedimientos.abierto {
+    transform: translateX(0);
+}
+
+#panelProcedimientos > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#panelProcedimientos > header h2 {
+    margin: 0;
+}
+
+#simuladorCaldera .grupo-operacion .controles-botones {
+    flex-wrap: nowrap;
+}
+
+#simuladorCaldera .grupo-operacion .boton-simulador {
+    padding: 2px 4px;
+    flex: 1 1 auto;
+}
+
+#simuladorCaldera .operacion-con-alarma {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 24px;
+    gap: 8px;
+    min-width: 0;
+}
+
+#simuladorCaldera .alarma-indicador {
+    align-self: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid #999999;
+    border-radius: 50%;
+    background: #b8b8b8;
+    cursor: pointer;
+}
+
+#simuladorCaldera .alarma-indicador.alarma-nueva {
+    background: #d32f2f;
+    animation: parpadeo-alarma-caldera 1s steps(1, end) infinite;
+}
+
+#simuladorCaldera .alarma-indicador.alarma-activa {
+    background: #d32f2f;
+    animation: none;
+}
+
+@keyframes parpadeo-alarma-caldera {
+    0%, 100% { background: #d32f2f; }
+    50% { background: #b8b8b8; }
+}
+
+#pantallaAlarmas {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(800px, 100%);
+    height: 100vh;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1001;
+    background: #f5f5f5;
+    border-left: 1px solid #999999;
+    padding: 14px;
+    overflow-y: auto;
+}
+
+#pantallaAlarmas.abierto {
+    transform: translateX(0);
+}
+
+#pantallaAlarmas > header {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#pantallaAlarmas > header h2 {
+    margin: 0;
+}
+
+#simuladorCaldera #indicadoresHMI {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+    margin: 8px 12px 0;
+    min-height: 129.5px;
+    align-items: stretch;
+}
+
+#simuladorCaldera #indicadoresHMI .panel-grafica {
+    position: relative;
+}
+
+#simuladorCaldera #indicadoresHMI .grafica-hmi {
+    position: absolute;
+    left: 10px;
+    bottom: 6px;
+    display: block;
+    width: calc(100% - 20px);
+    height: calc(100% - 26px);
+}
+
+#simuladorCaldera .registrador-eventos {
+    margin: 8px 12px 0;
+    min-height: 70px;
+}
+
+/* Operación en frío: indicador y registro con altura estable. */
+#simuladorCaldera .panel-nivel output,
+#simuladorCaldera .descripcion-nivel {
+    display: block;
+    text-align: center;
+}
+
+#simuladorCaldera .panel-nivel output {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#simuladorCaldera .descripcion-nivel {
+    font-size: 10px;
+}
+
+#simuladorCaldera .registrador-eventos {
+    height: 90px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+#contenidoRegistradorEventos {
+    height: 52px;
+    overflow-y: auto;
+    font-size: 11px;
+    line-height: 16px;
+    overflow-wrap: anywhere;
+}
+
+/* La actualización continua del nivel no debe perseguir una transición de 1.2 s. */
+#simuladorCaldera #calderaSVG #agua-nivel,
+#simuladorCaldera #calderaSVG #visor-agua {
+    transition: none;
+}
+
+#simuladorCaldera #calderaSVG[data-operacion-pausada="si"] #E07-BAA .aspas {
+    animation-play-state: paused;
+}
+
+/* Colores de operación; la especificidad conserva el color en hover y active. */
+#simuladorCaldera .controles-botones .boton-operacion {
+    background: linear-gradient(#81c784, #57a85a);
+    border-color: #3f8242;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+#simuladorCaldera .controles-botones .boton-operacion.operacion-activa,
+#simuladorCaldera .controles-botones .boton-reinicio:active {
+    background: linear-gradient(#e57373, #c94f4f);
+    border-color: #9f3b3b;
+}
+
+/* Ayuda permanente en el espacio superior libre del área de proceso. */
+#simuladorCaldera .leyenda-operacion-escena {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    max-width: min(350px, 45%);
+    margin: 0;
+    color: #000000;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: right;
+    pointer-events: none;
+    white-space: nowrap;
+    max-width: none;
+    width: auto;
+}
+
+/* Estación manual compacta; conserva la cuadrícula del encabezado. */
+#simuladorCaldera .estacion-alimentacion { padding-top: 2px; padding-bottom: 2px; }
+#simuladorCaldera .estacion-alimentacion legend { font-size: 11px; }
+.escala-apertura { position: relative; height: 21px; margin: 0 7px; }
+.graduaciones-apertura {
+    position: absolute; top: 5px; left: 0; right: 0; height: 5px;
+    border-bottom: 1px solid #777;
+    background: repeating-linear-gradient(to right, #777 0, #777 1px, transparent 1px, transparent 10%);
+    border-right: 1px solid #777;
+}
+.numero-apertura { position: absolute; top: 10px; font-size: 9px; }
+.numero-apertura.inicio { left: 0; transform: translateX(-50%); }
+.numero-apertura.medio { left: 50%; transform: translateX(-50%); }
+.numero-apertura.fin { right: 0; transform: translateX(50%); }
+.marcador-apertura {
+    position: absolute; top: 0; left: 0; transform: translateX(-50%);
+    border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #333;
+}
+#lecturaApertura, #lecturaAperturaAire, #lecturaAperturaCombustible, #lecturaAperturaVapor { display: block; text-align: center; font-size: 11px; line-height: 13px; }
+#lecturaAperturaAire { white-space: nowrap; }
+.botones-alimentacion { display: flex; gap: 4px; }
+#simuladorCaldera .botones-alimentacion .boton-simulador {
+    flex: 1; min-width: 0; height: 22px; padding: 1px 4px; touch-action: none;
+}
+#simuladorCaldera .botones-alimentacion .modo-alimentacion {
+    background: linear-gradient(#81c784, #57a85a); border-color: #3f8242; color: #ffffff; font-weight: bold;
+}
+#simuladorCaldera .botones-alimentacion .modo-seleccionado {
+    background: linear-gradient(#e57373, #c94f4f); border-color: #9f3b3b;
+}
+
+/* Lectura junto a la escala: dos filas compactas dentro del grupo existente. */
+#simuladorCaldera .estacion-alimentacion { position: relative; }
+#simuladorCaldera .estacion-alimentacion .escala-apertura { margin-right: 40px; }
+#simuladorCaldera .estacion-alimentacion #lecturaApertura,
+#simuladorCaldera .estacion-alimentacion #lecturaAperturaAire,
+#simuladorCaldera .estacion-alimentacion #lecturaAperturaCombustible,
+#simuladorCaldera .estacion-alimentacion #lecturaAperturaVapor {
+    position: absolute; top: 7px; right: 8px; width: 32px;
+}
+
+#simuladorCaldera #calderaSVG[data-operacion-pausada="si"] #E08-VTF .aspas {
+    animation-play-state: paused;
+}
+
+/* Bloqueo inicial sin atenuar los colores de los controles manuales. */
+#simuladorCaldera .botones-alimentacion .boton-simulador:disabled:not([id^="btnAutomatico"]) {
+    opacity: 1;
+}
+
+/* Guía manual: estilos limitados al panel lateral existente. */
+#panelProcedimientos { display: flex; flex-direction: column; box-sizing: border-box; }
+#panelProcedimientos > :not(.guia-pestanas) { contain: inline-size; min-width: 0; }
+#panelProcedimientos > header { flex: 0 0 auto; gap: 8px; }
+#panelProcedimientos > header h2 { font-size: 18px; overflow-wrap: anywhere; }
+#panelProcedimientos .guia-introduccion,
+#panelProcedimientos .guia-aclaracion { font-size: 12px; line-height: 1.45; margin: 10px 0; flex: 0 0 auto; }
+#panelProcedimientos .guia-pestanas { display: flex; overflow-x: auto; gap: 4px; min-width: 0; flex: 0 0 auto; padding: 3px 2px 8px; }
+#panelProcedimientos .guia-pestanas button { flex: 0 0 auto; white-space: nowrap; font-weight: bold; padding: 7px 9px; border: 1px solid #999; border-radius: 3px; background: #eeeeee; color: #333; }
+#panelProcedimientos .guia-pestanas [aria-selected="true"] { background: #dbe9f2; border-color: #477894; font-weight: bold; }
+#panelProcedimientos .guia-contenido { flex: 1 1 auto; min-height: 0; min-width: 0; overflow-y: auto; overflow-x: hidden; }
+#panelProcedimientos [role="tabpanel"] { white-space: normal; overflow-wrap: anywhere; }
+#panelProcedimientos [role="tabpanel"][hidden] { display: none; }
+#panelProcedimientos [role="tabpanel"] h3 { font-size: 15px; margin: 12px 0; }
+#panelProcedimientos .guia-actividad { display: flex; align-items: flex-start; gap: 8px; margin: 8px 0; padding: 5px 2px; font-size: 13px; line-height: 1.45; cursor: pointer; }
+#panelProcedimientos .guia-actividad input { flex: 0 0 auto; margin-top: 3px; }
+#panelProcedimientos .guia-nota,
+#panelProcedimientos .guia-contador { font-size: 12px; line-height: 1.45; }
+#panelProcedimientos .guia-nota { color: #555; }
+#panelProcedimientos .guia-contador { font-weight: bold; }
+#panelProcedimientos .guia-navegacion { display: flex; gap: 8px; flex: 0 0 auto; }
+#panelProcedimientos .guia-navegacion button { flex: 1; min-width: 0; }
+#panelProcedimientos .guia-limpieza { margin-top: 8px; flex: 0 0 auto; }
+#panelProcedimientos :focus-visible { outline: 2px solid #477894; outline-offset: 2px; }
+
+/* Selector de guías: sin relación con el estado del proceso. */
+#panelProcedimientos .guia-selector { display: flex; align-items: center; gap: 8px; margin-top: 12px; flex: 0 0 auto; font-size: 13px; }
+#panelProcedimientos .guia-selector select { flex: 1; min-width: 0; padding: 5px; font: inherit; }
+#panelProcedimientos > [hidden] { display: none; }
+#panelProcedimientos #guiaParoPendiente { font-size: 13px; line-height: 1.45; white-space: normal; overflow-wrap: anywhere; }
+/* La fila completa sigue fijando el ancho, incluso al mostrar Paro. */
+#panelProcedimientos .guia-pestanas[hidden] {
+    display: flex;
+    visibility: hidden;
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow-y: hidden;
+    pointer-events: none;
+}
+
+/* Avance manual de Arranque; selección independiente del color de cumplimiento. */
+#panelProcedimientos .guia-pestanas [role="tab"] {
+    background: linear-gradient(#e57373, #c94f4f);
+    border-color: #9f3b3b;
+    color: #ffffff;
+}
+#panelProcedimientos .guia-pestanas [role="tab"].guia-completo {
+    background: linear-gradient(#81c784, #57a85a);
+    border-color: #3f8242;
+}
+#panelProcedimientos .guia-pestanas [role="tab"][aria-selected="true"] {
+    box-shadow: inset 0 0 0 2px #243746;
+}
+
+/* Encabezado de procedimientos: etiqueta encima del selector. */
+#panelProcedimientos .guia-selector { flex-direction: row; align-items: center; gap: 10px; }
+#panelProcedimientos .guia-selector label { font-size: 16px; font-weight: 700; }
+
+/* Separación idéntica para las filas de Arranque y Paro. */
+#panelProcedimientos .guia-pestanas { margin-top: 16px; }
+#panelProcedimientos .guia-pestanas[hidden] { margin-top: 0; }
+
+/* Mandos compactos de encendido, dentro de la celda existente. */
+.panel-encendido .mandos-encendido { display: flex; min-width: 0; }
+.panel-encendido .grupo-encendido { flex: 1; min-width: 0; text-align: center; }
+.panel-encendido .grupo-encendido + .grupo-encendido { border-left: 1px solid #b7b7b7; }
+.panel-encendido strong { font-size: 12px; position: relative; top: -8px; }
+.panel-encendido .botones-encendido { display: flex; justify-content: center; gap: 2px; margin-top: -2px; }
+.panel-encendido .mando-encendido { width: 30px; height: 30px; flex: 0 0 30px; box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 1px solid; border-radius: 50%; color: #fff; font-weight: bold; cursor: pointer; }
+.panel-encendido .mando-encendido span { display: block; font-size: 13px; }
+.panel-encendido .mando-encendido small { display: block; font-size: 8px; }
+.panel-encendido .mando-verde { background: linear-gradient(#81c784, #57a85a); border-color: #3f8242; }
+.panel-encendido .mando-rojo { background: linear-gradient(#e57373, #c94f4f); border-color: #9f3b3b; }
+.panel-encendido .mando-encendido:disabled { cursor: default; }
+.panel-encendido .mando-encendido:focus-visible { outline: 2px solid #243746; outline-offset: 2px; }
+.panel-encendido .encendido-descripcion { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+.botonera-cv { display: flex; align-items: flex-start; justify-content: center; gap: 4px; padding-top: 4px; }
+.botonera-cv .mando-encendido { text-align: center; }
+.botonera-cv .orden-cv { width: 38px; text-align: center; }
+
+#proteccionesTrip .mandos-disparo { display: flex; flex-wrap: nowrap; justify-content: flex-end; gap: 8px; }
+#proteccionesTrip .boton-simulador { width: auto; padding: 8px 12px; }
+
+#anunciadorAlarmas .ventanas-alarmas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 88px; gap: 8px; max-width: 860px; margin: 16px 0; }
+#anunciadorAlarmas .ventana-alarma { display: flex; align-items: center; justify-content: center; text-align: center; padding: 8px; border: 2px solid #777; border-radius: 3px; background: #c5c5c5; color: #222; font: bold 14px Arial, sans-serif; cursor: pointer; }
+#anunciadorAlarmas .alarma-nueva { background: #d32f2f; color: white; animation: parpadeo-nivel-bajo 1s steps(1, end) infinite; }
+#anunciadorAlarmas .alarma-reconocida { background: #d32f2f; color: white; }
+#anunciadorAlarmas .alarma-pendiente { background: #ffc04d; color: #222; }
+#anunciadorAlarmas .prueba-lamparas { background: #d32f2f; color: white; animation: none; }
+#anunciadorAlarmas .ventana-alarma[aria-pressed="true"] { border-color: #243746; box-shadow: inset 0 0 0 2px #fff; }
+#anunciadorAlarmas .mandos-anunciador { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+#anunciadorAlarmas .boton-simulador { width: auto; padding: 8px 12px; }
+#anunciadorAlarmas .detalle-alarma { min-height: 100px; max-width: 860px; }
+#anunciadorAlarmas button:focus-visible { outline: 2px solid #243746; outline-offset: 2px; }
+@keyframes parpadeo-nivel-bajo { 0%, 100% { background: #d32f2f; } 50% { background: #8d2424; } }
+
+/* Ocultar detalles visualmente, manteniendo texto accesible y nodos del HMI. */
+#pantallaAlarmas .detalle-alarma,
+#proteccionesTrip #estadoDisparo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+#pantallaProceso #proteccionesTrip {
+    position: absolute;
+    top: 42px;
+    right: 14px;
+}
