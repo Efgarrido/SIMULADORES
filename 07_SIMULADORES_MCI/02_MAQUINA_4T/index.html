@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOTOR DE COMBUSTIÓN INTERNA DE CUATRO TIEMPOS — OTTO</title>
+    <link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/simulador.css">
+</head>
+<body>
+<div class="simulador">
+    <div class="titulo-simulador">
+        <h1>MOTOR DE COMBUSTIÓN INTERNA DE CUATRO TIEMPOS — OTTO</h1>
+    </div>
+    <div class="contenido-simulador">
+    <div class="controls">
+        <fieldset class="panel-simulador control-box">
+            <legend>Velocidad</legend>
+            <div class="variable-control"><output id="valor1" for="parametro1">100 %</output></div>
+            <div class="slider-simulador">
+                <input id="parametro1" type="range" min="25" max="200" step="1" value="100" aria-label="Velocidad">
+                <div class="graduaciones-porcentaje graduaciones-velocidad" aria-hidden="true"><span></span><span></span><span></span></div>
+                <div class="escala-slider escala-velocidad" aria-hidden="true"><span>25 %</span><span>100 %</span><span>200 %</span></div>
+            </div>
+        </fieldset>
+        <fieldset class="panel-simulador control-box">
+            <legend>Ángulo</legend>
+            <div class="variable-control"><output id="valor2" for="parametro2">0°</output></div>
+            <div class="slider-simulador">
+                <input id="parametro2" type="range" min="0" max="720" step="1" value="0" aria-label="Ángulo">
+                <div class="graduaciones-porcentaje" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                <div class="escala-slider" aria-hidden="true"><span>0°</span><span>360°</span><span>720°</span></div>
+            </div>
+        </fieldset>
+        <fieldset class="panel-simulador control-box">
+            <legend>Disponible</legend>
+            <div class="variable-control"><output id="valor3" for="parametro3">50</output></div>
+            <div class="slider-simulador">
+                <input id="parametro3" type="range" min="0" max="100" step="1" value="50" aria-label="Disponible">
+                <div class="graduaciones-porcentaje" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                <div class="escala-slider" aria-hidden="true"><span>0</span><span>50</span><span>100</span></div>
+            </div>
+        </fieldset>
+        <fieldset class="panel-simulador control-box">
+            <legend>Operación</legend>
+            <div class="zona-botones buttons">
+                <button id="applyBtn" class="boton-simulador" type="button">APLICAR</button>
+                <button id="pauseBtn" class="boton-simulador" type="button" aria-pressed="false">PAUSA</button>
+                <button id="stepBtn" class="boton-simulador" type="button">PASO</button>
+                <button id="resetBtn" class="boton-simulador" type="button">REINICIAR</button>
+            </div>
+        </fieldset>
+    </div>
+    <div class="paneles-principales">
+        <section class="panel-reservado" aria-labelledby="titulo-escena">
+            <h2 id="titulo-escena">ESCENA DEL SIMULADOR</h2>
+            <div class="area-reservada" id="escena">
+                <div class="zona-mecanismo">
+                    <div class="dibujo-mecanismo"><svg id="engine" viewBox="0 0 440 580" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mecanismo del motor 02_MAQUINA_4T"></svg></div>
+                    <div class="escala-termica" aria-label="Escala térmica de 300 a 2500 K">Temperatura [K]<div class="barra-termica" id="barra-termica"></div><div class="etiquetas-termicas" id="etiquetas-termicas"></div></div>
+                </div>
+                <div class="lecturas-instantaneas" aria-label="Estado termodinámico instantáneo">
+                    <div class="lectura-instantanea"><span class="hmi-nombre">ÁNGULO</span><div class="hmi-lectura"><span>θ</span> <output id="inst_theta">0</output> <span>°</span></div></div>
+                    <div class="lectura-instantanea"><span class="hmi-nombre">TEMPERATURA</span><div class="hmi-lectura"><span>T</span> <output id="inst_T">0</output> <span>K</span></div></div>
+                    <div class="lectura-instantanea"><span class="hmi-nombre">PRESIÓN</span><div class="hmi-lectura"><span>P</span> <output id="inst_P">0</output> <span>kPa</span></div></div>
+                    <div class="lectura-instantanea"><span class="hmi-nombre">VOLUMEN</span><div class="hmi-lectura"><span>V</span> <output id="inst_V">0</output> <span>cm³</span></div></div>
+                    <div class="lectura-instantanea"><span class="hmi-nombre">MASA</span><div class="hmi-lectura"><span>m</span> <output id="inst_m">0</output> <span>g</span></div></div>
+                    <div class="lectura-instantanea"><span class="hmi-nombre">ENTROPÍA ESPECÍFICA</span><div class="hmi-lectura"><span>s</span> <output id="inst_s">0</output> <span>kJ/(kg·K)</span></div></div>
+                    <div class="lectura-instantanea"><span class="hmi-nombre">ENERGÍA INTERNA ESPECÍFICA</span><div class="hmi-lectura"><span>u</span> <output id="inst_u">0</output> <span>kJ/kg</span></div></div>
+                </div>
+            </div>
+        </section>
+        <section class="panel-reservado" aria-labelledby="titulo-graficas">
+            <h2 id="titulo-graficas">GRÁFICAS</h2>
+            <div class="barra-graficas">
+            <div class="pestanas-graficas" role="tablist" aria-label="Gráficas">
+                <button id="tab-ts" class="pestana-grafica" type="button" role="tab" aria-selected="true" aria-controls="graficas" data-grafica="T–s">T–s</button>
+                <button id="tab-pv" class="pestana-grafica" type="button" role="tab" aria-selected="false" aria-controls="graficas" data-grafica="P–V">P–V</button>
+                <button id="tab-tth" class="pestana-grafica" type="button" role="tab" aria-selected="false" aria-controls="graficas" data-grafica="T–θ">T–θ</button>
+                <button id="tab-pth" class="pestana-grafica" type="button" role="tab" aria-selected="false" aria-controls="graficas" data-grafica="P–θ">P–θ</button>
+            </div>
+            <button id="csvBtn" type="button">Exportar CSV</button>
+            </div>
+            <div class="area-reservada" id="graficas" role="tabpanel" aria-labelledby="tab-ts"><svg id="plot" viewBox="0 0 934 649" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Gráfica termodinámica"></svg>
+                <div id="legend" class="leyenda-graficas"></div>
+                <div class="herramientas-graficas"><label id="logWrap" hidden><input id="logY" type="checkbox" checked> Eje P logarítmico</label></div>
+            </div>
+        </section>
+    </div>
+    <div class="instrument-grid">
+        <div class="instrument">
+            <div class="name" id="titulo-indicador1">Indicador 1</div>
+            <div class="num"><span class="valor" id="indicador1">0.00</span> <span class="unidad" id="unidad-indicador1"></span></div>
+        </div>
+        <div class="instrument">
+            <div class="name" id="titulo-indicador2">Indicador 2</div>
+            <div class="num"><span class="valor" id="indicador2">0.00</span> <span class="unidad" id="unidad-indicador2"></span></div>
+        </div>
+        <div class="instrument">
+            <div class="name" id="titulo-indicador3">Indicador 3</div>
+            <div class="num"><span class="valor" id="indicador3">0.00</span> <span class="unidad" id="unidad-indicador3"></span></div>
+        </div>
+        <div class="instrument">
+            <div class="name" id="titulo-indicador4">Indicador 4</div>
+            <div class="num"><span class="valor" id="indicador4">0.00</span> <span class="unidad" id="unidad-indicador4"></span></div>
+        </div>
+        <div class="instrument">
+            <div class="name" id="titulo-indicador5">Indicador 5</div>
+            <div class="num"><span class="valor" id="indicador5">0.00</span> <span class="unidad" id="unidad-indicador5"></span></div>
+        </div>
+        <div class="instrument">
+            <div class="name" id="titulo-indicador6">Indicador 6</div>
+            <div class="num"><span class="valor" id="indicador6">0.00</span> <span class="unidad" id="unidad-indicador6"></span></div>
+        </div>
+        <div class="instrument">
+            <div class="name" id="titulo-indicador7">Indicador 7</div>
+            <div class="num"><span class="valor" id="indicador7">0.00</span> <span class="unidad" id="unidad-indicador7"></span></div>
+        </div>
+    </div>
+    </div>
+</div>
+<script src="js/modelo-motor.js"></script>
+<script src="js/mecanismo-motor.js"></script>
+<script src="js/graficas.js"></script>
+<script src="js/simulador.js"></script>
+</body>
+</html>

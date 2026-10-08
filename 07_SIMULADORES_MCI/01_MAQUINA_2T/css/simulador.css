@@ -1,0 +1,389 @@
+/* Distribución de la plantilla maestra. Estilo general en estilos.css. */
+.simulador { width: 1440px; max-width: calc(100% - 30px); }
+.contenido-simulador { width: 100%; container-type: inline-size; }
+.controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.6fr);
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.control-box {
+    min-width: 0;
+    min-height: 72px;
+    padding: 5px 8px 6px;
+}
+.variable-control {
+    display: block;
+    margin: 0 0 2px;
+    text-align: center;
+    font-size: 12px;
+}
+.graduaciones-porcentaje {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: flex-start;
+
+    /*
+       7 px corresponden aproximadamente a la mitad
+       del ancho del cursor del slider.
+
+       De esta manera las marcas extremas coinciden
+       con los centros de las posiciones 0 % y 100 %.
+    */
+
+    margin:
+        -4px
+        7px
+        0
+        7px;
+
+    height: 7px;
+
+    pointer-events: none;
+}
+
+
+.graduaciones-porcentaje span {
+    display: block;
+
+    width: 1px;
+    height: 5px;
+
+    margin: 0;
+    padding: 0;
+
+    background: #777777;
+}
+
+
+/* ------------------------------------------------------------
+   MARCAS PRINCIPALES
+   0 %, 50 % y 100 %
+   ------------------------------------------------------------ */
+
+.graduaciones-porcentaje span:first-child,
+.graduaciones-porcentaje span:nth-child(6),
+.graduaciones-porcentaje span:last-child {
+    height: 7px;
+
+    background: #555555;
+}
+
+
+/* ============================================================
+   06. AJUSTE DE ESCALA DE LOS CONTROLES
+   ============================================================ */
+
+.control-box .escala-slider {
+
+    position: relative;
+
+    display: block;
+
+    width: 100%;
+
+    height: 12px;
+
+    margin-top: 0;
+
+    padding: 0 7px;
+
+}
+
+.control-box .escala-slider span {
+
+    position: absolute;
+
+}
+
+/* 0 */
+
+.control-box .escala-slider span:first-child {
+
+    left: 7px;
+
+    transform: translateX(-50%);
+
+}
+
+/* 50 */
+
+.control-box .escala-slider span:nth-child(2) {
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+}
+
+/* 100 */
+
+.control-box .escala-slider span:last-child {
+
+    right: 7px;
+
+    transform: translateX(50%);
+
+}
+
+
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 100%;
+}
+.buttons .boton-simulador {
+    flex: 1;
+    min-width: 0;
+    padding: 0 4px;
+    white-space: nowrap;
+}
+.paneles-principales {
+    display: grid;
+    grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
+    gap: 8px;
+    margin-bottom: 12px;
+}
+.panel-reservado {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    height: 480px;
+    background: #ffffff;
+    border: 1px solid #999999;
+    border-radius: 3px;
+}
+.panel-reservado h2 {
+    margin: 0;
+    padding: 10px;
+    font-size: 13px;
+    text-align: center;
+    border-bottom: 1px solid #999999;
+}
+.area-reservada {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    padding: 10px;
+    text-align: center;
+    color: #555555;
+}
+.instrument-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+}
+.instrument {
+    min-width: 0;
+    min-height: 0;
+    height: 44px;
+
+    padding: 4px 7px;
+
+    text-align: center;
+
+    background: #f5f5f5;
+
+    border: 1px solid #999999;
+    border-radius: 3px;
+}
+
+
+.instrument .name {
+    font-size: 12px;
+    font-weight: bold;
+    font-style: normal;
+    overflow-wrap: anywhere;
+    color: #222222;
+}
+
+
+.instrument .num {
+    margin-top: 2px;
+
+    padding: 2px 4px;
+
+    font-size: 12px;
+    font-weight: bold;
+    overflow-wrap: anywhere;
+
+    color: #111111;
+
+    background: #e3e3e3;
+
+    border: 1px inset #b5b5b5;
+    border-radius: 2px;
+}
+
+
+
+.instrument .unidad { font-size: 12px; font-weight: normal; color: #555555; }
+.pestanas-graficas {
+    display: flex;
+    border-bottom: 1px solid #999999;
+    background: #f5f5f5;
+    padding: 0 4px;
+}
+.pestana-grafica {
+    min-width: 0;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: #333333;
+    font: inherit;
+    padding: 8px 10px;
+    cursor: pointer;
+}
+.pestana-grafica[aria-selected="true"] {
+    border-bottom-color: #1c6dd0;
+    font-weight: bold;
+}
+
+/* Colores originales del mecanismo, limitados al panel izquierdo. */
+#escena { min-height:0; overflow:hidden;
+  --bg:#f4f5f7; --panel:#ffffff; --ink:#1d2430; --muted:#5f6b7a; --line:#d9dee5; --grid:#eceff3;
+  --accent:#1c6dd0; --accent-ink:#fff;
+  --metal:#cfd5dc; --metal-line:#8a95a3; --gas:#ffffff; --case:#f7fafb; --part:#bfe0e4; --part-dark:#7fb3ba;
+  --piston:#a9d3d8; --dark:#2a3038; --flame:#ff8000; --exh:#dcdfe3; --arrow:#111;
+  --c-power:#e8590c; --c-exhaust:#7a838d; --c-intake:#1c7ed6; --c-comp:#2f9e44;
+}
+#engine { display:block; width:100%; height:100%; min-height:0; }
+#engine text { fill:var(--ink); }
+
+/* Estilos limitados al panel de gráficas. */
+#graficas { min-height:0; display:flex; flex-direction:column; gap:3px; padding:4px;
+  --bg:#f4f5f7; --panel:#ffffff; --ink:#1d2430; --muted:#5f6b7a; --line:#d9dee5; --grid:#eceff3;
+  --accent:#1c6dd0; --accent-ink:#fff;
+  --metal:#cfd5dc; --metal-line:#8a95a3; --gas:#ffffff; --case:#f7fafb; --part:#bfe0e4; --part-dark:#7fb3ba;
+  --piston:#a9d3d8; --dark:#2a3038; --flame:#ff8000; --exh:#dcdfe3; --arrow:#111;
+  --c-power:#e8590c; --c-exhaust:#7a838d; --c-intake:#1c7ed6; --c-comp:#2f9e44;
+}
+#plot { display:block; width:100%; flex:1; min-height:0; }
+#plot text { fill:var(--ink); }
+#graficas .leyenda-graficas { display:flex; flex-wrap:wrap; justify-content:center; gap:3px 10px; font-size:12px; }
+#graficas .leyenda-graficas i { display:inline-block; width:12px; height:3px; margin-right:4px; vertical-align:middle; }
+#graficas .herramientas-graficas { display:flex; justify-content:center; gap:8px; align-items:center; font-size:10px; }
+#graficas button { font:inherit; border:1px solid #888; border-radius:2px; background:linear-gradient(#fff,#ddd); color:#222; cursor:pointer; }
+
+/* Referencias visuales de velocidad sobre el recorrido útil del cursor. */
+.graduaciones-velocidad { position:relative; }
+.graduaciones-velocidad span { position:absolute; height:7px; transform:translateX(-50%); background:#555555; }
+.graduaciones-velocidad span:first-child { left:0; }
+.graduaciones-velocidad span:nth-child(2) { left:42.8571428571%; }
+.graduaciones-velocidad span:last-child { left:100%; }
+/* 7 px + (ancho - 14 px) × 3/7 = ancho × 3/7 + 1 px. */
+.control-box .escala-slider.escala-velocidad span:nth-child(2) { left:calc(42.8571428571% + 1px); }
+
+/* Amplía los paneles reservando el espacio añadido, sin escalar los SVG.
+   El contenido anterior tenía como máximo 1170 px (1200 - 30 de bordes/padding). */
+.panel-reservado {
+    padding-bottom: 140px;
+}
+.panel-reservado:first-child {
+    padding-inline: calc(max(0px, 100cqw - 1170px) * 0.225);
+}
+.panel-reservado:last-child {
+    padding-inline: calc(max(0px, 100cqw - 1170px) * 0.275);
+}
+
+/* Aprovecha el espacio reservado sólo en el panel de gráficas. */
+.panel-reservado:last-child {
+    padding-inline: 0;
+    padding-bottom: 0;
+}
+#graficas { overflow:hidden; }
+#plot { align-self:center; }
+#graficas .leyenda-graficas,
+#graficas .herramientas-graficas { flex-shrink:0; }
+
+/* Barra única de pestañas y exportación; sólo afecta al panel derecho. */
+.barra-graficas { display:flex; align-items:center; flex-shrink:0; min-width:0; min-height:42px; gap:6px; padding:4px 8px 4px 0; border-bottom:1px solid #999999; background:#f5f5f5; }
+.barra-graficas .pestanas-graficas { flex:1; min-width:0; align-items:stretch; border-bottom:0; }
+.barra-graficas .pestana-grafica { display:inline-flex; align-items:center; justify-content:center; }
+.barra-graficas #csvBtn { flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; height:27px; font:inherit; font-size:12px; color:#222; background:linear-gradient(#fff,#ddd); border:1px solid #888; border-radius:2px; box-shadow:0 1px 1px rgba(0,0,0,.20); padding:2px 10px; cursor:pointer; }
+
+/* Escena: mecanismo y escala a la izquierda, lecturas a la derecha. */
+.panel-reservado:first-child { padding-inline: 0; padding-bottom: 0; }
+#escena {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 126px;
+    align-items: stretch;
+    gap: 8px;
+    padding: 8px;
+}
+.zona-mecanismo {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) 56px;
+    min-width: 0;
+    min-height: 0;
+}
+.dibujo-mecanismo { min-width: 0; min-height: 0; }
+.lecturas-instantaneas {
+    display: grid;
+    grid-template-rows: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+    min-width: 0;
+    min-height: 0;
+}
+.lectura-instantanea {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid #bbb;
+    background: #eee;
+    padding: 3px;
+    font-size: 11px;
+    line-height: 1.2;
+}
+.lectura-instantanea output { font-size: 14px; margin-top: 3px; }
+/* Ancho nominal común, independiente del SVG; se reduce solo si falta espacio. */
+.escala-termica {
+    box-sizing: border-box;
+    width: 300px;
+    max-width: 100%;
+    justify-self: center;
+    margin: 0;
+    padding: 4px 0 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    color: #333;
+}
+.barra-termica { box-sizing: content-box; height: 14px; border: 1px solid #999; margin-top: 3px; }
+.etiquetas-termicas { position: relative; height: 15px; margin: 3px 1px 0; }
+.etiquetas-termicas span { position: absolute; transform: translateX(-50%); font-size: 9px; }
+.etiquetas-termicas span:first-child { transform: none; }
+.etiquetas-termicas span:last-child { transform: translateX(-100%); }
+
+/* Lecturas HMI: referencia ../06_CALDERA_PIROTUBULAR/css/caldera-escena.css.
+   La caldera usa recuadros SVG de 24 px de alto; aquí se adaptan a 44 px
+   para nombres completos, símbolos y unidades, conservando su tipografía. */
+#escena { grid-template-columns: minmax(0, 1fr) 144px; }
+#escena .lecturas-instantaneas {
+    grid-template-rows: repeat(7, 44px);
+    align-content: center;
+    gap: 4px;
+}
+#escena .lectura-instantanea {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 3px;
+    border: 1px solid #92999e;
+    border-radius: 3px;
+    background: #f7f9fa;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    line-height: 1.2;
+}
+#escena .hmi-nombre { font-size: 9px; color: #555d63; }
+#escena .hmi-lectura {
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #263238;
+    white-space: nowrap;
+}
+#escena .hmi-lectura output { font: inherit; margin: 0; }
