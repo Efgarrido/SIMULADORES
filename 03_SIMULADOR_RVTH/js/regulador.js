@@ -718,10 +718,17 @@ function actualizarRegulador(){
     Y_RODILLO_NEUTRO;
 
 
+    /*
+       Copia experimental: a la retroalimentación de la
+       leva se suma la compensación temporal (si existe).
+    */
+
     const By =
     B_Y_BASE
     +
-    desplazamientoB;
+    desplazamientoB
+    +
+    compensacionTemporal;
 
 
     puntoB.setAttribute(
@@ -947,10 +954,13 @@ function actualizarRegulador(){
        ORDEN DE CIERRE
     ================================================= */
 
+    /* Copia de desarrollo: el flujo se anima solo
+       mientras el servomotor se mueve realmente. */
+
     if(
-        desplazamientoCarrete
-        >
-        UMBRAL_VALVULA
+        velocidadServoActual
+        <
+        -UMBRAL_MOVIMIENTO_SERVO
     ){
 
         animEntradaPresion.setAttribute(
@@ -1026,9 +1036,9 @@ function actualizarRegulador(){
     ================================================= */
 
     else if(
-        desplazamientoCarrete
-        <
-        -UMBRAL_VALVULA
+        velocidadServoActual
+        >
+        UMBRAL_MOVIMIENTO_SERVO
     ){
 
         animEntradaPresion.setAttribute(

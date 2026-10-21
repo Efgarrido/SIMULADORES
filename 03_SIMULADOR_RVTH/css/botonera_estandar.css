@@ -1,0 +1,81 @@
+/* =====================================================
+   SIMULADOR RVTH — ESTÁNDAR DE BOTONERAS (etapa 15)
+
+   Reproduce, sin cambios de medidas ni colores, las reglas
+   de la botonera de 06_CALDERA_PIROTUBULAR (css/simulador.css,
+   bloques «Estación manual compacta», «Lectura junto a la
+   escala» y «Bloqueo inicial»).
+   En la caldera están limitadas a #simuladorCaldera; aquí se
+   limitan a .panel-controles. La base común (estilos.css,
+   .grupo-control, .controles-botones, .boton-simulador) ya
+   es idéntica en ambos simuladores.
+
+   Gobernador (etapa 18): MANUAL / AUTO ocupan el lugar de los
+   botones M / A de la caldera, con su mismo comportamiento de
+   color (seleccionado rojo, el otro verde); + y − grises.
+   APLICAR, PAUSA y REINICIAR conservan su aspecto propio
+   del RVTH (no se tocan aquí).
+===================================================== */
+
+/* ---------- Estación compacta (caldera) ---------- */
+.panel-controles .estacion-alimentacion { padding-top: 2px; padding-bottom: 2px; position: relative; }
+.panel-controles .estacion-alimentacion legend { font-size: 11px; }
+.panel-controles .escala-apertura { position: relative; height: 21px; margin: 0 7px; }
+.panel-controles .graduaciones-apertura {
+    position: absolute; top: 5px; left: 0; right: 0; height: 5px;
+    border-bottom: 1px solid #777;
+    background: repeating-linear-gradient(to right, #777 0, #777 1px, transparent 1px, transparent 10%);
+    border-right: 1px solid #777;
+}
+.panel-controles .numero-apertura { position: absolute; top: 10px; font-size: 9px; }
+.panel-controles .numero-apertura.inicio { left: 0; transform: translateX(-50%); }
+.panel-controles .numero-apertura.medio { left: 50%; transform: translateX(-50%); }
+.panel-controles .numero-apertura.fin { right: 0; transform: translateX(50%); }
+.panel-controles .marcador-apertura {
+    position: absolute; top: 0; left: 0; transform: translateX(-50%);
+    border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #333;
+}
+.panel-controles .botones-alimentacion { display: flex; gap: 4px; }
+.panel-controles .botones-alimentacion .boton-simulador {
+    flex: 1; min-width: 0; height: 22px; padding: 1px 4px; touch-action: none;
+}
+
+/* Lectura junto a la escala (caldera) */
+.panel-controles .estacion-alimentacion .escala-apertura { margin-right: 40px; }
+.panel-controles .estacion-alimentacion #gobLectura {
+    display: block; text-align: center; font-size: 11px; line-height: 13px;
+    position: absolute; top: 7px; right: 8px; width: 32px;
+}
+
+/* Bloqueo inicial sin atenuar los colores (caldera) */
+.panel-controles .botones-alimentacion .boton-simulador:disabled:not(#gobModoAuto) { opacity: 1; cursor: default; }
+
+/* ---------- Modo MANUAL / AUTO en el lugar de M / A (etapa 18) ----------
+   Mismas reglas que la caldera (.modo-alimentacion / .modo-seleccionado):
+   botones verdes; el modo seleccionado, rojo. AUTO inhabilitado se
+   atenúa (opacidad del botón base), como el botón A de la caldera. */
+.panel-controles .botones-alimentacion .modo-alimentacion {
+    background: linear-gradient(#81c784, #57a85a); border-color: #3f8242; color: #ffffff; font-weight: bold;
+}
+.panel-controles .botones-alimentacion .modo-seleccionado {
+    background: linear-gradient(#e57373, #c94f4f); border-color: #9f3b3b;
+}
+/* Etapa 25: transferencia AUTO → MANUAL en curso («Pasando a
+   MANUAL»): ámbar, ni verde ni rojo (MANUAL aún no está activo);
+   el texto ocupa dos renglones dentro de la altura del botón. */
+.panel-controles .botones-alimentacion .modo-transicion {
+    background: linear-gradient(#f3c26b, #df9a2e); border-color: #a86f16;
+    font-size: 10px; line-height: 10px; white-space: normal;
+}
+
+/* Etapa 22: rótulo de la escala (apertura del distribuidor), en el
+   borde superior derecho de la estación, sin cambiar su título. */
+.panel-controles .estacion-alimentacion .gob-titulo-escala {
+    position: absolute; top: -9px; right: 8px; padding: 0 4px;
+    background: #f7f7f7; font-size: 10px; line-height: 14px; color: #444;
+    white-space: nowrap;
+}
+
+/* Fin de carrera del ACCIONAMIENTO (limitador en MANUAL, ajuste del
+   resorte en AUTO): el extremo de la escala se marca en rojo */
+.panel-controles .numero-apertura.limite-activo { color: #c94f4f; font-weight: bold; }

@@ -474,6 +474,80 @@
 
 
 /* ============================================================
+   ETAPA F4-B2 — ADVERTENCIAS DE OPERACIÓN
+   Posición (left, top), ancho y altura máxima: js/simulador.js
+   (posicionarPanelAdvertencias). Colores iguales a los del
+   recuadro de estado. Sin animaciones ni parpadeo.
+============================================================ */
+
+.panel-advertencias{
+    position:absolute;
+
+    left:18px;
+    bottom:4px;
+
+    box-sizing:border-box;
+
+    padding:4px 6px 5px;
+
+    border-radius:6px;
+
+    background:#ffffff;
+
+    border:1px solid #9aa5b1;
+
+    font-family:Arial, Helvetica, sans-serif;
+
+    overflow:hidden;
+
+    z-index:2;
+}
+
+.advertencias-titulo{
+    font-size:11px;
+    font-weight:bold;
+    color:#263238;
+    letter-spacing:0.2px;
+    margin:0 0 3px;
+    white-space:nowrap;
+}
+
+.advertencias-lista{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    flex-wrap:wrap;
+    gap:3px 4px;
+}
+
+.advertencia{
+    font-size:10.5px;
+    font-weight:bold;
+    line-height:1.25;
+    padding:2px 6px;
+    border-radius:4px;
+    border:1px solid;
+    white-space:normal;
+}
+
+.adv-verde{ background:#d5e8d4; border-color:#6a9a68; color:#1e5b1c; }
+
+.adv-ambar{ background:#fff2cc; border-color:#c9a227; color:#6b5200; }
+
+.adv-rojo{  background:#f4cccc; border-color:#b85450; color:#7a1f1b; }
+
+/* Modo compacto: solo si el contenido no cabe en el espacio libre. */
+.panel-advertencias.compacto{ padding:2px 4px 3px; }
+
+.panel-advertencias.compacto .advertencias-titulo{ font-size:10px; margin-bottom:2px; }
+
+.panel-advertencias.compacto .advertencias-lista{ gap:2px 3px; }
+
+.panel-advertencias.compacto .advertencia{ font-size:9.5px; padding:1px 4px; line-height:1.2; }
+
+
+/* ============================================================
    11. PANEL SUPERIOR DE CONTROLES
    ============================================================ */
 
@@ -1234,4 +1308,778 @@
 @keyframes flow {
     from { stroke-dashoffset: var(--o); }
     to { stroke-dashoffset: calc(var(--o) - 120px); }
+}
+
+
+/* ============================================================
+   26. SELECTOR DE VISTA AVR / DIAGRAMA FASORIAL
+   Estilo del selector de vista del simulador de bomba
+   centrífuga (08_SIMULADOR_BBA). La vista AVR conserva su
+   distribución; la vista fasorial usa dos columnas iguales.
+   ============================================================ */
+
+.selector-vista{
+    display:flex;
+    align-self:flex-start;
+    gap:10px;
+
+    margin:0 0 auto;
+    padding:3px 8px;
+
+    font-size:11px;
+    font-weight:bold;
+    color:#333333;
+
+    background:rgba(245,245,245,0.92);
+    border:1px solid #bbbbbb;
+    border-radius:3px;
+}
+
+.selector-vista label{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    cursor:pointer;
+}
+
+.selector-vista input{
+    margin:0;
+    accent-color:#555555;
+}
+
+/* La curva queda centrada en el espacio restante, sin cambiar
+   sus dimensiones. */
+.panel-curva > .curvaCapacidad{
+    margin-bottom:auto;
+}
+
+/* Ventanas de la vista fasorial (ocultas en la vista AVR). */
+.ventana-fasorial,
+.panel-fasorial{
+    display:none;
+}
+
+.contenedor.modo-fasorial{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+
+    /* Misma altura que la vista AVR (medida en js/simulador.js),
+       para que los indicadores inferiores no se desplacen. */
+    min-height:var(--altura-vista-avr, auto);
+}
+
+.contenedor.modo-fasorial .curvaCapacidad,
+.contenedor.modo-fasorial > .escena{
+    display:none;
+}
+
+.contenedor.modo-fasorial .panel-fasorial{
+    display:flex;
+    flex-direction:column;
+
+    /* Alinea la ventana derecha con la izquierda, que queda
+       bajo el selector de vista (8 + 21 + 8 px). */
+    padding:37px 8px 8px;
+}
+
+.contenedor.modo-fasorial .ventana-fasorial{
+    display:flex;
+    flex-direction:column;
+    flex:1;
+
+    min-height:300px;
+
+    background:#ffffff;
+    border:1px solid #b0bec5;
+    border-radius:8px;
+}
+
+.contenedor.modo-fasorial .panel-curva > .ventana-fasorial{
+    margin-top:8px;
+}
+
+.titulo-ventana-fasorial{
+    margin:0;
+    padding:10px;
+
+    text-align:center;
+
+    font-size:14px;
+    font-weight:bold;
+    color:#16324f;
+
+    border-bottom:1px solid #b0bec5;
+}
+
+.area-ventana-fasorial{
+    flex:1;
+    min-height:0;
+}
+
+
+/* ============================================================
+   27. CORTE TRANSVERSAL — SELECTOR Y VISUALIZACIÓN DEL ROTOR
+   Los SVG se muestran como <img>, ajustados al área con sus
+   proporciones (object-fit: contain), centrados y sin recortes.
+   ============================================================ */
+
+.selector-corte{
+    align-self:center;
+    margin:8px 0 0;
+}
+
+.area-corte{
+    position:relative;
+
+    /* Permite dimensionar el marco con unidades cqw / cqh. */
+    container-type:size;
+}
+
+/* Marco con la proporción exacta del viewBox (1200 × 650), lo más
+   grande posible dentro del área (margen de 8 px) y centrado. Así
+   el recorte del disco coincide exactamente con el dibujo. */
+.marco-corte{
+    position:absolute;
+    inset:0;
+    margin:auto;
+
+    width:min(
+        calc(100cqw - 16px),
+        calc((100cqh - 16px) * 1200 / 650)
+    );
+    aspect-ratio:1200 / 650;
+}
+
+.marco-corte[hidden]{
+    display:none;
+}
+
+.corte-transversal,
+.disco-rotor-corte{
+    position:absolute;
+    inset:0;
+
+    display:block;
+    width:100%;
+    height:100%;
+}
+
+/* Disco giratorio: círculo de radio 183 centrado en (600, 325),
+   expresado en % del marco: 183/1200 = 15.25 % y 183/650 = 28.1538 %.
+   (600, 325) es el centro del viewBox: el giro es sobre el 50 % 50 %. */
+.disco-rotor-corte{
+    clip-path:ellipse(15.25% 28.1538% at 50% 50%);
+
+    transform-origin:50% 50%;
+
+    /* Capa de composición propia: el giro no obliga a volver a
+       dibujar la imagen fija del estator. */
+    will-change:transform;
+}
+
+
+/* ============================================================
+   28. DIAGRAMA FASORIAL (Etapas F3-B y F3-C)
+   Ventana derecha de la vista fasorial: gráfico SVG con escala
+   fija (viewBox + preserveAspectRatio: conserva proporciones) que
+   ocupa toda la altura útil, y columna lateral con casillas,
+   indicadores y notas.
+   ============================================================ */
+
+.area-diagrama-fasorial{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) var(--ancho-lateral-fasorial, 226px);
+    gap:0 8px;
+
+    padding:4px 8px 6px 4px;
+
+    /* Contención de tamaño: el contenido no agranda la ventana (los
+       indicadores inferiores no se desplazan); la columna lateral
+       se desplaza internamente solo si no cabe. */
+    container-type:size;
+    overflow:hidden;
+}
+
+.fasorial-grafico{
+    position:relative;
+    min-height:0;
+}
+
+.fasorial-grafico > svg{
+    position:absolute;
+    inset:0;
+
+    display:block;
+    width:100%;
+    height:100%;
+
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.fasorial-lateral{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+
+    min-height:0;
+    overflow-y:auto;
+
+    padding-top:2px;
+
+    font-size:12px;
+    color:#333333;
+}
+
+.fasorial-modelo{
+    padding:4px 6px;
+
+    text-align:center;
+    font-size:12px;
+    font-weight:bold;
+    color:#16324f;
+
+    background:#eef3f7;
+    border:1px solid #b0bec5;
+    border-radius:3px;
+}
+
+/* Casillas: dos columnas compactas, texto de 12 px. */
+.fasorial-casillas{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:2px 6px;
+
+    margin:0;
+    padding:2px 7px 6px;
+
+    border:1px solid #bbbbbb;
+    border-radius:3px;
+}
+
+.fasorial-casillas[hidden]{
+    display:none;
+}
+
+.fasorial-casillas legend{
+    padding:0 3px;
+
+    font-size:11px;
+    font-weight:bold;
+    color:#455a64;
+}
+
+.fasorial-casillas label{
+    display:flex;
+    align-items:center;
+    gap:5px;
+
+    min-height:18px;
+
+    font-size:12px;
+    color:#263238;
+
+    white-space:nowrap;
+    cursor:pointer;
+}
+
+.fasorial-casillas input{
+    flex:none;
+
+    width:14px;
+    height:14px;
+    margin:0;
+
+    accent-color:#455a64;
+}
+
+/* Muestra del color del elemento (leyenda incorporada). */
+.muestra-fasorial{
+    flex:none;
+
+    width:12px;
+    height:4px;
+
+    background:var(--c);
+    border-radius:1px;
+}
+
+.fasorial-casillas sub,
+.fasorial-indicadores sub{
+    font-size:0.75em;
+    line-height:0;
+}
+
+/* Indicadores numéricos: celdas tipo HMI en dos columnas. */
+.fasorial-indicadores{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:4px;
+}
+
+.fas-ind{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:4px;
+
+    min-width:0;
+    padding:2px 6px;
+
+    background:#ffffff;
+    border:1px solid #90a4ae;
+    border-radius:4px;
+}
+
+.fas-ind-ancho{
+    grid-column:1 / -1;
+}
+
+.fas-ind-nombre{
+    font-size:12px;
+    font-weight:bold;
+    color:#455a64;
+}
+
+.fas-ind-valor{
+    font-size:13px;
+    font-weight:bold;
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+    color:#102a43;
+}
+
+.area-diagrama-fasorial.modelo-liso .solo-salientes{
+    display:none;
+}
+
+.fasorial-aviso{
+    margin:0;
+    padding:3px 6px;
+
+    font-size:10px;
+    color:#7a4b00;
+
+    background:#fff2cc;
+    border:1px solid #c9a227;
+    border-radius:3px;
+}
+
+/* F4-C3: leyenda única de retención (rojo: superado; ámbar: alcanzado) */
+.fasorial-aviso.aviso-rojo{
+    color:#7a1f1b;
+    background:#f4cccc;
+    border-color:#b85450;
+    font-weight:bold;
+}
+
+.fasorial-aviso.aviso-ambar{
+    color:#6b5200;
+    background:#fff2cc;
+    border-color:#c9a227;
+    font-weight:bold;
+}
+
+/* F4-C3: mientras se muestra la leyenda de retención, las frases
+   generales de las notas ceden su espacio (parámetros y entradas de
+   los fasores mostrados se conservan). */
+.fasorial-lateral.con-retencion .nota-general{
+    display:none;
+}
+
+.fasorial-aviso[hidden]{
+    display:none;
+}
+
+.fasorial-notas{
+    margin:auto 0 0;
+
+    font-size:10px;
+    line-height:1.35;
+    color:#78909c;
+}
+
+.fasorial-parametros,
+.fasorial-entradas{
+    color:#546e7a;
+}
+
+/* Altura reducida (pantallas de 720–768 px): columna más compacta. */
+@container (max-height:420px){
+
+    .fasorial-lateral{
+        gap:3px;
+    }
+
+    .fasorial-modelo{
+        padding:1px 6px;
+        font-size:11px;
+    }
+
+    .fasorial-indicadores{
+        gap:3px;
+    }
+
+    .fasorial-casillas{
+        gap:0 5px;
+        padding:1px 6px 4px;
+    }
+
+    .fasorial-casillas label{
+        min-height:14.5px;
+        font-size:11px;
+    }
+
+    .fasorial-casillas input{
+        width:13px;
+        height:13px;
+    }
+
+    .fas-ind{
+        padding:0 5px;
+    }
+
+    .fas-ind-nombre{
+        font-size:11px;
+    }
+
+    .fas-ind-valor{
+        font-size:12px;
+    }
+
+    .fasorial-notas{
+        font-size:9.5px;
+        line-height:1.25;
+    }
+
+}
+
+/* Elementos del SVG */
+.fas-texto{
+    font-size:16px;
+    font-weight:bold;
+    paint-order:stroke;
+    stroke:#ffffff;
+    stroke-width:4px;
+    stroke-linejoin:round;
+}
+
+.fas-texto-eje{
+    font-size:12px;
+    fill:#78909c;
+}
+
+.fas-guia{
+    stroke-width:1;
+    stroke-opacity:0.7;
+    stroke-dasharray:2 2;
+}
+
+/* El ancho de la columna lateral se ajusta con el ancho de la
+   ventana (la consulta de contenedor no puede cambiar la rejilla
+   del propio contenedor). */
+@media (max-width:1300px){
+
+    .area-diagrama-fasorial{
+        --ancho-lateral-fasorial:200px;
+    }
+
+    .fasorial-casillas label{
+        gap:3px;
+        font-size:11px;
+    }
+
+    .muestra-fasorial{
+        width:8px;
+    }
+
+    .fas-ind-valor{
+        font-size:12px;
+    }
+
+}
+
+@media (max-width:1100px){
+
+    .area-diagrama-fasorial{
+        --ancho-lateral-fasorial:184px;
+    }
+
+    .fasorial-casillas{
+        padding:1px 4px 4px;
+        gap:0 3px;
+    }
+
+    .fasorial-casillas label{
+        font-size:10px;
+    }
+
+}
+
+/* Ventana estrecha (≈ 1024 px): notas más compactas. */
+@container (max-width:500px){
+
+    .fasorial-notas{
+        font-size:9px;
+        line-height:1.2;
+    }
+
+}
+
+
+/* ============================================================
+   29. CORTE TRANSVERSAL — MODO DE ANÁLISIS ESPACIAL (Etapa F3-D)
+   Selector ROTACIÓN (DINÁMICO / ANÁLISIS) junto al selector de
+   rotor, y capa SVG con los ejes d y q superpuesta al corte.
+   ============================================================ */
+
+.controles-corte{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:center;
+    gap:6px 8px;
+
+    margin:8px 8px 0;
+}
+
+.controles-corte > .selector-corte{
+    margin:0;
+}
+
+.titulo-selector-rotacion{
+    color:#555555;
+}
+
+/* Misma geometría que los marcos del corte; no captura eventos. */
+.marco-ejes-corte{
+    pointer-events:none;
+}
+
+.ejes-corte{
+    position:absolute;
+    inset:0;
+
+    display:block;
+    width:100%;
+    height:100%;
+
+    overflow:visible;
+
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+
+/* ============================================================
+   30. PANEL DESPLEGABLE — REFERENCIA DE VARIABLES (Etapa F3-E)
+   Mismo esquema que el panel lateral de procedimientos de la
+   caldera pirotubular (#panelProcedimientos): fondo #f5f5f5,
+   borde derecho #999, desplazamiento translateX(−100% → 0) en
+   0.3 s, encabezado con título y botón ×, desplazamiento
+   vertical interno. Aquí queda contenido en la ventana
+   DIAGRAMA FASORIAL (sobre el diagrama, que no cambia).
+   ============================================================ */
+
+.contenedor.modo-fasorial #ventanaDiagramaFasorial{
+    position:relative;
+}
+
+.area-diagrama-fasorial{
+    position:relative;
+}
+
+/* Botón de activación: esquina superior izquierda de la ventana,
+   en la barra de título (estilo de los botones del simulador). */
+.boton-referencia-variables{
+    position:absolute;
+    top:7px;
+    left:8px;
+    z-index:3;
+
+    height:24px;
+    padding:0 8px;
+
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:11px;
+    font-weight:bold;
+    color:#222222;
+
+    background:linear-gradient(#ffffff, #dddddd);
+    border:1px solid #888888;
+    border-radius:2px;
+    box-shadow:0 1px 1px rgba(0, 0, 0, 0.20);
+
+    cursor:pointer;
+}
+
+.boton-referencia-variables:hover{
+    background:linear-gradient(#ffffff, #eeeeee);
+}
+
+.boton-referencia-variables[aria-expanded="true"]{
+    background:linear-gradient(#cccccc, #eeeeee);
+    box-shadow:inset 0 1px 2px rgba(0, 0, 0, 0.30);
+}
+
+.panel-referencia-variables{
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    z-index:2;
+
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+
+    box-sizing:border-box;
+    width:min(400px, 100%);
+    padding:12px 14px;
+
+    overflow-y:auto;
+    overflow-x:hidden;
+
+    font-size:12px;
+    color:#263238;
+
+    background:#f5f5f5;
+    border-right:1px solid #999999;
+    box-shadow:2px 0 6px rgba(0, 0, 0, 0.15);
+
+    transform:translateX(-100%);
+    visibility:hidden;
+    transition:transform 0.3s ease-in-out, visibility 0s linear 0.3s;
+}
+
+.panel-referencia-variables.abierto{
+    transform:translateX(0);
+    visibility:visible;
+    transition:transform 0.3s ease-in-out, visibility 0s;
+}
+
+.panel-referencia-variables > header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+}
+
+.panel-referencia-variables > header h3{
+    margin:0;
+
+    font-size:14px;
+    font-weight:bold;
+    color:#16324f;
+}
+
+.panel-referencia-variables > header button{
+    flex:none;
+
+    width:26px;
+    height:26px;
+    padding:0;
+
+    font-size:18px;
+    line-height:1;
+    color:#333333;
+
+    background:linear-gradient(#ffffff, #dddddd);
+    border:1px solid #888888;
+    border-radius:2px;
+
+    cursor:pointer;
+}
+
+.panel-referencia-variables :focus-visible{
+    outline:2px solid #477894;
+    outline-offset:2px;
+}
+
+.ref-rotor{
+    margin:0;
+    font-size:11px;
+    color:#455a64;
+}
+
+.tabla-referencia-variables{
+    width:100%;
+
+    border-collapse:collapse;
+
+    background:#ffffff;
+    border:1px solid #b0bec5;
+}
+
+.tabla-referencia-variables th,
+.tabla-referencia-variables td{
+    padding:3px 6px;
+
+    text-align:left;
+    vertical-align:baseline;
+
+    border-bottom:1px solid #e3e8eb;
+}
+
+.tabla-referencia-variables thead th{
+    font-size:10px;
+    color:#455a64;
+
+    background:#eef3f7;
+    border-bottom:1px solid #b0bec5;
+}
+
+.tabla-referencia-variables .ref-grupo th{
+    padding-top:5px;
+
+    font-size:10px;
+    color:#16324f;
+
+    background:#f5f7f9;
+}
+
+.tabla-referencia-variables tr[hidden]{
+    display:none;
+}
+
+.ref-simbolo{
+    width:34px;
+
+    font-size:13px;
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+.ref-unidad{
+    width:44px;
+
+    text-align:center !important;
+    white-space:nowrap;
+    color:#455a64;
+}
+
+.tabla-referencia-variables sub,
+.ref-nota sub{
+    font-size:0.75em;
+    line-height:0;
+}
+
+.ref-nota{
+    margin:0;
+    padding:6px 8px;
+
+    font-size:11px;
+    line-height:1.4;
+    color:#455a64;
+
+    background:#ffffff;
+    border-left:3px solid #90a4ae;
+}
+
+.ref-nota-secundaria{
+    font-size:10px;
+    color:#607d8b;
+    border-left-color:#cfd8dc;
+}
+
+/* Etapa F3-F2: nota de δ en el panel VARIABLES (color del eje ψV). */
+.ref-nota-delta{
+    border-left-color:#e65100;
 }

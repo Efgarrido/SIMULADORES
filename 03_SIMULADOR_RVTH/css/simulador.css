@@ -22,8 +22,8 @@
 ===================================================== */
 
 .panel-controles{
-    margin:8px 12px 0;
-    padding:7px 10px 9px;
+    margin:4px 12px 0;
+    padding:3px 10px 4px;
     background:#f5f5f5;
     border:1px solid #b8b8b8;
     border-radius:5px;
@@ -46,10 +46,14 @@
     align-items:stretch;
 }
 
+.panel-controles .titulo-simulador{
+    margin-bottom:6px;
+}
+
 .grupo-control{
     min-width:0;
     margin:0;
-    padding:8px 10px 6px;
+    padding:2px 10px 2px;
     border:1px solid #b7b7b7;
     border-radius:4px;
     background:#f7f7f7;
@@ -139,6 +143,20 @@
     text-align:center;
     font-size:9px;
     color:#707070;
+}
+
+/* Gobernador de carga: botonera [−] valor [+]
+   (componente .ajuste-incremental de la plantilla) */
+
+.grupo-gobernador .ajuste-incremental{
+    gap:14px;
+}
+
+.grupo-gobernador .texto-ayuda-control{
+    margin-top:3px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }
 
 /* Operación */
@@ -245,7 +263,7 @@
         minmax(220px,20fr)
         minmax(0,80fr);
     gap:10px;
-    padding:8px 12px 0;
+    padding:4px 12px 0;
     align-items:stretch;
 }
 
@@ -316,7 +334,7 @@
     display:grid;
     grid-template-columns:repeat(5,minmax(0,1fr));
     gap:8px;
-    margin:8px 12px 10px;
+    margin:4px 12px 6px;
 }
 
 .indicadores-inferiores .indicador{
@@ -843,3 +861,426 @@
     stroke-width:2;
     stroke-linejoin:round;
 }
+
+
+/* =====================================================
+   ETAPA 3 — CIRCUITO DE ACEITE Y CÓDIGO VICKERS
+   (válvula distribuidora y servomotor hidráulico)
+===================================================== */
+
+.textoMini{
+    font-size:11px;
+}
+
+.tituloLeyenda{
+    font-weight:bold;
+}
+
+/* Colores según función y estado hidráulico */
+.vk-presion   { fill:#d62828; stroke:#d62828; }   /* rojo: presión de sistema */
+.vk-controlado{ fill:#f2c500; stroke:#f2c500; }   /* amarillo: flujo controlado */
+.vk-retorno   { fill:#2a62c9; stroke:#2a62c9; }   /* azul: retorno */
+.vk-carga     { fill:#f28c28; stroke:#f28c28; }   /* anaranjado: presión de carga retenida */
+.vk-inactivo  { fill:#ffffff; stroke:#ffffff; }   /* blanco: fluido inactivo */
+
+/* Cámaras del servomotor: solo relleno */
+.camara.vk-presion,
+.camara.vk-controlado,
+.camara.vk-retorno,
+.camara.vk-carga,
+.camara.vk-inactivo,
+.fluido.vk-presion,
+.fluido.vk-controlado,
+.fluido.vk-retorno,
+.fluido.vk-carga,
+.fluido.vk-inactivo{
+    stroke:none;
+}
+
+/* Conductos: borde oscuro + relleno de color */
+.tuboBorde{
+    fill:none;
+    stroke:#263640;
+    stroke-width:9;
+    stroke-linejoin:round;
+}
+
+.tubo{
+    fill:none !important;
+    stroke-width:5;
+    stroke-linejoin:round;
+}
+
+.cuerpoValvula{
+    fill:#9aa9b2;
+    stroke:#263640;
+    stroke-width:3;
+}
+
+.resalteCarrete{
+    fill:#d1d9de;
+    stroke:#4a5c66;
+    stroke-width:1.5;
+}
+
+.vastagoCarrete{
+    stroke:#4a5c66;
+    stroke-width:4;
+    stroke-linecap:round;
+}
+
+.pomoCarrete{
+    fill:#4a5c66;
+}
+
+.tomaCilindro{
+    fill:#9aa9b2;
+    stroke:#263640;
+    stroke-width:2;
+}
+
+.simboloFuente{
+    fill:white;
+    stroke:#263640;
+    stroke-width:2.5;
+}
+
+.flechaFuente{
+    fill:#263640;
+}
+
+.simboloTanque{
+    fill:none;
+    stroke:#263640;
+    stroke-width:2.5;
+}
+
+.muestra{
+    stroke:#657985 !important;
+    stroke-width:1;
+}
+
+/* Etapa 3 — ajustes: flechas de circulación y rayado */
+.flechaAceite{
+    fill:#263640;
+    stroke:#ffffff;
+    stroke-width:1.2;
+    display:none;
+}
+
+.sinCirculacion{
+    fill:url(#rayadoSinCirculacion);
+    pointer-events:none;
+    display:none;
+}
+
+.escalaDidactica{
+    font-style:italic;
+    fill:#657985;
+}
+
+/* Etapa 4 — circuito piloto */
+.tuboPilotoBorde{
+    fill:none;
+    stroke:#263640;
+    stroke-width:6;
+    stroke-linejoin:round;
+}
+
+.tuboPiloto{
+    fill:none !important;
+    stroke-width:3;
+    stroke-linejoin:round;
+}
+
+.cuerpoServoPiloto{
+    fill:#f2f5f6;
+    stroke:#263640;
+    stroke-width:4;
+}
+
+.flechaPiloto{
+    stroke-width:1;
+}
+
+/* =====================================================
+   ETAPA 5 — REGULADOR DE WATT (estilos del módulo,
+   limitados a #watt-regulador) Y VARILLAJE A–B–C
+===================================================== */
+
+#watt-regulador{
+    --fondo:#f6f5f1; --panel:#ffffff; --texto:#1d2230; --acero:#2f3a56;
+    --brazo-sup:#2f3a56; --brazo-inf:#46557a; --masa:#5b8c3a; --masa-borde:#3c6224;
+    --manguito:#a8405e; --tope:#c0577a; --fijo:#8a8f9c; --salida:#e08a12;
+    --cota:#3b7dd8; --cabezal:#b08a3a;
+}
+#watt-regulador .pieza { stroke-width: 1.5; }
+#watt-regulador .eje { fill: var(--acero); stroke: var(--acero); }
+#watt-regulador .linea-eje { stroke: var(--manguito); stroke-dasharray: 10 4 2 4; stroke-width: 1.2; }
+#watt-regulador .fija { fill: var(--fijo); stroke: var(--fijo); }
+#watt-regulador .fija-cojinete { fill: var(--fondo); stroke: var(--fijo); stroke-width: 3; }
+#watt-regulador .cabezal { fill: var(--cabezal); stroke: var(--acero); }
+#watt-regulador .cabezal-horquilla { fill: var(--cabezal); stroke: var(--acero); }
+#watt-regulador .tope { fill: var(--tope); stroke: var(--acero); }
+#watt-regulador .manguito-cuerpo { fill: var(--acero); stroke: var(--acero); }
+#watt-regulador .manguito-brida { fill: var(--manguito); stroke: var(--acero); }
+#watt-regulador #rw-manguito.en-tope .manguito-brida { fill: var(--salida); }
+#watt-regulador .barra { stroke-linecap: round; }
+#watt-regulador .brazo-sup { stroke: var(--brazo-sup); stroke-width: 16; }
+#watt-regulador .brazo-inf { stroke: var(--brazo-inf); stroke-width: 12; }
+#watt-regulador .cuello { stroke: var(--brazo-sup); stroke-width: 10; }
+#watt-regulador .masa { fill: var(--masa); stroke: var(--masa-borde); stroke-width: 2.5; }
+#watt-regulador .pasador { fill: var(--panel); stroke: var(--acero); stroke-width: 3; }
+#watt-regulador .rotulo { fill: var(--texto); font-size: 22px; font-family: Arial, Helvetica, sans-serif; }
+#watt-regulador .detras { filter: brightness(.82); }
+#watt-regulador .brillo { fill: #fff; opacity: .28; pointer-events: none; }
+#watt-regulador .marca-giro { stroke: var(--panel); stroke-width: 3; opacity: .7; }
+
+.collarToma{
+    fill:#e08a12;
+    stroke:#263640;
+    stroke-width:1.2;
+}
+
+.horquillaToma{
+    stroke:#e08a12;
+    stroke-width:3;
+    stroke-linecap:round;
+}
+
+.bielaVarillaje{
+    stroke:#4a5c66;
+    stroke-width:2.5;
+    stroke-linecap:round;
+}
+
+.palancaVarillaje{
+    stroke:#263640;
+    stroke-width:4;
+    stroke-linecap:round;
+}
+
+.pasadorVarillaje{
+    fill:#ffffff;
+    stroke:#263640;
+    stroke-width:1.5;
+}
+
+.rotuloVarillaje{
+    font-weight:bold;
+}
+
+/* Etapa 24: motores esquemáticos M1 y M2 (verde detenido,
+   rojo en marcha; flecha de sentido solo en marcha) */
+.motorEsq{ fill:#57a85a; stroke:#263640; stroke-width:1.5; }
+.motorEsq.en-marcha{ fill:#c94f4f; }
+.motorEsqLetra{ fill:#ffffff; font-size:9px; font-weight:bold; text-anchor:middle; pointer-events:none; }
+.ejeMotorEsq{ fill:none; stroke:#4a5c66; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.flechaMotor .flechaMotorArco{ fill:none; stroke:#a13a24; stroke-width:1.3; }
+.flechaMotor .flechaMotorPunta{ fill:#a13a24; }
+.rotuloMotor{ fill:#475965; }
+
+/* =====================================================
+   CAPA DE ANOTACIONES OCULTA (17-oct-2026)
+   Textos de referencia de la escena: ocultos por
+   defecto; visibles con la clase "mostrar-anotaciones"
+   en el <svg> de la escena. Solo quedan a la vista los
+   títulos de los componentes (.tituloComponente).
+===================================================== */
+
+.escena svg .anotacion{
+    display:none;
+}
+
+.escena svg.mostrar-anotaciones .anotacion{
+    display:inline;
+}
+
+/* Letras "S" de los topes del módulo de Watt */
+.escena svg:not(.mostrar-anotaciones) #watt-regulador .rotulo{
+    display:none;
+}
+
+.tituloComponente{
+    font-size:14px;
+    font-weight:bold;
+}
+
+/* Etapa 6 — palanca flotante A–C–D (realimentación) */
+.palancaFlotante{
+    stroke:#4a5c66;
+    stroke-width:4;
+    stroke-linecap:round;
+}
+
+/* Etapa 7 — leva, seguidor y apoyo móvil B */
+.levaPerfil{
+    fill:#b8c4cb;
+    stroke:#263640;
+    stroke-width:1.5;
+    stroke-linejoin:round;
+}
+
+.rodilloSeguidor{
+    fill:#ffffff;
+    stroke:#263640;
+    stroke-width:2;
+}
+
+.brazoSeguidor{
+    fill:none;
+    stroke:#263640;
+    stroke-width:3.5;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+}
+
+.varillaRealimentacion{
+    stroke:#4a5c66;
+    stroke-width:2.5;
+    stroke-linecap:round;
+}
+
+.guiaB line{
+    stroke:#657985;
+    stroke-width:2;
+}
+
+.guiaB .guiaBFija{
+    stroke-width:1.2;
+}
+
+.pasadorB{
+    fill:#e7ecef;
+}
+
+/* Etapa 8 — seguidor directo guiado, resorte y guía fija */
+.vastagoSeguidor{
+    stroke:#263640;
+    stroke-width:3.5;
+    stroke-linecap:round;
+}
+
+.resorteSeguidor{
+    fill:none;
+    stroke:#657985;
+    stroke-width:1.4;
+    stroke-linejoin:round;
+}
+
+.collarSeguidor{
+    fill:#9da7ad;
+    stroke:#263640;
+    stroke-width:1.2;
+}
+
+.guiaSeguidor .bujeGuia{
+    fill:#9da7ad;
+    stroke:#263640;
+    stroke-width:1.2;
+}
+
+.guiaSeguidor line{
+    stroke:#263640;
+    stroke-width:1.4;
+    stroke-linecap:round;
+}
+
+.guiaSeguidor .lineaBaseApoyo{
+    stroke-width:2.2;
+}
+
+/* PROPUESTA — ranura de la palanca en A */
+.ranuraPalanca{
+    stroke:#ffffff;
+    stroke-width:2.2;
+    stroke-linecap:round;
+}
+
+/* Interruptor en la esquina superior derecha de la escena mecánica.
+   Formato del SIN: 140 × 27 px; cerrado rojo, abierto verde. */
+.escena{position:relative;}
+.control-interruptor{
+    position:absolute;
+    top:10px;
+    right:10px;
+    z-index:2;
+    width:228px;
+    max-width:calc(100% - 20px);
+    text-align:right;
+}
+:is(#interruptorGenerador, #sincInterruptor52G){
+    width:140px;
+    min-width:0;
+    height:27px;
+    padding:2px 12px;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:11px;
+    font-weight:bold;
+    color:#ffffff;
+    border:1px solid #888888;
+    border-radius:2px;
+    box-shadow:0 1px 1px rgba(0,0,0,0.20);
+    white-space:nowrap;
+    cursor:pointer;
+}
+:is(#interruptorGenerador, #sincInterruptor52G).success{
+    background:linear-gradient(#e57373,#c94f4f);
+    border-color:#9f3b3b;
+}
+:is(#interruptorGenerador, #sincInterruptor52G).danger{
+    background:linear-gradient(#81c784,#57a85a);
+    border-color:#3f8242;
+}
+:is(#interruptorGenerador, #sincInterruptor52G):active{box-shadow:inset 0 1px 2px rgba(0,0,0,0.30);}
+:is(#interruptorGenerador, #sincInterruptor52G):focus-visible{outline:3px solid #296caa;outline-offset:2px;}
+.velocidad-interruptor{font-size:12px;margin-top:3px;color:#33454f;}
+.aviso-interruptor{font-size:11px;line-height:1.3;min-height:15px;margin-top:2px;color:#475965;}
+.aviso-interruptor.rechazado{color:#a13a24;font-weight:bold;}
+
+/* Etapa 11 — seis indicadores inferiores IGUALES
+   (mismo ancho, alto y estilo). Títulos abreviados. */
+@media(min-width:1000px){
+    .indicadores-inferiores{
+        grid-template-columns:repeat(6,minmax(0,1fr));
+    }
+}
+
+@media(min-width:901px) and (max-width:999px){
+    .indicadores-inferiores{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+
+.indicadores-inferiores .indicador .titulo{
+    white-space:nowrap;
+    overflow:hidden;
+}
+
+/* Interruptor: sin leyendas permanentes. El aviso de
+   rechazo es transitorio y flota bajo el botón. */
+.control-interruptor .aviso-interruptor{
+    position:absolute;
+    top:31px;
+    right:0;
+    min-height:0;
+    margin:0;
+    padding:3px 7px;
+    white-space:nowrap;
+    background:#fff4f1;
+    border:1px solid #d9a99c;
+    border-radius:2px;
+    box-shadow:0 1px 2px rgba(0,0,0,0.15);
+    display:none;
+}
+.control-interruptor .aviso-interruptor.rechazado{ display:block; }
+
+/* Ventanas de 1000–1199 px: misma reducción en los seis */
+@media(min-width:1000px) and (max-width:1199px){
+    .indicadores-inferiores{ gap:6px; }
+    .indicadores-inferiores .indicador{ padding:4px 5px; }
+    .indicadores-inferiores .indicador .titulo,
+    .indicadores-inferiores .indicador .valor{ font-size:11px; }
+    .indicadores-inferiores .indicador .valor{ padding:2px 3px; }
+}
+
+/* El rótulo completo del mando 52G comparte estilo y colores con la escena. */
+:is(#interruptorGenerador, #sincInterruptor52G){width:auto;min-width:110px;}

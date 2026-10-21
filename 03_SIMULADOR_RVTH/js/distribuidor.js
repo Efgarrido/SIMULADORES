@@ -552,7 +552,12 @@ const TURBINA_ESCALA = 0.32;
 const ACOPLE_VASTAGO_Y = 515;
 
 /* Palanca de reenvío */
-const ACOPLE_PIVOTE_X = 320;
+/* 16-oct-2026: pivote desplazado 20 px a la derecha (antes 320)
+   para que D no se monte sobre el caracol con 0 % de mando.
+   Vástago y ángulo de la oreja recalculados para conservar
+   0 % → ψ = 0° y 100 % → ψ = −10.34° (desviación intermedia
+   ≤ 0.036° respecto a la geometría anterior). */
+const ACOPLE_PIVOTE_X = 340;
 const ACOPLE_PIVOTE_Y = 595;
 const ACOPLE_BRAZO_A = 80;       // pivote → D (vástago)
 const ACOPLE_BRAZO_B = 47.5;     // pivote → G (biela de conexión)
@@ -570,8 +575,10 @@ const ACOPLE_RADIO_OREJA_LOCAL = 560.9;
    topes del pistón coincidan con los extremos aprobados
    del V8:  0 % → ψ = 0°   y   100 % → ψ = −10.34°.
 */
-const ACOPLE_VASTAGO = 468.3448;
-const ACOPLE_ANGULO_OREJA = 95.5249;   // grados, sistema del anillo
+/* 16-oct-2026 (servomotor con pivote trasero P = 968, 515):
+   recalibrados para conservar 0 % → ψ = 0° y 100 % → ψ = −10.34°. */
+const ACOPLE_VASTAGO = 457.4830;         // antes 456.9904 (y 468.3448)
+const ACOPLE_ANGULO_OREJA = 90.8345;   // grados, sistema del anillo (antes 90.7386 y 95.5249)
 
 /* Ramas de montaje (signo del producto vectorial) */
 const ACOPLE_RAMA_D = 1;       // D por encima del pivote
@@ -736,12 +743,21 @@ function interseccionCircunferencias(c1, r1, c2, r2, rama){
 function resolverAcoplamiento(xPiston){
 
     const pivote = { x: ACOPLE_PIVOTE_X, y: ACOPLE_PIVOTE_Y };
-    const extremoPiston = { x: xPiston, y: ACOPLE_VASTAGO_Y };
+    /* Servomotor articulado en su pivote trasero P:
+       D está a la distancia (vástago + P–pistón) de P,
+       medida sobre el eje del cilindro. */
+
+    const pivoteServo = { x: SERVO_PIVOTE_X, y: SERVO_PIVOTE_Y };
+
+    const distanciaPD =
+    ACOPLE_VASTAGO
+    +
+    (SERVO_PIVOTE_X - xPiston);
 
     /* 1. D: |D − pivote| = a  y  |D − pistón| = vástago */
     const D = interseccionCircunferencias(
         pivote, ACOPLE_BRAZO_A,
-        extremoPiston, ACOPLE_VASTAGO,
+        pivoteServo, distanciaPD,
         ACOPLE_RAMA_D
     );
 
@@ -861,10 +877,12 @@ function actualizarDistribuidor(movimientoServo){
     puntoD.setAttribute("cx", acople.D.x);
     puntoD.setAttribute("cy", acople.D.y);
 
-    /* Etiqueta D: arriba y ligeramente a la derecha
-       del punto (solo posición del texto). */
-    textoD.setAttribute("x", acople.D.x + 7);
-    textoD.setAttribute("y", acople.D.y - 13);
+    /* Rótulo visible G: a la derecha del pasador vástago–reenvío
+       (r = 8), sobre el vástago; mismo estilo que A–E.
+       Conserva los nombres internos acople.D, puntoD y textoD;
+       no corresponde al punto interno acople.G. */
+    textoD.setAttribute("x", acople.D.x + 11);
+    textoD.setAttribute("y", acople.D.y - 7);
 
 
     ultimoXPiston = xPiston;
@@ -895,13 +913,22 @@ function actualizarDistribuidor(movimientoServo){
 
 
 /* =====================================================
-   GIRO DEL RODETE FRANCIS (sin cambios)
+   GIRO DEL RODETE FRANCIS
+   Etapa 22 (19-oct-2026): 25 % de la velocidad del eje.
 ===================================================== */
 
 function actualizarRotorFrancis(dt){
 
+    /*
+       Velocidad visual nominal del rodete: 540 °/s = 90 rpm,
+       es decir el 25 % de la velocidad de referencia de la
+       unidad (360 rpm a 60 Hz): una vuelta cada 0.6667 s.
+       Escala proporcional a la frecuencia (detenido a 0 Hz).
+       Etapa 22: antes 216 °/s (36 rpm, 1/10).
+    */
+
     const velocidadVisualNominal =
-    200;
+    540;
 
 
     anguloRotor9A -=

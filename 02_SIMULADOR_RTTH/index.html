@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SIMULADOR RV - Versión 17</title>
+<title>SIMULADOR RVTH</title>
 
 <link rel="stylesheet" href="css/estilos.css">
 <link rel="stylesheet" href="css/simulador.css">
@@ -255,6 +255,16 @@ REINICIAR
 
 <aside class="panel panel-curva">
 
+<!-- =========================================================
+     SELECTOR DE VISTA — AVR / DIAGRAMA FASORIAL
+     Cambio exclusivamente visual (js/simulador.js).
+========================================================= -->
+
+<div class="selector-vista" role="radiogroup" aria-label="Vista del simulador">
+    <label><input type="radio" name="vistaSimulador" id="vistaAVR" value="avr" autocomplete="off" checked> AVR</label>
+    <label><input type="radio" name="vistaSimulador" id="vistaDiagramaFasorial" value="fasorial" autocomplete="off"> DIAGRAMA FASORIAL</label>
+</div>
+
 <div class="curvaCapacidad">
 
 <div class="tituloCurva">
@@ -363,7 +373,7 @@ Q (pu)
     Límite de estabilidad
 </text>
 
-<text x="48" y="200" class="textoLimiteCapacidad etiquetaTurbina">Pmin turbina</text>
+<text x="48" y="200" class="textoLimiteCapacidad etiquetaTurbina etiquetaPminTurbina">Pmin turbina</text>
 <text x="145" y="45" class="textoLimiteCapacidad etiquetaTurbina">Pmax turbina</text>
 
 <circle
@@ -388,6 +398,7 @@ x="200"
 y="27"
 text-anchor="middle"
 class="textoCurva"
+id="textoSmaxCurva"
 >
 Smax = 1.0 pu
 </text>
@@ -395,6 +406,65 @@ Smax = 1.0 pu
 </svg>
 
 </div>
+
+<!-- VENTANA IZQUIERDA DE LA VISTA FASORIAL (contenido pendiente) -->
+
+<section class="ventana-fasorial" id="ventanaCorteTransversal" aria-labelledby="tituloCorteTransversal">
+    <h2 class="titulo-ventana-fasorial" id="tituloCorteTransversal">GENERADOR SÍNCRONO — CORTE TRANSVERSAL</h2>
+
+    <!-- Selector del rotor del corte transversal (independiente del
+         selector de rotor de la vista AVR). -->
+    <div class="controles-corte">
+    <div class="selector-vista selector-corte" role="radiogroup" aria-label="Tipo de rotor del corte transversal">
+        <label><input type="radio" name="rotorCorte" id="rotorCorteSalientes" value="salientes" autocomplete="off" checked> ROTOR DE POLOS SALIENTES</label>
+        <label><input type="radio" name="rotorCorte" id="rotorCorteLiso" value="liso" autocomplete="off"> ROTOR CILÍNDRICO</label>
+    </div>
+
+    <!-- Modo de visualización del rotor transversal (Etapa F3-D):
+         DINÁMICO = giro sincronizado; ANÁLISIS = rotor inmóvil en la
+         posición capturada, con los ejes d y q. No usa PAUSA. -->
+    <div class="selector-vista selector-corte selector-rotacion" role="radiogroup" aria-label="Modo de visualización del rotor transversal">
+        <span class="titulo-selector-rotacion">ROTACIÓN:</span>
+        <label><input type="radio" name="modoCorte" id="modoCorteDinamico" value="dinamico" autocomplete="off" checked> DINÁMICO</label>
+        <label><input type="radio" name="modoCorte" id="modoCorteAnalisis" value="analisis" autocomplete="off"> ANÁLISIS</label>
+    </div>
+    </div>
+
+    <!-- Cortes transversales cargados como recursos externos (<img>):
+         sus identificadores internos no entran en el DOM.
+         Cada marco tiene dos capas del MISMO archivo SVG:
+           · corte-transversal  — imagen fija (estator, fases, leyenda)
+           · disco-rotor-corte  — misma imagen recortada al disco del
+             entrehierro (r = 183) y girada con el ángulo del rotor
+             longitudinal (anguloRotor). -->
+    <div class="area-ventana-fasorial area-corte" id="areaCorteTransversal">
+        <div class="marco-corte" id="marcoCorteSalientes">
+            <img class="corte-transversal" id="imgCorteSalientes"
+                 src="svg_rotores/rotor_polos_salientes.svg"
+                 alt="Corte transversal del generador síncrono con rotor de polos salientes">
+            <img class="disco-rotor-corte" id="discoCorteSalientes"
+                 src="svg_rotores/rotor_polos_salientes.svg"
+                 alt="" aria-hidden="true">
+        </div>
+        <div class="marco-corte" id="marcoCorteLiso" hidden>
+            <img class="corte-transversal" id="imgCorteLiso"
+                 src="svg_rotores/rotor_cilindrico.svg"
+                 alt="Corte transversal del generador síncrono con rotor liso (cilíndrico)">
+            <img class="disco-rotor-corte" id="discoCorteLiso"
+                 src="svg_rotores/rotor_cilindrico.svg"
+                 alt="" aria-hidden="true">
+        </div>
+
+        <!-- Capa de análisis (Etapa F3-D): ejes d y q superpuestos al
+             corte, en el mismo sistema de coordenadas del SVG del rotor
+             (viewBox 1200 × 650, centro 600, 325). Contenido generado en
+             js/simulador.js. Los SVG originales no se modifican. -->
+        <div class="marco-corte marco-ejes-corte" id="marcoEjesCorte" hidden>
+            <svg class="ejes-corte" id="svgEjesCorte" viewBox="0 0 1200 650"
+                 aria-label="Ejes d y q del rotor en la posición capturada"></svg>
+        </div>
+    </div>
+</section>
 
 </aside>
 
@@ -646,7 +716,7 @@ d="
 M155 135
 L155 105
 L300 105
-L300 140
+L300 128
 "
 class="lineaExcitacion"
 />
@@ -657,7 +727,7 @@ d="
 M155 215
 L155 265
 L300 265
-L300 210
+L300 222
 "
 class="lineaExcitacion"
 />
@@ -675,8 +745,8 @@ EXCITATRIZ DC
 
 
 <text
-x="270"
-y="137"
+x="350"
+y="145"
 text-anchor="middle"
 class="tituloBloque"
 >
@@ -684,12 +754,34 @@ class="tituloBloque"
 </text>
 
 
+<!-- EXCITATRIZ CD: tres circunferencias concéntricas (carcasa y
+     máquina). Terminales: superior e inferior = circuito de campo;
+     derecho superior e inferior = salida de CD hacia los anillos. -->
+<g id="excitatrizCD">
 <circle
 cx="300"
 cy="175"
-r="35"
+r="37"
 class="maquinaDC"
+style="fill:#ffffff"
 />
+<circle
+cx="300"
+cy="175"
+r="31"
+fill="none"
+stroke="#263238"
+stroke-width="2"
+/>
+<circle
+cx="300"
+cy="175"
+r="25"
+fill="none"
+stroke="#263238"
+stroke-width="2"
+/>
+</g>
 
 
 <text
@@ -698,13 +790,13 @@ y="182"
 text-anchor="middle"
 class="tituloBloque"
 >
-DC
+CD
 </text>
 
 
 <text
-x="270"
-y="239"
+x="350"
+y="219"
 text-anchor="middle"
 class="tituloBloque"
 >
@@ -715,8 +807,9 @@ class="tituloBloque"
 <path
 id="conductorExcitacion"
 d="
-M300 140
-L300 105
+M300 150
+L335 150
+L335 105
 L405 105
 L569 105
 L569 145
@@ -732,8 +825,10 @@ class="lineaExcitacion"
 <path
 id="conductorRetornoExcitacion"
 d="
-M300 210
-L300 265
+M300 200
+L335 200
+L335 265
+M405 265
 L465 265
 L465 125
 L553 125
@@ -742,13 +837,53 @@ L553 145
 class="lineaExcitacion"
 />
 
-<g id="flujoDegradadoRetornoExcitacion" class="flujoDegradadoExcitacion" pointer-events="none" aria-hidden="true"></g>
+<!-- Trayectoria (invisible) del flujo animado de retorno: excitatriz (−)
+     → derivación izquierda → devanado superior del transformador de
+     estabilización → derivación derecha → anillo rozante. La animación
+     la recorre en sentido inverso (anillo → devanado → excitatriz).
+     La capa animada se dibuja después del transformador (ver abajo). -->
+<path
+id="trayectoriaFlujoRetornoExcitacion"
+d="
+M300 200
+L335 200
+L335 265
+L335 370
+L335 374
+C335 384 345 384 345 374
+C345 364 355 364 355 374
+C355 384 365 384 365 374
+C365 364 375 364 375 374
+C375 384 385 384 385 374
+C385 364 395 364 395 374
+C395 384 405 384 405 374
+L405 370
+L405 265
+L465 265
+L465 125
+L553 125
+L553 145
+"
+fill="none"
+stroke="none"
+pointer-events="none"
+aria-hidden="true"
+/>
 
 
 
 <rect
 x="295"
-y="135"
+y="128"
+width="10"
+height="10"
+rx="1"
+fill="#111"
+/>
+
+<rect
+x="295"
+y="212"
 width="10"
 height="10"
 rx="1"
@@ -1850,6 +1985,10 @@ class="lineaExcitacion"
 <circle cx="335" cy="370" r="5" fill="#b3261e"/>
 <circle cx="405" cy="370" r="5" fill="#b3261e"/>
 
+<!-- Capa animada del flujo de retorno, encima del transformador para que
+     el recorrido a través del devanado superior sea visible. -->
+<g id="flujoDegradadoRetornoExcitacion" class="flujoDegradadoExcitacion" pointer-events="none" aria-hidden="true"></g>
+
 
 <!-- =====================================================
      ETAPA 1 — REFERENCIAS DEL TRANSFORMADOR DE
@@ -1861,10 +2000,10 @@ class="lineaExcitacion"
 <g id="refTransformadorEst" pointer-events="none">
 
 <!-- i_est: corriente del primario, sentido descendente -->
-<line x1="322" y1="292" x2="322" y2="322" stroke="#175a91" stroke-width="2"/>
-<polygon points="317,320 327,320 322,330" fill="#175a91"/>
+<line x1="417" y1="312" x2="417" y2="342" stroke="#175a91" stroke-width="2"/>
+<polygon points="412,340 422,340 417,350" fill="#175a91"/>
 
-<text x="315" y="318" text-anchor="end" class="textoValor">
+<text x="445" y="331" text-anchor="end" class="textoValor">
 <tspan font-style="italic">i</tspan><tspan baseline-shift="sub" font-size="10">est</tspan>
 </text>
 
@@ -2186,7 +2325,8 @@ class="lineaControl"
 
 <!-- =====================================================
      ETAPA 1 — ECUACIÓN DEL ERROR
-     · e = Vref − V = −ΔV sobre el conductor de error
+     · e = Vref − Vm sobre el conductor de error (F4-C4: Vm es la
+       tensión medida por el transductor que usa el regulador)
      (los signos del comparador están ahora en
       #bloqueComparadorSigma)
 ====================================================== -->
@@ -2198,7 +2338,7 @@ Error de tensión
 </text>
 
 <text x="640" y="566" text-anchor="middle" class="textoValor" id="ecuacionError">
-e = V<tspan baseline-shift="sub" font-size="10">ref</tspan> − V = −ΔV
+e = V<tspan baseline-shift="sub" font-size="10">ref</tspan> − V<tspan baseline-shift="sub" font-size="10">m</tspan>
 </text>
 
 </g>
@@ -2223,6 +2363,28 @@ class="estado"
 id="estado"
 >
 TENSIÓN NOMINAL
+</div>
+
+
+<!-- =========================================================
+     ETAPA F4-B2 — ADVERTENCIAS DE OPERACIÓN
+     Recuadro superpuesto en el espacio libre inferior izquierdo
+     de la escena (simétrico al recuadro de estado). Su posición
+     y su ancho se calculan en js/simulador.js para no cubrir
+     ningún elemento del diagrama ni el recuadro de estado.
+     Contenido generado por actualizarAdvertencias().
+========================================================= -->
+
+<div
+class="panel-advertencias"
+id="panelAdvertencias"
+role="status"
+aria-live="polite"
+>
+<div class="advertencias-titulo">ADVERTENCIAS DE OPERACIÓN</div>
+<ul class="advertencias-lista" id="listaAdvertencias">
+<li class="advertencia adv-verde">OPERACIÓN DENTRO DE LÍMITES</li>
+</ul>
 </div>
 
 
@@ -2267,6 +2429,164 @@ id="rotorCilindrico"
 
 
 </main>
+
+<!-- =========================================================
+     VENTANA DERECHA DE LA VISTA FASORIAL — DIAGRAMA FASORIAL
+     (Etapa F3-B). Postproceso cuasiestático de PG, QG y V del
+     AVR (js/simulador.js, sección DIAGRAMA FASORIAL). El tipo
+     de rotor lo fija el selector del corte transversal.
+========================================================= -->
+
+<section class="panel panel-fasorial" id="panelDiagramaFasorial">
+    <section class="ventana-fasorial" id="ventanaDiagramaFasorial" aria-labelledby="tituloDiagramaFasorial">
+        <!-- Botón del panel de referencia (Etapa F3-E) -->
+        <button type="button" class="boton-referencia-variables" id="btnReferenciaVariables"
+                aria-controls="panelReferenciaVariables" aria-expanded="false"
+                title="Referencia de variables">☰ VARIABLES</button>
+
+        <h2 class="titulo-ventana-fasorial" id="tituloDiagramaFasorial">DIAGRAMA FASORIAL</h2>
+        <div class="area-ventana-fasorial area-diagrama-fasorial" id="areaDiagramaFasorial">
+
+        <div class="fasorial-grafico">
+            <!-- Contenido generado en js/simulador.js (escala fija). -->
+            <svg id="svgDiagramaFasorial" viewBox="0 0 565 545" role="img"
+                 aria-labelledby="tituloModeloFasorial"></svg>
+        </div>
+
+        <div class="fasorial-lateral">
+
+        <div class="fasorial-modelo" id="tituloModeloFasorial">ROTOR DE POLOS SALIENTES</div>
+
+        <fieldset class="fasorial-casillas" id="casillasFasorialLiso" data-modelo="liso" hidden>
+            <legend>Elementos visibles</legend>
+            <label title="Tensión terminal (referencia)"><input type="checkbox" data-elemento="V" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#1f4e79"></span><span>V</span></label>
+            <label title="Corriente de armadura"><input type="checkbox" data-elemento="Ia" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#c62828"></span><span>I<sub>a</sub></span></label>
+            <label title="Caída resistiva (magnitud real)"><input type="checkbox" data-elemento="RaIa" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#6d4c41"></span><span>R<sub>a</sub>·I<sub>a</sub></span></label>
+            <label title="Caída en la reactancia síncrona"><input type="checkbox" data-elemento="jXsIa" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#2e7d32"></span><span>jX<sub>s</sub>·I<sub>a</sub></span></label>
+            <label title="Fuerza electromotriz interna"><input type="checkbox" data-elemento="Ef" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#6a1b9a"></span><span>E<sub>f</sub></span></label>
+            <label title="Ángulo del factor de potencia"><input type="checkbox" data-elemento="phi" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#c62828"></span><span>φ</span></label>
+            <label title="Ángulo de carga"><input type="checkbox" data-elemento="delta" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#6a1b9a"></span><span>δ</span></label>
+        </fieldset>
+
+        <fieldset class="fasorial-casillas" id="casillasFasorialSalientes" data-modelo="salientes">
+            <legend>Elementos visibles</legend>
+            <label title="Tensión terminal (referencia)"><input type="checkbox" data-elemento="V" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#1f4e79"></span><span>V</span></label>
+            <label title="Corriente de armadura"><input type="checkbox" data-elemento="Ia" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#c62828"></span><span>I<sub>a</sub></span></label>
+            <label title="Caída resistiva (magnitud real)"><input type="checkbox" data-elemento="RaIa" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#6d4c41"></span><span>R<sub>a</sub>·I<sub>a</sub></span></label>
+            <label title="Caída en Xq con la corriente total"><input type="checkbox" data-elemento="jXqIa" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#2e7d32"></span><span>jX<sub>q</sub>·I<sub>a</sub></span></label>
+            <label title="Fasor auxiliar: fija la dirección del eje q"><input type="checkbox" data-elemento="EQ" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#9c4dcc"></span><span>E<sub>Q</sub></span></label>
+            <label title="Corrección de saliencia sobre el eje q"><input type="checkbox" data-elemento="jXdXqId" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#ef6c00"></span><span>j(X<sub>d</sub>−X<sub>q</sub>)·I<sub>d</sub></span></label>
+            <label title="Fuerza electromotriz interna"><input type="checkbox" data-elemento="Ef" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#6a1b9a"></span><span>E<sub>f</sub></span></label>
+            <label title="Componente de Ia en el eje d"><input type="checkbox" data-elemento="Id" autocomplete="off"><span class="muestra-fasorial" style="--c:#ad1457"></span><span>I<sub>d</sub></span></label>
+            <label title="Componente de Ia en el eje q"><input type="checkbox" data-elemento="Iq" autocomplete="off"><span class="muestra-fasorial" style="--c:#00838f"></span><span>I<sub>q</sub></span></label>
+            <label title="Construcción alternativa (opcional)"><input type="checkbox" data-elemento="jXdId" autocomplete="off"><span class="muestra-fasorial" style="--c:#827717"></span><span>jX<sub>d</sub>·I<sub>d</sub></span></label>
+            <label title="Construcción alternativa (opcional)"><input type="checkbox" data-elemento="jXqIq" autocomplete="off"><span class="muestra-fasorial" style="--c:#0277bd"></span><span>jX<sub>q</sub>·I<sub>q</sub></span></label>
+            <label title="Eje directo (δ − 90°)"><input type="checkbox" data-elemento="ejeD" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#78909c"></span><span>Eje d</span></label>
+            <label title="Eje en cuadratura (δ)"><input type="checkbox" data-elemento="ejeQ" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#78909c"></span><span>Eje q</span></label>
+            <label title="Ángulo del factor de potencia"><input type="checkbox" data-elemento="phi" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#c62828"></span><span>φ</span></label>
+            <label title="Ángulo de carga"><input type="checkbox" data-elemento="delta" autocomplete="off" checked><span class="muestra-fasorial" style="--c:#6a1b9a"></span><span>δ</span></label>
+            <label title="Ángulo entre Ia y el eje q"><input type="checkbox" data-elemento="psi" autocomplete="off"><span class="muestra-fasorial" style="--c:#455a64"></span><span>ψ</span></label>
+        </fieldset>
+
+        <div class="fasorial-indicadores" id="indicadoresFasoriales">
+            <div class="fas-ind"><span class="fas-ind-nombre">|I<sub>a</sub>|</span><span class="fas-ind-valor" id="fasMagIa">—</span></div>
+            <div class="fas-ind"><span class="fas-ind-nombre">|E<sub>f</sub>|</span><span class="fas-ind-valor" id="fasMagEf">—</span></div>
+            <div class="fas-ind"><span class="fas-ind-nombre">φ</span><span class="fas-ind-valor" id="fasPhi">—</span></div>
+            <div class="fas-ind"><span class="fas-ind-nombre">δ</span><span class="fas-ind-valor" id="fasDelta">—</span></div>
+            <div class="fas-ind fas-ind-ancho"><span class="fas-ind-nombre">FP</span><span class="fas-ind-valor" id="fasFP">—</span></div>
+            <div class="fas-ind solo-salientes"><span class="fas-ind-nombre">I<sub>d</sub></span><span class="fas-ind-valor" id="fasId">—</span></div>
+            <div class="fas-ind solo-salientes"><span class="fas-ind-nombre">I<sub>q</sub></span><span class="fas-ind-valor" id="fasIq">—</span></div>
+            <div class="fas-ind fas-ind-ancho solo-salientes"><span class="fas-ind-nombre">|E<sub>Q</sub>|</span><span class="fas-ind-valor" id="fasMagEQ">—</span></div>
+        </div>
+
+        <p class="fasorial-aviso" id="avisoFasorial" hidden></p>
+
+        <p class="fasorial-notas">
+            <span class="nota-general">Modelo fasorial de régimen permanente · Actualización cuasiestática con PG, QG y V.</span>
+            <span class="fasorial-parametros" id="parametrosFasoriales"></span>
+            <span class="fasorial-entradas" id="entradasFasoriales"></span>
+            <span class="nota-general">Marco síncrono (V en 0°): δ es el ángulo de carga, no la posición mecánica del rotor.</span>
+        </p>
+
+        </div>
+
+        <!-- =========================================================
+             PANEL DESPLEGABLE — REFERENCIA DE VARIABLES (Etapa F3-E)
+             Mismo esquema que el panel lateral de procedimientos del
+             simulador de la caldera pirotubular: se desliza desde el
+             borde izquierdo, contenido en esta ventana, sobre el
+             diagrama (que no se desplaza ni se redimensiona).
+        ========================================================= -->
+        <aside class="panel-referencia-variables" id="panelReferenciaVariables"
+               aria-labelledby="tituloReferenciaVariables" aria-hidden="true" inert>
+            <header>
+                <h3 id="tituloReferenciaVariables">REFERENCIA DE VARIABLES</h3>
+                <button type="button" id="btnCerrarReferenciaVariables"
+                        aria-label="Cerrar referencia de variables">×</button>
+            </header>
+
+            <p class="ref-rotor">Rotor seleccionado: <strong id="refRotorSeleccionado">ROTOR DE POLOS SALIENTES</strong></p>
+
+            <table class="tabla-referencia-variables">
+                <thead>
+                <tr><th scope="col">SÍMBOLO</th><th scope="col">SIGNIFICADO</th><th scope="col" class="ref-unidad">UNIDAD</th></tr>
+                </thead>
+                <tbody>
+                <tr class="ref-grupo"><th colspan="3" scope="colgroup">Variables comunes</th></tr>
+                <tr><td class="ref-simbolo" style="color:#1f4e79">V</td><td>Tensión terminal del generador</td><td class="ref-unidad">pu</td></tr>
+                <tr><td class="ref-simbolo" style="color:#c62828">I<sub>a</sub></td><td>Corriente del estator</td><td class="ref-unidad">pu</td></tr>
+                <tr><td class="ref-simbolo" style="color:#6a1b9a">E<sub>f</sub></td><td>Fuerza electromotriz interna</td><td class="ref-unidad">pu</td></tr>
+                <tr><td class="ref-simbolo" style="color:#6d4c41">R<sub>a</sub></td><td>Resistencia del estator</td><td class="ref-unidad">pu</td></tr>
+                <tr><td class="ref-simbolo" style="color:#263238">P<sub>G</sub></td><td>Potencia activa generada</td><td class="ref-unidad">pu</td></tr>
+                <tr><td class="ref-simbolo" style="color:#263238">Q<sub>G</sub></td><td>Potencia reactiva generada</td><td class="ref-unidad">pu</td></tr>
+                <tr><td class="ref-simbolo" style="color:#263238">I<sub>f</sub></td><td>Excitación normalizada del AVR</td><td class="ref-unidad">pu</td></tr>
+                <tr><td class="ref-simbolo" style="color:#c62828">φ</td><td>Ángulo del factor de potencia</td><td class="ref-unidad">grados</td></tr>
+                <tr><td class="ref-simbolo" style="color:#6a1b9a">δ</td><td>Ángulo de carga</td><td class="ref-unidad">grados</td></tr>
+                <tr class="ref-grupo" data-rotor="liso"><th colspan="3" scope="colgroup">Rotor liso</th></tr>
+                <tr data-rotor="liso"><td class="ref-simbolo" style="color:#2e7d32">X<sub>s</sub></td><td>Reactancia síncrona</td><td class="ref-unidad">pu</td></tr>
+                <tr class="ref-grupo" data-rotor="salientes"><th colspan="3" scope="colgroup">Rotor de polos salientes</th></tr>
+                <tr data-rotor="salientes"><td class="ref-simbolo" style="color:#2e7d32">X<sub>d</sub></td><td>Reactancia del eje directo</td><td class="ref-unidad">pu</td></tr>
+                <tr data-rotor="salientes"><td class="ref-simbolo" style="color:#2e7d32">X<sub>q</sub></td><td>Reactancia del eje en cuadratura</td><td class="ref-unidad">pu</td></tr>
+                <tr data-rotor="salientes"><td class="ref-simbolo" style="color:#ad1457">I<sub>d</sub></td><td>Componente de corriente del eje d</td><td class="ref-unidad">pu</td></tr>
+                <tr data-rotor="salientes"><td class="ref-simbolo" style="color:#00838f">I<sub>q</sub></td><td>Componente de corriente del eje q</td><td class="ref-unidad">pu</td></tr>
+                <tr data-rotor="salientes"><td class="ref-simbolo" style="color:#9c4dcc">E<sub>Q</sub></td><td>Fasor auxiliar de construcción</td><td class="ref-unidad">pu</td></tr>
+                <tr data-rotor="salientes"><td class="ref-simbolo" style="color:#455a64">ψ</td><td>Ángulo entre I<sub>a</sub> y el eje q</td><td class="ref-unidad">grados</td></tr>
+                <tr class="ref-grupo"><th colspan="3" scope="colgroup">Ejes del rotor</th></tr>
+                <tr><td class="ref-simbolo" style="color:#78909c">d</td><td>Eje directo del rotor</td><td class="ref-unidad" title="Sin unidad">—</td></tr>
+                <tr><td class="ref-simbolo" style="color:#78909c">q</td><td>Eje en cuadratura</td><td class="ref-unidad" title="Sin unidad">—</td></tr>
+                <tr><td class="ref-simbolo" style="color:#e65100">ψ<sub>V</sub></td><td>Eje de flujo equivalente asociado a V (corte, modo ANÁLISIS)</td><td class="ref-unidad" title="Sin unidad">—</td></tr>
+                </tbody>
+            </table>
+
+            <p class="ref-nota">
+                El diagrama fasorial representa el régimen permanente de la solución
+                integrada máquina–red. La excitación está calibrada con
+                E<sub>f</sub> = k<sub>f</sub>·I<sub>f</sub> (k<sub>f</sub> = E<sub>f</sub> en el punto nominal:
+                rotor liso 1.5646; polos salientes 1.2594). Si el punto de operación
+                sale de la curva de capacidad, se conservan los últimos fasores de
+                operación permitida.
+            </p>
+
+            <p class="ref-nota ref-nota-delta">
+                <strong>δ en el corte transversal (ROTACIÓN: ANÁLISIS):</strong>
+                separación angular entre el eje d del rotor y el eje de flujo
+                equivalente asociado a V (ψ<sub>V</sub> = θ<sub>r</sub> − 90° − δ).
+                δ es un ángulo eléctrico; con dos polos los grados eléctricos
+                coinciden numéricamente con los mecánicos. La representación usa
+                referencias espaciales equivalentes del modelo fasorial, no una
+                medición directa del flujo del entrehierro.
+            </p>
+
+            <p class="ref-nota ref-nota-secundaria">
+                pu: por unidad (base: potencia y tensión nominales). En los
+                indicadores inferiores, P<sub>G</sub> y Q<sub>G</sub> se muestran
+                en % (100 % = 1 pu).
+            </p>
+        </aside>
+
+        </div>
+    </section>
+</section>
 
 </div>
 

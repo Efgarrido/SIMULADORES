@@ -1,0 +1,69 @@
+/* =====================================================
+   PROPUESTA VISUAL DASHOPT (20-oct-2026)
+   Corte didáctico ampliado del amortiguador de compensación
+   (#dashpot-detalle en index.html; posiciones en
+   js/dashpot_detalle.js). Solo presentación.
+===================================================== */
+
+.ddMarco{ fill:#ffffff; stroke:#8a9aa4; stroke-width:1.2; }
+.ddCabecera{ fill:#ffffff; stroke:none; }
+.ddLlamada rect{ fill:none; stroke:#8a9aa4; stroke-width:1; stroke-dasharray:3 2.5; }
+.ddLlamada line{ stroke:#8a9aa4; stroke-width:1; stroke-dasharray:3 2.5; }
+
+.ddCuerpo{ fill:#9aa9b2; stroke:#263640; stroke-width:1.5; }
+.ddEmbolo{ fill:#d1d9de; stroke:#4a5c66; stroke-width:1.2; }
+.ddVarilla{ stroke:#4a5c66; stroke-width:2.5; stroke-linecap:round; }
+.ddVastagoPri{ stroke:#263640; stroke-width:2.5; stroke-linecap:round; }
+.ddEscuadra{ stroke:#263640; stroke-width:3; stroke-linecap:round; }
+.ddEscuadraUnion{ fill:#263640; }
+.ddPasador{ fill:#ffffff; stroke:#263640; stroke-width:1.3; }
+.ddResorte{ fill:none; stroke:#4a5c66; stroke-width:1.1; stroke-linejoin:round; }
+
+/* Aceite: amarillo = línea primario–receptor (flujo controlado);
+   pálido = aceite a presión de depósito; blanco = sin aceite modelado */
+.ddAceite{ fill:#f2c500; stroke:none; }
+.ddAceiteDeposito{ fill:#f8eebd; stroke:none; }
+.ddInactivo{ fill:#ffffff; stroke:none; }
+
+.ddTuboBorde{ fill:none; stroke:#263640; stroke-width:5; stroke-linejoin:round; stroke-linecap:round; }
+.ddTubo{ fill:none; stroke:#f2c500; stroke-width:2.6; stroke-linejoin:round; stroke-linecap:round; }
+.ddTe{ fill:#263640; }
+.ddDeposito{ fill:none; stroke:#263640; stroke-width:2; }
+.ddAguja circle{ fill:#ffffff; stroke:#263640; stroke-width:1.2; }
+.ddAguja line{ stroke:#263640; stroke-width:1.2; }
+.ddAguja path{ fill:#263640; }
+
+.ddAnclaje line{ stroke:#657985; stroke-width:1.2; }
+.ddAnclaje .ddBase{ stroke:#263640; stroke-width:2; }
+
+/* Referencia del centro del receptor (posición del émbolo con yd = 0) */
+.ddRefCentro{ stroke:#c94f4f; stroke-width:1.4; stroke-linecap:round; }
+
+.ddFlecha{ fill:#263640; stroke:#ffffff; stroke-width:1; display:none; }
+
+.ddCorte{ fill:none; stroke:#4a5c66; stroke-width:1; }
+.ddLetra{ font-size:11px; font-weight:bold; fill:#263640; }
+.ddAviso{ font-size:9px; font-style:italic; fill:#c94f4f; }
+.ddNota{ font-size:8.5px; fill:#475965; }
+
+/* Tope del dibujo alcanzado (|K·yd| mayor que la carrera dibujada) */
+#dashpot-detalle.dd-fuera-escala #dd-embolo-rec .ddEmbolo{ stroke:#c94f4f; stroke-width:1.8; }
+
+/* Ronda 2 (20-oct-2026): factor fijo visible y aviso de exceso del rango del detalle */
+.ddEscala{ font-size:10px; font-weight:bold; fill:#657985; }
+.ddExceso{ fill:none; stroke:#c94f4f; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+
+/* Recuadro reducido al 80 %; compensación tipográfica para mantener
+   título a 13 px, letras a 11 px y factor a 10 px en coordenadas de escena. */
+#dashpot-detalle .tituloComponente{font-size:16.25px;}
+#dashpot-detalle .ddLetra{font-size:13.75px;}
+#dashpot-detalle .ddEscala{font-size:12.5px;}
+#dashpot-detalle .ddAviso{font-size:11.25px;}
+
+/* Vista incorporada en la varilla V–B. Los elementos anteriores se
+   conservan para sus actualizaciones, sin duplicarlos en pantalla. */
+#amortiguador-compensacion, #varilla-vb, #dashpot-llamada,
+#dashpot-detalle .ddMarco, #dashpot-detalle .ddCabecera,
+#dashpot-detalle .ddCorte, #dashpot-detalle .ddLetra,
+#dd-escala { display:none; }
+#dashpot-detalle .tituloComponente{font-size:16.25px;}

@@ -1,0 +1,206 @@
+/* =====================================================
+   SIMULADOR RVTH — VENTANAS LATERALES (etapa 20, 18-oct-2026)
+
+   Copia de la implementación de 06_CALDERA_PIROTUBULAR
+   (css/simulador.css): panel lateral izquierdo de
+   procedimientos (#panelProcedimientos, botón ☰) y panel
+   lateral derecho (#pantallaAlarmas, indicador redondo
+   junto a Operación). Etapa 21: el panel derecho queda
+   vacío, reservado para el sincronoscopio.
+   Mismas medidas, colores, transiciones y capas (z-index).
+   Donde la caldera limita a #simuladorCaldera, aquí se
+   limita a .panel-controles.
+   Diferencia necesaria: la columna de Operación crece
+   32 px (24 px del indicador + 8 px de separación) para
+   que APLICAR, PAUSA y REINICIAR conserven su ancho.
+===================================================== */
+
+/* ---------- Acceso al menú junto a la fila de controles ---------- */
+.panel-controles .fila-controles-con-menu {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+}
+
+.panel-controles .fila-controles {
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(0,1fr)
+        minmax(0,1.12fr)
+        calc(max(250px, calc((100% - 40px) * 1.15 / 6.27)) + 32px);
+}
+
+@media(max-width:850px){
+    .panel-controles .fila-controles{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+
+@media(max-width:560px){
+    .panel-controles .fila-controles{ grid-template-columns:1fr; }
+}
+
+/* ---------- Panel lateral izquierdo: procedimientos ---------- */
+#panelProcedimientos {
+    position: fixed;
+    top: 0;
+    left: 0;
+    /* Ancho intrínseco de la fila de pestañas, estable entre pasos. */
+    width: max-content;
+    min-width: min(420px, 100vw);
+    max-width: min(560px, 100vw);
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+    background: #f5f5f5;
+    border-right: 1px solid #999999;
+    padding: 14px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#panelProcedimientos.abierto {
+    transform: translateX(0);
+}
+
+#panelProcedimientos > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#panelProcedimientos > header h2 {
+    margin: 0;
+}
+
+/* ---------- Indicador redondo junto a Operación (abre el panel derecho) ---------- */
+.panel-controles .grupo-operacion .controles-botones {
+    flex-wrap: nowrap;
+}
+
+.panel-controles .operacion-con-alarma {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 24px;
+    gap: 8px;
+    min-width: 0;
+}
+
+.panel-controles .alarma-indicador {
+    align-self: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid #999999;
+    border-radius: 50%;
+    background: #b8b8b8;
+    cursor: pointer;
+}
+
+/* ---------- Panel lateral derecho (vacío, reservado para el sincronoscopio) ---------- */
+#pantallaAlarmas {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(800px, 100%);
+    height: 100vh;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    z-index: 1001;
+    background: #f5f5f5;
+    border-left: 1px solid #999999;
+    padding: 14px;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+#pantallaAlarmas.abierto {
+    transform: translateX(0);
+}
+
+#pantallaAlarmas > header {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#pantallaAlarmas > header h2 {
+    margin: 0;
+}
+
+/* ---------- Guía de procedimientos (contenido del panel izquierdo) ---------- */
+#panelProcedimientos { display: flex; flex-direction: column; box-sizing: border-box; }
+#panelProcedimientos > :not(.guia-pestanas) { contain: inline-size; min-width: 0; }
+#panelProcedimientos > header { flex: 0 0 auto; gap: 8px; }
+#panelProcedimientos > header h2 { font-size: 18px; overflow-wrap: anywhere; }
+#panelProcedimientos .guia-introduccion,
+#panelProcedimientos .guia-aclaracion { font-size: 12px; line-height: 1.45; margin: 10px 0; flex: 0 0 auto; }
+#panelProcedimientos .guia-pestanas { display: flex; overflow-x: auto; gap: 4px; min-width: 0; flex: 0 0 auto; padding: 3px 2px 8px; }
+#panelProcedimientos .guia-pestanas button { flex: 0 0 auto; white-space: nowrap; font-weight: bold; padding: 7px 9px; border: 1px solid #999; border-radius: 3px; background: #eeeeee; color: #333; }
+#panelProcedimientos .guia-pestanas [aria-selected="true"] { background: #dbe9f2; border-color: #477894; font-weight: bold; }
+#panelProcedimientos .guia-contenido { flex: 1 1 auto; min-height: 0; min-width: 0; overflow-y: auto; overflow-x: hidden; }
+#panelProcedimientos [role="tabpanel"] { white-space: normal; overflow-wrap: anywhere; }
+#panelProcedimientos [role="tabpanel"][hidden] { display: none; }
+#panelProcedimientos [role="tabpanel"] h3 { font-size: 15px; margin: 12px 0; }
+#panelProcedimientos .guia-actividad { display: flex; align-items: flex-start; gap: 8px; margin: 8px 0; padding: 5px 2px; font-size: 13px; line-height: 1.45; cursor: pointer; }
+#panelProcedimientos .guia-actividad input { flex: 0 0 auto; margin-top: 3px; }
+#panelProcedimientos .guia-nota,
+#panelProcedimientos .guia-contador { font-size: 12px; line-height: 1.45; }
+#panelProcedimientos .guia-nota { color: #555; }
+#panelProcedimientos .guia-contador { font-weight: bold; }
+#panelProcedimientos .guia-navegacion { display: flex; gap: 8px; flex: 0 0 auto; }
+#panelProcedimientos .guia-navegacion button { flex: 1; min-width: 0; }
+#panelProcedimientos .guia-limpieza { margin-top: 8px; flex: 0 0 auto; }
+#panelProcedimientos :focus-visible { outline: 2px solid #477894; outline-offset: 2px; }
+
+/* Selector de guías: sin relación con el estado del proceso. */
+#panelProcedimientos .guia-selector { display: flex; align-items: center; gap: 8px; margin-top: 12px; flex: 0 0 auto; font-size: 13px; }
+#panelProcedimientos .guia-selector select { flex: 1; min-width: 0; padding: 5px; font: inherit; }
+#panelProcedimientos > [hidden] { display: none; }
+/* La fila completa sigue fijando el ancho, incluso al mostrar Paro. */
+#panelProcedimientos .guia-pestanas[hidden] {
+    display: flex;
+    visibility: hidden;
+    height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow-y: hidden;
+    pointer-events: none;
+}
+
+/* Avance manual; selección independiente del color de cumplimiento. */
+#panelProcedimientos .guia-pestanas [role="tab"] {
+    background: linear-gradient(#e57373, #c94f4f);
+    border-color: #9f3b3b;
+    color: #ffffff;
+}
+#panelProcedimientos .guia-pestanas [role="tab"].guia-completo {
+    background: linear-gradient(#81c784, #57a85a);
+    border-color: #3f8242;
+}
+#panelProcedimientos .guia-pestanas [role="tab"][aria-selected="true"] {
+    box-shadow: inset 0 0 0 2px #243746;
+}
+
+/* Encabezado de procedimientos: etiqueta junto al selector. */
+#panelProcedimientos .guia-selector { flex-direction: row; align-items: center; gap: 10px; }
+#panelProcedimientos .guia-selector label { font-size: 16px; font-weight: 700; }
+
+/* Separación idéntica para las filas de Arranque y Paro. */
+#panelProcedimientos .guia-pestanas { margin-top: 16px; }
+#panelProcedimientos .guia-pestanas[hidden] { margin-top: 0; }
+
+/* Botones de la guía con el formato de botón del simulador. */
+#panelProcedimientos .guia-navegacion button,
+#panelProcedimientos .guia-limpieza button {
+    height: 27px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    color: #222222;
+    background: linear-gradient(#ffffff, #dddddd);
+    border: 1px solid #888888;
+    border-radius: 2px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.20);
+    cursor: pointer;
+}
+#panelProcedimientos .guia-navegacion button:disabled { opacity: .45; cursor: default; }

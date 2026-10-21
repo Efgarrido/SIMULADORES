@@ -6,13 +6,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SIMULADOR RVTH - Migración modular 14</title>
+<title>SIMULADOR RVTH</title>
 
 <!-- Estilos generales de la plantilla maestra (copia sin cambios) -->
 <link rel="stylesheet" href="css/estilos.css">
 
 <!-- Estilos propios del simulador RVTH -->
 <link rel="stylesheet" href="css/simulador.css">
+
+<!-- Etapa 12: regulador con resorte (panel y piezas nuevas) -->
+<link rel="stylesheet" href="css/watt_resorte.css">
+
+<!-- Etapa 15: estándar de botoneras (06_CALDERA_PIROTUBULAR) -->
+<link rel="stylesheet" href="css/botonera_estandar.css">
+
+<!-- Etapa 20: ventanas laterales (06_CALDERA_PIROTUBULAR) -->
+<link rel="stylesheet" href="css/ventanas_laterales.css">
+<link rel="stylesheet" href="css/sincronizacion.css">
+<link rel="stylesheet" href="css/dashpot_detalle.css">
 
 
 </head>
@@ -34,24 +45,71 @@
 SIMULADOR RVTH – REGULADOR DE VELOCIDAD DE UNA TURBINA HIDRÁULICA
 </h1>
 
-<p>
-Unidad libre – Regulador centrífugo de Watt – Servomotor hidráulico – Distribuidor Fink – Turbina Francis
-</p>
-
 </div>
 
+<!-- Etapa 20: acceso al panel lateral de procedimientos (☰),
+     igual que 06_CALDERA_PIROTUBULAR -->
+
+<div class="fila-controles-con-menu">
+
+<button type="button" id="btnProcedimientos" aria-label="Abrir procedimientos" aria-controls="panelProcedimientos">☰</button>
 
 <div class="fila-controles">
 
 
-<!-- GOBERNADOR DE CARGA (reservado; sin control funcional) -->
+<!-- GOBERNADOR DE CARGA
+     Etapa 12 (18-oct-2026): REGULADOR CENTRÍFUGO CON RESORTE.
+     El manguito lo mueve la ecuación dinámica del regulador
+     con la velocidad real del eje (js/watt_resorte_integracion.js).
+     BAJAR / SUBIR (antes LENTO / RÁPIDO) mueven el motor del tornillo
+     que ajusta la precarga del resorte (mantener pulsado). Hipótesis: carga
+     del mando sobre el collar F_L = 0 N. -->
 
-<fieldset class="grupo-control grupo-modo">
+<fieldset id="estacionGobernador" class="grupo-control grupo-modo grupo-gobernador estacion-alimentacion">
 
 <legend>Gobernador de carga</legend>
 
-<div class="texto-ayuda-control">
-Disponible en una etapa posterior
+<!-- Etapa 15: botonera estándar (06_CALDERA_PIROTUBULAR).
+     Etapa 18: MANUAL / AUTO son botones de modo en el lugar de
+     M / A de la caldera (seleccionado en rojo, el otro en verde).
+     Etapa 22 (19-oct-2026): la escala muestra SIEMPRE la apertura
+     geométrica del distribuidor (%), en MANUAL y en AUTO, para que
+     no cambie de significado al cambiar de modo. + y − siguen
+     moviendo su accionamiento: en MANUAL el limitador de apertura;
+     en AUTO (regulando) el ajuste del resorte. -->
+
+<span class="gob-titulo-escala" id="gobTituloEscala">Apertura del distribuidor (%)</span>
+
+<div class="escala-apertura" id="gobEscala" role="img" aria-label="Apertura del distribuidor: 0 %">
+<div class="graduaciones-apertura"></div>
+<span class="numero-apertura inicio" id="gobNumBajar">0</span><span class="numero-apertura medio">50</span><span class="numero-apertura fin" id="gobNumSubir">100</span>
+<span id="gobMarcador" class="marcador-apertura"></span>
+</div>
+
+<output id="gobLectura">0 %</output>
+
+<div class="botones-alimentacion">
+<button id="gobModoManual" class="boton-simulador modo-alimentacion modo-seleccionado" type="button"
+aria-pressed="true" aria-label="Modo MANUAL" title="Modo MANUAL">MANUAL</button>
+<button id="gobernadorRapido" class="boton-simulador" type="button"
+aria-label="+ : sube el limitador de apertura (mantener pulsado)" title="+ : sube el limitador de apertura (mantener pulsado)">+</button>
+<button id="gobernadorLento" class="boton-simulador" type="button"
+aria-label="− : baja el limitador de apertura (mantener pulsado)" title="− : baja el limitador de apertura (mantener pulsado)">−</button>
+<button id="gobModoAuto" class="boton-simulador modo-alimentacion" type="button" disabled
+aria-pressed="false" aria-label="Modo AUTO" title="Modo AUTO">AUTO</button>
+</div>
+
+<!-- Lecturas internas (no visibles): las siguen actualizando
+     watt_resorte_integracion.js para pruebas y diagnóstico. -->
+<div class="gob-interno" hidden>
+s = <span id="gobS">0.0</span> mm <span id="gobTope"></span>
+ajuste a = <span id="gobAjuste">0.0</span> mm
+<span id="gobFcLento" class="gob-fc">Límite BAJAR</span>
+<div class="gob-barra"><div id="gobBarraAjuste"></div></div>
+<span id="gobFcRapido" class="gob-fc">Límite SUBIR</span>
+<div id="gobPiloto"></div>
+<div id="gobAvisoPiloto" role="status"></div>
+<div class="gob-hipotesis">velocidad/carga · F<sub>L</sub> = 0 N (hipótesis)</div>
 </div>
 
 </fieldset>
@@ -123,7 +181,11 @@ aria-label="Variación de carga eléctrica (%)"
 </fieldset>
 
 
-<!-- OPERACIÓN -->
+<!-- OPERACIÓN
+     Etapa 20: con el indicador redondo a la derecha
+     (abre el panel lateral derecho), como en la caldera. -->
+
+<div class="operacion-con-alarma">
 
 <fieldset class="grupo-control grupo-operacion">
 
@@ -147,6 +209,12 @@ REINICIAR
 
 </fieldset>
 
+<button type="button" id="btnAlarmas" class="alarma-indicador" aria-label="Abrir sincronoscopio" aria-controls="pantallaAlarmas" title="Sincronoscopio"></button>
+
+</div>
+
+
+</div>
 
 </div>
 
@@ -177,10 +245,10 @@ REINICIAR
 
 <section class="marco-grafica">
 
-<h2>FRECUENCIA — RESPUESTA COMPLETA</h2>
+<h2>VELOCIDAD DE LA TURBINA</h2>
 
 <div class="zona-canvas">
-<canvas id="graficaFrecuenciaCompleta" class="graficaCanvas" width="400" height="140"></canvas>
+<canvas id="graficaVelocidad" class="graficaCanvas" width="400" height="140"></canvas>
 </div>
 
 </section>
@@ -188,7 +256,7 @@ REINICIAR
 
 <section class="marco-grafica">
 
-<h2>APERTURA DEL DISTRIBUIDOR</h2>
+<h2>APERTURA DISTRIBUIDOR</h2>
 
 <div class="zona-canvas">
 <canvas id="graficaApertura" class="graficaCanvas" width="400" height="140"></canvas>
@@ -202,11 +270,45 @@ REINICIAR
 
 <main class="escena">
 
-<svg viewBox="0 45 1200 590" role="img" aria-label="Conjunto mecánico del regulador de velocidad">
+<div class="control-interruptor" aria-label="Interruptor del generador">
+<button id="interruptorGenerador" class="boton-simulador danger" type="button" aria-pressed="false"
+ aria-describedby="avisoInterruptor">
+<span id="estadoInterruptor">52G ABIERTO</span>
+</button>
+<div id="avisoInterruptor" class="aviso-interruptor" role="status" aria-live="polite"></div>
+</div>
+
+
+<!-- Etapa 17 (18-oct-2026): límite superior del viewBox ampliado de y = 45 a y = 4
+     (pieza más alta del regulador en y = 12.5 en toda la carrera del ajuste + 8.5 de margen).
+     Borde inferior sin cambios (664.5). No cambia ninguna coordenada del mecanismo. -->
+<svg viewBox="0 4 1200 660.5" role="img" aria-label="Conjunto mecánico del regulador de velocidad">
+
+<!-- =====================================================
+     CAPA DE ANOTACIONES (17-oct-2026)
+     Todos los textos de referencia de la escena (lecturas
+     numéricas, presiones, letras de puntos y variables,
+     puertos, notas de escala y funcionamiento, leyenda
+     Vickers y cuadro de estado) llevan la clase
+     "anotacion" y están OCULTOS por defecto
+     (css/simulador.css). Se conservan en el archivo y el
+     JavaScript los sigue actualizando.
+     Para mostrarlos: añadir la clase "mostrar-anotaciones"
+     a este <svg> (p. ej. desde la consola:
+     document.querySelector('.escena svg')
+       .classList.add('mostrar-anotaciones')).
+     Visibles: solo los títulos de los componentes
+     (clase "tituloComponente").
+===================================================== -->
 
 
 <defs>
 
+<marker id="flecha-transmision-velocidad" viewBox="0 0 8 8"
+    refX="7" refY="4" markerWidth="8" markerHeight="8"
+    markerUnits="userSpaceOnUse" orient="auto">
+    <path d="M0 0 L8 4 L0 8 Z" fill="#000000"/>
+</marker>
 
 <pattern
 id="rayado"
@@ -279,8 +381,18 @@ stroke-width="2.5"
                         </radialGradient>
 <path id="perfil-fink-v4" class="perfil-directriz" d="M 12 5 C 28 6, 36 10, 52 16 C 84 28, 116 44, 145 63 C 177 84, 204 108, 228 135 C 251 162, 269 192, 283 222 C 299 255, 309 290, 314 322 C 319 350, 321 374, 322 397 C 324 414, 318 428, 308 439 C 298 450, 287 457, 275 459 C 262 461, 249 458, 237 451 C 225 444, 215 433, 207 419 C 199 406, 197 396, 194 387 C 188 357, 170 315, 148 270 C 128 225, 92 155, 48 92 C 28 60, 10 28, 6 13 C 5 9, 6 5, 12 5 Z"></path>
 
+<!-- Etapa 3: rayado de cámara sin circulación -->
+<pattern id="rayadoSinCirculacion" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
+<line x1="0" y1="0" x2="0" y2="10" stroke="#263640" stroke-width="2" stroke-opacity="0.45"/>
+</pattern>
 </defs>
 
+
+<!-- Conjunto mecánico completo (turbina, acoplamiento y
+     servomotor) desplazado como bloque: 20 px a la
+     derecha y 33 px hacia abajo (16-oct-2026). Las
+     coordenadas internas no cambian. -->
+<g id="conjunto-mecanico" transform="translate(20 33)">
 
 <!-- =====================================================
      TURBINA HIDRÁULICA · DISTRIBUIDOR FINK V8
@@ -374,7 +486,7 @@ stroke-width="2.5"
 
                         <circle id="circulo-pivotes" class="circulo-pivotes" cx="0" cy="0" r="340"></circle>
 
-                        <g id="escala-giro-anillo" class="escala-giro-anillo"><line class="marca-escala" x1="-30.772" y1="-466.987" x2="-31.561" y2="-478.961"></line><text class="texto-escala" x="-32.284" y="-485.937">0°</text><line class="marca-escala" x1="-38.917" y1="-466.379" x2="-39.499" y2="-473.355"></line><line class="marca-escala" x1="-47.051" y1="-465.629" x2="-47.754" y2="-472.593"></line><line class="marca-escala" x1="-55.170" y1="-464.737" x2="-55.995" y2="-471.688"></line><line class="marca-escala" x1="-63.272" y1="-463.703" x2="-64.218" y2="-470.639"></line><line class="marca-escala" x1="-71.355" y1="-462.528" x2="-73.185" y2="-474.388"></line><text class="texto-escala" x="-74.862" y="-481.259">5°</text><line class="marca-escala" x1="-79.417" y1="-461.213" x2="-80.604" y2="-468.111"></line><line class="marca-escala" x1="-87.454" y1="-459.756" x2="-88.762" y2="-466.633"></line><line class="marca-escala" x1="-95.464" y1="-458.160" x2="-96.892" y2="-465.013"></line><line class="marca-escala" x1="-103.446" y1="-456.424" x2="-104.993" y2="-463.251"></line><line class="marca-escala" x1="-111.396" y1="-454.549" x2="-114.252" y2="-466.204"></line><text class="texto-escala" x="-116.870" y="-472.888">10°</text><line class="marca-escala" x1="-119.312" y1="-452.536" x2="-121.096" y2="-459.305"></line><path class="marca-escala" fill="none" d="M -30.772 -466.987 A 468 468 0 0 0 -119.312 -452.536"></path></g>
+                        <g id="escala-giro-anillo" class="escala-giro-anillo"><line class="marca-escala" x1="-30.772" y1="-466.987" x2="-31.561" y2="-478.961"></line><text class="anotacion texto-escala" x="-32.284" y="-485.937">0°</text><line class="marca-escala" x1="-38.917" y1="-466.379" x2="-39.499" y2="-473.355"></line><line class="marca-escala" x1="-47.051" y1="-465.629" x2="-47.754" y2="-472.593"></line><line class="marca-escala" x1="-55.170" y1="-464.737" x2="-55.995" y2="-471.688"></line><line class="marca-escala" x1="-63.272" y1="-463.703" x2="-64.218" y2="-470.639"></line><line class="marca-escala" x1="-71.355" y1="-462.528" x2="-73.185" y2="-474.388"></line><text class="anotacion texto-escala" x="-74.862" y="-481.259">5°</text><line class="marca-escala" x1="-79.417" y1="-461.213" x2="-80.604" y2="-468.111"></line><line class="marca-escala" x1="-87.454" y1="-459.756" x2="-88.762" y2="-466.633"></line><line class="marca-escala" x1="-95.464" y1="-458.160" x2="-96.892" y2="-465.013"></line><line class="marca-escala" x1="-103.446" y1="-456.424" x2="-104.993" y2="-463.251"></line><line class="marca-escala" x1="-111.396" y1="-454.549" x2="-114.252" y2="-466.204"></line><text class="anotacion texto-escala" x="-116.870" y="-472.888">10°</text><line class="marca-escala" x1="-119.312" y1="-452.536" x2="-121.096" y2="-459.305"></line><path class="marca-escala" fill="none" d="M -30.772 -466.987 A 468 468 0 0 0 -119.312 -452.536"></path></g>
 
                     </g>
 
@@ -494,7 +606,7 @@ stroke-width="2.5"
                              (placa unida a la llanta, dibujada bajo el anillo
                              y las orejetas). Pasador a radio 560.9 (local);
                              posición angular 95.5249° en el sistema del anillo. -->
-                        <g id="oreja-servomotor" transform="rotate(95.5249)">
+                        <g id="oreja-servomotor" transform="rotate(90.8345)">
                             <path id="oreja-servomotor-cuerpo" class="oreja-servo" d="M 442.6 -46.5 L 560.9 -16 A 16 16 0 0 1 560.9 16 L 442.6 46.5 Z"></path>
                             <circle id="pasador-oreja-servomotor" class="pasador-oreja" cx="560.9" cy="0" r="11"></circle>
                         </g>
@@ -670,35 +782,36 @@ stroke-width="2.5"
      → G → biela de conexión → oreja del anillo.
 
      Geometría (coordenadas del SVG principal):
-       pivote fijo           (320, 595)
+       pivote fijo           (340, 595)  (antes 320, 595)
        brazo a (pivote–D)    80
        brazo b (pivote–G)    47.5
        biela de conexión     123.0
-       vástago (D–pistón)    468.3448
+       vástago (D–pistón)    457.4830  (antes 468.3448)
+       servomotor articulado en su pivote trasero P (968, 515)
      Posiciones dinámicas: js/distribuidor.js
 ===================================================== -->
 <g id="acoplamiento-servomotor">
 
 <!-- Apoyo fijo de la palanca de reenvío (solo dibujo;
-     el centro de la articulación sigue en 320, 595) -->
+     el centro de la articulación está en 340, 595) -->
 
 <path
 id="soporte-reenvio"
-d="M320 595 L305 613 L335 613 Z"
+d="M340 595 L325 613 L355 613 Z"
 class="soporteReenvio"
 />
 
 <g id="base-reenvio" class="baseApoyo">
 
-<line class="lineaBaseApoyo" x1="297" y1="613" x2="343" y2="613"/>
+<line class="lineaBaseApoyo" x1="317" y1="613" x2="363" y2="613"/>
 
-<line x1="299" y1="621" x2="306" y2="613"/>
-<line x1="305" y1="621" x2="312" y2="613"/>
-<line x1="311" y1="621" x2="318" y2="613"/>
-<line x1="317" y1="621" x2="324" y2="613"/>
-<line x1="323" y1="621" x2="330" y2="613"/>
-<line x1="329" y1="621" x2="336" y2="613"/>
-<line x1="335" y1="621" x2="342" y2="613"/>
+<line x1="319" y1="621" x2="326" y2="613"/>
+<line x1="325" y1="621" x2="332" y2="613"/>
+<line x1="331" y1="621" x2="338" y2="613"/>
+<line x1="337" y1="621" x2="344" y2="613"/>
+<line x1="343" y1="621" x2="350" y2="613"/>
+<line x1="349" y1="621" x2="356" y2="613"/>
+<line x1="355" y1="621" x2="362" y2="613"/>
 
 </g>
 
@@ -713,7 +826,7 @@ class="bielaConexion"
 
 <line
 id="palanca-reenvio"
-x1="320"
+x1="340"
 y1="595"
 x2="328.07"
 y2="515.41"
@@ -722,14 +835,14 @@ class="palancaReenvio"
 
 <circle
 id="pivote-reenvio"
-cx="320"
+cx="340"
 cy="595"
 r="6.5"
 class="pivoteReenvio"
 />
 
 <circle
-cx="320"
+cx="340"
 cy="595"
 r="2"
 class="centroPivoteReenvio"
@@ -749,8 +862,9 @@ class="pasadorAcople"
      D
 ===================================================== -->
 
-<!-- Etapa 2A: D = articulación vástago–palanca de reenvío
-     (posición calculada en js/distribuidor.js) -->
+<!-- Articulación vástago–palanca de reenvío: rótulo visible G.
+     Conserva los identificadores internos puntoD/textoD y acople.D;
+     posición calculada en js/distribuidor.js. -->
 <circle
 id="puntoD"
 cx="197"
@@ -761,424 +875,371 @@ class="acopleAnillo"
 
 <text
 id="textoD"
-x="330.51"
-y="502.08"
-class="textoSVG etiquetaSVG">
-D
+x="341.51"
+y="508.08"
+class="textoSVG textoMini rotuloVarillaje">
+G
 </text>
 
 
 <text
 x="475"
 y="540"
-class="textoSVG textoPeq">
+class="anotacion textoSVG textoPeq">
 CIERRE ←
 </text>
 
 <text
 x="575"
 y="540"
-class="textoSVG textoPeq">
+class="anotacion textoSVG textoPeq">
 → APERTURA
 </text>
 
-
-<!-- =====================================================
-     REGULADOR WATT
-===================================================== -->
-
+<!-- Abertura geométrica del Fink (aberturaFink, distribuidor.js) -->
 <text
-x="360"
-y="75"
+id="textoAberturaFink"
+x="560"
+y="590"
 text-anchor="middle"
-class="textoSVG etiquetaSVG">
-Regulador de Watt
+class="anotacion textoSVG textoMini">
+Abertura geométrica del Fink (%): –
 </text>
-
-<rect
-x="290"
-y="82"
-width="140"
-height="11"
-rx="2"
-class="soporteWatt"
-/>
-
-<line
-x1="360"
-y1="93"
-x2="360"
-y2="245"
-class="mecanico"
-/>
-
-<line
-x1="320"
-y1="93"
-x2="320"
-y2="108"
-class="mecanico"
-/>
-
-<circle
-cx="320"
-cy="108"
-r="8"
-class="pivoteWatt"
-/>
-
-<circle
-cx="320"
-cy="108"
-r="3"
-class="centroPivote"
-/>
-
-<line
-x1="400"
-y1="93"
-x2="400"
-y2="108"
-class="mecanico"
-/>
-
-<circle
-cx="400"
-cy="108"
-r="8"
-class="pivoteWatt"
-/>
-
-<circle
-cx="400"
-cy="108"
-r="3"
-class="centroPivote"
-/>
-
-<line
-id="brazoIzq"
-x1="320"
-y1="108"
-x2="295"
-y2="165"
-class="mecanico"
-/>
-
-<line
-id="brazoDer"
-x1="400"
-y1="108"
-x2="425"
-y2="165"
-class="mecanico"
-/>
-
-<circle
-id="bolaIzq"
-cx="295"
-cy="165"
-r="17"
-fill="#202a30"
-stroke="#111"
-stroke-width="2"
-/>
-
-<circle
-id="bolaDer"
-cx="425"
-cy="165"
-r="17"
-fill="#202a30"
-stroke="#111"
-stroke-width="2"
-/>
-
-<line
-id="brazoInfIzq"
-x1="295"
-y1="165"
-x2="340"
-y2="211"
-class="mecanico"
-/>
-
-<line
-id="brazoInfDer"
-x1="425"
-y1="165"
-x2="380"
-y2="211"
-class="mecanico"
-/>
-
-<rect
-id="manguito"
-x="340"
-y="200"
-width="40"
-height="22"
-rx="3"
-fill="#aab7be"
-stroke="#263640"
-stroke-width="4"
-/>
-
-
-<!-- A -->
-
-<circle
-id="puntoA"
-cx="360"
-cy="222"
-r="7"
-class="puntoMovil"
-/>
-
-<text
-id="textoA"
-x="372"
-y="244"
-class="textoSVG etiquetaSVG">
-A
-</text>
-
-
-<!-- PALANCA ABC -->
-
-<line
-id="palancaABC"
-x1="360"
-y1="222"
-x2="1030"
-y2="220"
-class="mecanico"
-/>
-
-
-<!-- B -->
-
-<circle
-id="puntoB"
-cx="520"
-cy="220"
-r="8"
-fill="#111"
-/>
-
-<text
-id="textoB"
-x="505"
-y="197"
-class="textoSVG etiquetaSVG">
-B
-</text>
-
-
-<!-- RETROALIMENTACIÓN -->
-
-<line
-id="varillaRetro"
-x1="520"
-y1="220"
-x2="520"
-y2="474"
-class="varillaRetro"
-/>
-
-<circle
-id="rodilloRetro"
-cx="520"
-cy="485"
-r="11"
-class="rodilloRetro"
-/>
-
-<text
-x="530"
-y="365"
-class="textoSVG etiquetaSVG">
-Retroalimentación
-</text>
-
-
-<!-- C -->
-
-<circle
-id="puntoC"
-cx="1030"
-cy="220"
-r="8"
-class="puntoMovil"
-/>
-
-<text
-id="textoC"
-x="1014"
-y="195"
-class="textoSVG etiquetaSVG">
-C
-</text>
-
-
-<!-- =====================================================
-     VÁLVULA
-===================================================== -->
-
-<text
-x="1120"
-y="250"
-text-anchor="middle"
-class="textoSVG etiquetaSVG">
-Válvula de control
-</text>
-
-<rect
-x="980"
-y="260"
-width="100"
-height="245"
-class="camisaValvula"
-/>
-
-<rect
-x="998"
-y="275"
-width="64"
-height="215"
-class="cavidadAceite"
-/>
-
-
-<path
-id="retornoSuperior"
-d="M1062 300 H1170"
-class="puertoRetorno"
-/>
-
-
-<path
-id="entradaPresion"
-d="M1062 380 H1170"
-class="puertoPresion"
-/>
-
-
-<path
-id="retornoInferior"
-d="M1062 466 H1170"
-class="puertoRetorno"
-/>
-
-
-<text
-x="1090"
-y="280"
-class="textoSVG textoPeq">
-Retorno
-</text>
-
-<text
-x="1090"
-y="360"
-class="textoSVG textoPeq">
-Aceite a presión
-</text>
-
-<text
-x="1090"
-y="448"
-class="textoSVG textoPeq">
-Retorno
-</text>
-
-
-<path
-id="puertoTrabajoSuperior"
-d="M998 338 H900"
-class="puertoTrabajo"
-/>
-
-<path
-id="puertoTrabajoInferior"
-d="M998 424 H932"
-class="puertoTrabajo"
-/>
-
-
-<!-- =====================================================
-     TUBERÍAS
-===================================================== -->
-
-<path
-id="tuberiaCamaraIzquierda"
-d="
-M900 338
-H718
-V461
-"
-class="tuberiaServoReposo"
-/>
-
-
-<path
-id="tuberiaCamaraDerecha"
-d="
-M932 424
-V461
-"
-class="tuberiaServoReposo"
-/>
-
-
-<!-- =====================================================
-     CARRETE
-===================================================== -->
-
-<g id="carrete">
-
-<line
-x1="1030"
-y1="265"
-x2="1030"
-y2="438"
-class="ejeInterno"
-/>
-
-<rect
-x="999"
-y="324"
-width="62"
-height="28"
-class="pistonValvula"
-/>
-
-<rect
-x="999"
-y="410"
-width="62"
-height="28"
-class="pistonValvula"
-/>
-
-</g>
-
-
-<line
-id="ejeValvula"
-x1="1030"
-y1="220"
-x2="1030"
-y2="324"
-stroke="#263640"
-stroke-width="5"
-stroke-linecap="round"
-/>
 
 
 <!-- =====================================================
      SERVOMOTOR
 ===================================================== -->
+
+<!-- Cuerpo del servomotor articulado en su extremo
+     derecho (pivote P = 968, 515). El grupo gira
+     alrededor de P para que el vástago quede siempre
+     alineado con el eje del cilindro (js/servomotor.js). -->
+
+<!-- =====================================================
+     CIRCUITO DE ACEITE — VÁLVULA DISTRIBUIDORA (etapa 3)
+     4 vías, carrete de dos resaltes, traslape cero.
+     Lumbreras: S suministro, R1/R2 retorno a tanque,
+     C1 (cámara izquierda, anular, abre) y
+     C2 (cámara derecha, completa, cierra).
+     Colores (código Vickers) y posición del carrete:
+     js/servomotor.js. Escala del carrete exagerada.
+===================================================== -->
+
+<!-- =====================================================
+     ETAPA 4 (17-oct-2026): VÁLVULA PILOTO Y SERVO PILOTO
+     Circuito piloto a presión reducida p_p (fuente ideal).
+     Válvula piloto vertical, 4 vías, traslape cero:
+       lumbreras (y) R_pU 113–118, A_p 128–138 (der.),
+       S_p 149–153, B_p 164–174 (der.), R_pL 188–194.
+       Carrete piloto ARRIBA = abre (S_p → cámara superior
+       del servo piloto, inferior → R_pL; b baja).
+     Servo piloto: doble efecto, vástago pasante; su vástago
+     inferior b es el carrete de la distribuidora.
+     Escala de carretes y pistón DIDÁCTICA (js/servomotor.js).
+===================================================== -->
+
+<!-- =====================================================
+     ETAPA 5 (17-oct-2026): REGULADOR DE WATT (módulo de
+     soportes, copias sin cambios en js/watt/) y varillaje
+     A–B–C. Escala GRÁFICA del Watt: 0.25 px por mm, origen
+     (eje, pasadores superiores) en (540, 32). El dibujo lo
+     genera js/watt/dibujo.js dentro de #watt-dibujo.
+===================================================== -->
+
+<g id="watt-regulador" transform="translate(358 32) scale(0.25)">
+<g id="watt-dibujo"></g>
+</g>
+<text x="382.5" y="24" class="textoSVG tituloComponente">Regulador de Watt</text>
+<text x="382.5" y="37" class="anotacion textoSVG textoMini">giro visual · s es mando provisional</text>
+
+
+<!-- Etapa 8: piloto y servo piloto trasladados en bloque
+     (+195, +40) px; coordenadas internas sin cambios -->
+<g id="circuito-piloto" transform="translate(195 68.75)">
+
+<!-- Fuente piloto y retornos -->
+<line id="tubo-sp-borde" class="tuboPilotoBorde" x1="689" y1="151" x2="728" y2="151"/>
+<line id="tubo-sp" class="tuboPiloto vk-carga" x1="689" y1="151" x2="728" y2="151"/>
+<circle class="simboloFuente" cx="680" cy="151" r="9"/>
+<path class="flechaFuente" d="M678 146 L678 156 L685 151 Z"/>
+<text x="680" y="172" text-anchor="middle" class="anotacion textoSVG textoMini">Fuente piloto</text>
+<text x="680" y="183" text-anchor="middle" class="anotacion textoSVG textoMini">p piloto ideal</text>
+
+<path id="tubo-rpu-borde" class="tuboPilotoBorde" d="M728 115.5 L712 115.5 L712 128"/>
+<path id="tubo-rpu" class="tuboPiloto vk-inactivo" d="M728 115.5 L712 115.5 L712 128"/>
+<path class="simboloTanque" d="M702 124 L702 135 L722 135 L722 124"/>
+<path id="tubo-rpl-borde" class="tuboPilotoBorde" d="M728 191 L712 191 L712 203"/>
+<path id="tubo-rpl" class="tuboPiloto vk-inactivo" d="M728 191 L712 191 L712 203"/>
+<path class="simboloTanque" d="M702 199 L702 210 L722 210 L722 199"/>
+
+<!-- Conductos piloto → servo piloto -->
+<path id="tubo-ap-borde" class="tuboPilotoBorde" d="M768 133 L786 133 L786 129.5 L805 129.5"/>
+<path id="tubo-ap" class="tuboPiloto vk-carga" d="M768 133 L786 133 L786 129.5 L805 129.5"/>
+<path id="tubo-bp-borde" class="tuboPilotoBorde" d="M768 169 L786 169 L786 176.5 L805 176.5"/>
+<path id="tubo-bp" class="tuboPiloto vk-carga" d="M768 169 L786 169 L786 176.5 L805 176.5"/>
+
+<!-- Cuerpo de la válvula piloto -->
+<rect class="cuerpoValvula" x="728" y="108" width="40" height="92"/>
+<rect id="canal-rpu" class="fluido vk-inactivo" x="728" y="113" width="10" height="5"/>
+<rect id="canal-sp"  class="fluido vk-carga"    x="728" y="149" width="10" height="4"/>
+<rect id="canal-rpl" class="fluido vk-inactivo" x="728" y="188" width="10" height="6"/>
+<rect id="canal-ap"  class="fluido vk-carga"    x="758" y="128" width="10" height="10"/>
+<rect id="canal-bp"  class="fluido vk-carga"    x="758" y="164" width="10" height="10"/>
+<rect id="ranura-rpu" class="fluido vk-inactivo" x="738" y="112" width="20" height="16"/>
+<rect id="ranura-sp"  class="fluido vk-carga"    x="738" y="138" width="20" height="26"/>
+<rect id="ranura-rpl" class="fluido vk-inactivo" x="738" y="174" width="20" height="22"/>
+
+<g id="carrete-piloto">
+<line class="vastagoCarrete" x1="748" y1="92" x2="748" y2="128"/>
+<line class="vastagoCarrete" x1="748" y1="138" x2="748" y2="164"/>
+<rect class="resalteCarrete" x="738" y="128" width="20" height="10"/>
+<rect class="resalteCarrete" x="738" y="164" width="20" height="10"/>
+<circle class="pomoCarrete" cx="748" cy="89" r="5"/>
+</g>
+<text x="748" y="228" text-anchor="middle" class="textoSVG tituloComponente">Válvula piloto</text>
+<text x="748" y="241" text-anchor="middle" class="anotacion textoSVG textoMini">↑ abre · ↓ cierra</text>
+
+<!-- Servo piloto -->
+<rect class="cuerpoServoPiloto" x="805" y="122" width="40" height="62"/>
+<rect id="camaraSPsup" class="camara vk-carga" x="809" y="126" width="32" height="22"/>
+<rect id="camaraSPinf" class="camara vk-carga" x="809" y="158" width="32" height="22"/>
+<rect id="sinCirculacionSPsup" class="sinCirculacion" x="809" y="126" width="32" height="22"/>
+<rect id="sinCirculacionSPinf" class="sinCirculacion" x="809" y="158" width="32" height="22"/>
+<rect class="tomaCilindro" x="801" y="126" width="5" height="7"/>
+<rect class="tomaCilindro" x="801" y="173" width="5" height="7"/>
+<g id="piston-servopiloto">
+<line class="vastagoCarrete" x1="825" y1="102" x2="825" y2="148"/>
+<line class="vastagoCarrete" x1="825" y1="158" x2="825" y2="210"/>
+<rect class="pistonServoVisual" x="809" y="148" width="32" height="10"/>
+</g>
+<text x="852" y="138" class="textoSVG tituloComponente">Servo piloto</text>
+<text id="manometro-sp" x="852" y="152" class="anotacion textoSVG textoMini">sup – · inf – MPa</text>
+<text id="lecturaB" x="852" y="165" class="anotacion textoSVG textoMini">b = – mm</text>
+<text x="832" y="234" class="anotacion textoSVG textoMini">b ↓ abre</text>
+
+<g id="flechas-piloto">
+<path id="flecha-sp" class="flechaAceite flechaPiloto" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-ap" class="flechaAceite flechaPiloto" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-bp" class="flechaAceite flechaPiloto" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-rpu" class="flechaAceite flechaPiloto" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-rpl" class="flechaAceite flechaPiloto" d="M-5 -4 L5 -4 L0 5 Z"/>
+</g>
+
+</g>
+
+
+<!-- Varillaje A–B–C–D–E (js/watt_integracion.js, etapa 7)
+     Palanca de entrada A–B–C con B como APOYO MÓVIL (corredera
+     vertical, movido por la leva de realimentación principal) y
+     palanca flotante C–D–E (D: piloto; E: realimentación interna
+     del servo piloto). Posiciones recalculadas desde s, b y la
+     posición del pistón principal en cada paso. -->
+<g id="varillaje-abc">
+<!-- Etapa 9 (17-oct-2026): A es un pasador en la oreja del
+     collar del Watt (eje del Watt en x = 358); entra en una
+     RANURA corta del extremo de la palanca A–B–C. Sin biela Q–A.
+     Palancas a la altura del collar (y = 138.75 en la referencia). -->
+<rect id="collar-toma" class="collarToma" x="348.75" y="135.75" width="18.5" height="7.75"/>
+<line id="horquilla-toma" class="horquillaToma" x1="367.25" y1="138.75" x2="371.25" y2="138.75"/>
+<!-- Corredera fija que guía a B en vertical (eje x = 625) -->
+<g id="guia-b" class="guiaB">
+<line x1="618" y1="122.75" x2="618" y2="154.75"/>
+<line x1="632" y1="122.75" x2="632" y2="154.75"/>
+<line class="guiaBFija" x1="632" y1="122.75" x2="638" y2="118.75"/>
+<line class="guiaBFija" x1="632" y1="130.75" x2="638" y2="126.75"/>
+<line class="guiaBFija" x1="632" y1="138.75" x2="638" y2="134.75"/>
+<line class="guiaBFija" x1="632" y1="146.75" x2="638" y2="142.75"/>
+<line class="guiaBFija" x1="632" y1="154.75" x2="638" y2="150.75"/>
+</g>
+<!-- Etapa 16: LIMITADOR DE APERTURA con leva de arranque
+     (palanca L1–L2–L3 por encima de A–B–C; empujador de un solo
+     sentido sobre C; unión elástica C_ent – C_sal). Posiciones:
+     watt_integracion.js (LIMITADOR). -->
+<g id="limitador-apertura">
+<text x="700" y="83" text-anchor="middle" class="textoSVG tituloComponente">Limitador de apertura</text>
+<g id="lim-guia-l1" class="guiaB">
+<line x1="465" y1="102" x2="465" y2="119"/>
+<line x1="475" y1="102" x2="475" y2="119"/>
+<line class="guiaBFija" x1="475" y1="104" x2="481" y2="100"/>
+<line class="guiaBFija" x1="475" y1="117" x2="481" y2="113"/>
+</g>
+<rect id="lim-corredera-l1" class="collarSeguidor" x="466" y="100" width="8" height="6"/>
+<line id="lim-extension-vb" class="varillaRealimentacion" x1="625" y1="138.75" x2="625" y2="110.75"/>
+<line id="lim-palanca" class="palancaVarillaje palancaLimitadora" x1="470" y1="110.75" x2="908" y2="110.75"/>
+<line id="lim-ranura" class="ranuraPalanca" x1="464" y1="110.75" x2="476" y2="110.75"/>
+<line id="lim-empujador" class="bielaVarillaje empujadorLimitador" x1="908" y1="110.75" x2="908" y2="138.75"/>
+<path id="lim-union-c" class="resorteSeguidor" d=""/>
+<circle id="lim-pasador-l1" class="pasadorVarillaje" cx="470" cy="110.75" r="3"/>
+<circle id="lim-pasador-l2" class="pasadorVarillaje" cx="625" cy="110.75" r="3"/>
+<circle id="lim-pasador-l3" class="pasadorVarillaje" cx="908" cy="110.75" r="3"/>
+<!-- Etapa 23: rótulos de la palanca limitadora (mismo estilo que A–E;
+     posiciones calculadas en watt_integracion.js) -->
+<text id="rotulo-l1" x="484" y="105.75" class="textoSVG textoMini rotuloVarillaje">L1</text>
+<text id="rotulo-l2" x="607" y="105.75" class="textoSVG textoMini rotuloVarillaje">L2</text>
+<text id="rotulo-l3" x="913" y="105.75" class="textoSVG textoMini rotuloVarillaje">L3</text>
+</g>
+<!-- Etapa 24 (19-oct-2026): MOTORES ESQUEMÁTICOS (carcasa fija).
+     M1: motor reversible del ajuste de precarga del resorte (mueve la
+         corona-tuerca del cubo; eje corto hasta el cubo).
+     M2: motor reversible del husillo que sube o baja L1 (enlace
+         vertical corto hasta la corredera de L1; solo el enlace sigue
+         a L1, el motor no se mueve).
+     Verde = detenido; rojo = funcionando; flecha = sentido (solo en
+     marcha). Estado según la VARIACIÓN EFECTIVA del ajuste (a) y del
+     límite de apertura (watt_resorte_integracion.js). -->
+<g id="motores-esquematicos">
+<path id="m1-eje" class="ejeMotorEsq" d="M333.2 0 H346 V18.75 H353"/>
+<line id="m2-enlace" class="ejeMotorEsq" x1="470" y1="75.2" x2="470" y2="100"/>
+<g id="motor-m1" class="motorEsquematico">
+<!-- Ampliación visual del símbolo respecto a su centro, sin escalar el enlace ni el mecanismo. -->
+<g transform="translate(322 0) scale(1.4) translate(-322 0)">
+<circle id="m1-cuerpo" class="motorEsq" cx="322" cy="0" r="8"/>
+<text class="textoSVG motorEsqLetra" x="322" y="3.3">M</text>
+<g id="m1-sentido-pos" class="flechaMotor" style="display:none"><path class="flechaMotorArco" d="M313.5 -9 A12 12 0 0 1 330.5 -9"/><path class="flechaMotorPunta" d="M333.5 -10.5 L330.5 -5.5 L327.2 -10.2 Z"/></g>
+<g id="m1-sentido-neg" class="flechaMotor" style="display:none"><path class="flechaMotorArco" d="M313.5 -9 A12 12 0 0 1 330.5 -9"/><path class="flechaMotorPunta" d="M310.5 -10.5 L313.5 -5.5 L316.8 -10.2 Z"/></g>
+</g>
+<text class="textoSVG textoMini rotuloVarillaje" x="305" y="4" text-anchor="end">M1</text>
+</g>
+<g id="motor-m2" class="motorEsquematico">
+<g transform="translate(470 64) scale(1.4) translate(-470 -64)">
+<circle id="m2-cuerpo" class="motorEsq" cx="470" cy="64" r="8"/>
+<text class="textoSVG motorEsqLetra" x="470" y="67.3">M</text>
+<g id="m2-sentido-pos" class="flechaMotor" style="display:none"><path class="flechaMotorArco" d="M461.5 55 A12 12 0 0 1 478.5 55"/><path class="flechaMotorPunta" d="M481.5 53.5 L478.5 58.5 L475.2 53.8 Z"/></g>
+<g id="m2-sentido-neg" class="flechaMotor" style="display:none"><path class="flechaMotorArco" d="M461.5 55 A12 12 0 0 1 478.5 55"/><path class="flechaMotorPunta" d="M458.5 53.5 L461.5 58.5 L464.8 53.8 Z"/></g>
+</g>
+<text class="textoSVG textoMini rotuloVarillaje" x="488" y="76" text-anchor="start">M2</text>
+</g>
+</g>
+<line id="palanca-entrada" class="palancaVarillaje" x1="371.25" y1="138.75" x2="908" y2="138.75"/>
+<line id="biela-qa" class="ranuraPalanca" x1="367.25" y1="138.75" x2="378.25" y2="138.75"/>
+<line id="palanca-flotante" class="palancaFlotante" x1="908" y1="138.75" x2="1020" y2="138.75"/>
+<line id="biela-ck" class="bielaVarillaje" x1="943" y1="138.75" x2="943" y2="157.75"/>
+<line id="biela-dr" class="bielaVarillaje" x1="1020" y1="138.75" x2="1020" y2="170.75"/>
+<circle id="pasador-q" class="pasadorVarillaje" cx="371.25" cy="138.75" r="0"/>
+<circle id="pasador-a" class="pasadorVarillaje" cx="371.25" cy="138.75" r="3"/>
+<circle id="pasador-b" class="pasadorVarillaje pasadorB" cx="625" cy="138.75" r="4"/>
+<circle id="pasador-c" class="pasadorVarillaje" cx="908" cy="138.75" r="3"/>
+<circle id="pasador-c-sal" class="pasadorVarillaje" cx="908" cy="138.75" r="2.2"/>
+<circle id="pasador-d" class="pasadorVarillaje" cx="943" cy="138.75" r="3"/>
+<circle id="pasador-e" class="pasadorVarillaje" cx="1020" cy="138.75" r="3"/>
+<circle id="pasador-k" class="pasadorVarillaje" cx="943" cy="157.75" r="3"/>
+<circle id="pasador-r" class="pasadorVarillaje" cx="1020" cy="170.75" r="3"/>
+<text id="rotulo-a" x="373" y="132" class="textoSVG textoMini rotuloVarillaje">A</text>
+<text id="rotulo-b" x="605" y="133.75" class="textoSVG textoMini rotuloVarillaje">B</text>
+<text id="rotulo-c" x="890" y="154.75" class="textoSVG textoMini rotuloVarillaje">C</text>
+<text id="rotulo-d" x="940" y="132" class="textoSVG textoMini rotuloVarillaje">D</text>
+<text id="rotulo-e" x="1026" y="134" class="textoSVG textoMini rotuloVarillaje">E</text>
+<text x="380" y="153" class="anotacion textoSVG textoMini">A: pasador del collar en ranura</text>
+<text x="640" y="165" class="anotacion textoSVG textoMini">B: apoyo móvil en corredera fija</text>
+<text id="lectura-manguito" x="0" y="140" class="anotacion textoSVG textoMini">s = – mm</text>
+</g>
+
+
+<g id="circuito-aceite">
+
+<!-- DISTRIBUIDORA VERTICAL — etapa 8 (17-oct-2026):
+     a la derecha del servomotor principal, 55 px más abajo
+     y REFLEJADA lateralmente respecto a la etapa 7 (eje del
+     carrete x = 1020 = eje del servo piloto). Misma función
+     hidráulica y mismo accionamiento por arriba (vástago
+     inferior del servo piloto).
+     Lumbreras de arriba abajo: R2, C2, S, C1, R1.
+       S, R1 y R2 salen ahora por la DERECHA;
+       C1 y C2 por la IZQUIERDA (hacia las cámaras).
+     Carrete hacia ABAJO = abre (S → C1, C2 → R2);
+     carrete hacia ARRIBA = cierra (S → C2, C1 → R1).
+     El grupo #distribuidora-reflejada contiene el dibujo de
+     la etapa 7 con la transformación x' = 1845 − x,
+     y' = y + 55 (reflejo respecto a x = 825 y traslado). -->
+
+<!-- Conductos a las cámaras (trazado en servomotor.js):
+     C2 sale a y = 360 y baja por x ≈ 920 a la toma de C2;
+     C1 sale a y = 420 y llega a x ≈ 730; donde C1 cruza
+     el tramo vertical de C2 se dibuja un PUENTE (cruce sin
+     conexión). -->
+<path id="tubo-c2-borde" class="tuboBorde" d="M995 360 L920 360 L920 449"/>
+<path id="tubo-c2" class="tubo vk-carga" d="M995 360 L920 360 L920 449"/>
+<path id="tubo-c1-borde" class="tuboBorde" d="M995 420 L929 420 A9 9 0 0 0 911 420 L730 420 L730 449"/>
+<path id="tubo-c1" class="tubo vk-carga" d="M995 420 L929 420 A9 9 0 0 0 911 420 L730 420 L730 449"/>
+
+<g id="distribuidora-reflejada" transform="matrix(-1 0 0 1 1845 55)">
+
+<!-- Fuente de presión ideal (p_s constante) -->
+<line id="tubo-s-borde" class="tuboBorde" x1="748" y1="335" x2="800" y2="335"/>
+<line id="tubo-s" class="tubo vk-presion" x1="748" y1="335" x2="800" y2="335"/>
+<circle class="simboloFuente" cx="736" cy="335" r="12"/>
+<path class="flechaFuente" d="M733 329 L733 341 L743 335 Z"/>
+
+<!-- Retornos a tanque -->
+<path id="tubo-r2-borde" class="tuboBorde" d="M800 269 L762 269 L762 288"/>
+<path id="tubo-r2" class="tubo vk-inactivo" d="M800 269 L762 269 L762 288"/>
+<path class="simboloTanque" d="M750 282 L750 296 L774 296 L774 282"/>
+<path id="tubo-r1-borde" class="tuboBorde" d="M800 396 L762 396 L762 414"/>
+<path id="tubo-r1" class="tubo vk-inactivo" d="M800 396 L762 396 L762 414"/>
+<path class="simboloTanque" d="M750 408 L750 422 L774 422 L774 408"/>
+
+<!-- Cuerpo de la válvula (corte longitudinal vertical; escala del
+     carrete DIDÁCTICA: 16 px = tope de apertura, 1.93 mm supuestos).
+     Lumbreras (y, antes del traslado de +55): R2 263–275,
+     C2 297–313, S 331–339, C1 357–373, R1 390–402. -->
+<rect class="cuerpoValvula" x="800" y="250" width="50" height="162"/>
+<rect id="canal-r2" class="fluido vk-inactivo" x="800" y="263" width="13" height="12"/>
+<rect id="canal-s"  class="fluido vk-presion"  x="800" y="331" width="13" height="8"/>
+<rect id="canal-r1" class="fluido vk-inactivo" x="800" y="390" width="13" height="12"/>
+<rect id="canal-c2" class="fluido vk-carga"    x="837" y="297" width="13" height="16"/>
+<rect id="canal-c1" class="fluido vk-carga"    x="837" y="357" width="13" height="16"/>
+<rect id="ranura-r2" class="fluido vk-inactivo" x="813" y="258" width="24" height="39"/>
+<rect id="ranura-s"  class="fluido vk-presion"  x="813" y="313" width="24" height="44"/>
+<rect id="ranura-r1" class="fluido vk-inactivo" x="813" y="373" width="24" height="31"/>
+
+<!-- Carrete (se traslada verticalmente como bloque); su
+     vástago sube hasta el vástago inferior del servo piloto -->
+<g id="carrete-distribuidora">
+<line class="vastagoCarrete" x1="825" y1="224" x2="825" y2="297"/>
+<line class="vastagoCarrete" x1="825" y1="313" x2="825" y2="357"/>
+<rect class="resalteCarrete" x="813" y="297" width="24" height="16"/>
+<rect class="resalteCarrete" x="813" y="357" width="24" height="16"/>
+</g>
+
+<!-- Flechas de circulación dentro del dibujo reflejado -->
+<g id="flechas-aceite">
+<path id="flecha-s" class="flechaAceite" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-s-v" class="flechaAceite" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-r1" class="flechaAceite" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-r1-v" class="flechaAceite" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-r2" class="flechaAceite" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-r2-v" class="flechaAceite" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-c1-v" class="flechaAceite" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-c2-v" class="flechaAceite" d="M-5 -4 L5 -4 L0 5 Z"/>
+</g>
+
+</g>
+
+<!-- Flechas de los conductos a las cámaras (sin reflejo) -->
+<g id="flechas-aceite-camaras">
+<path id="flecha-c1-t" class="flechaAceite" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-c1-c" class="flechaAceite" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-c2-t" class="flechaAceite" d="M-5 -4 L5 -4 L0 5 Z"/>
+<path id="flecha-c2-c" class="flechaAceite" d="M-5 -4 L5 -4 L0 5 Z"/>
+</g>
+
+<!-- Rótulos (fuera del grupo reflejado para no invertir el texto) -->
+<text x="1124" y="386" class="anotacion textoSVG textoPeq">S · p<tspan baseline-shift="sub" font-size="9">s</tspan></text>
+<text x="1124" y="399" class="anotacion textoSVG textoMini">fuente ideal</text>
+<text x="1101" y="348" class="anotacion textoSVG textoMini">R2</text>
+<text x="1101" y="474" class="anotacion textoSVG textoMini">R1</text>
+<text id="manometro-c1" x="742" y="440" class="anotacion textoSVG textoMini">C1 anular · – MPa</text>
+<text id="manometro-c2" x="914" y="400" text-anchor="end" class="anotacion textoSVG textoMini">C2 completa · – MPa</text>
+<text x="988" y="338" text-anchor="end" class="textoSVG tituloComponente">Válvula distribuidora</text>
+<text x="1178" y="492" text-anchor="end" class="anotacion textoSVG textoMini">carrete: movido por b (servo piloto)</text>
+<text x="1178" y="504" text-anchor="end" class="anotacion textoSVG textoMini escalaDidactica">escala del carrete didáctica</text>
+<text x="1178" y="516" text-anchor="end" class="anotacion textoSVG textoMini">carrete: ↓ abre · ↑ cierra</text>
+
+</g>
+
+
+<g id="servomotor-cuerpo">
 
 <rect
 x="700"
@@ -1190,6 +1251,18 @@ stroke="#263640"
 stroke-width="6"
 />
 
+<!-- Tomas de aceite de C1 y C2 (solidarias al cilindro) -->
+<rect class="tomaCilindro" x="723" y="443" width="14" height="12"/>
+<rect class="tomaCilindro" x="913" y="443" width="14" height="12"/>
+
+<!-- Orejeta trasera del cilindro (solidaria al cuerpo) -->
+
+<path
+id="orejeta-servomotor"
+d="M953 499 L968 505 A10 10 0 0 1 968 525 L953 531 Z"
+class="pistonServoVisual"
+/>
+
 
 <rect
 id="camaraIzquierda"
@@ -1197,7 +1270,7 @@ x="706"
 y="461"
 width="94"
 height="113"
-class="camaraBase"
+class="camara vk-carga"
 />
 
 
@@ -1207,8 +1280,12 @@ x="850"
 y="461"
 width="94"
 height="113"
-class="camaraBase"
+class="camara vk-carga"
 />
+
+<!-- Rayado "sin circulación" (mismo tamaño que cada cámara) -->
+<rect id="sinCirculacionC1" class="sinCirculacion" x="706" y="461" width="94" height="113"/>
+<rect id="sinCirculacionC2" class="sinCirculacion" x="850" y="461" width="94" height="113"/>
 
 
 <line
@@ -1220,6 +1297,13 @@ y2="515"
 class="mecanico"
 />
 
+
+<!-- Etapa 7: leva de realimentación principal, solidaria
+     al vástago (se traslada con el pistón y gira con el
+     cilindro; perfil en js/watt_integracion.js) -->
+<g id="leva-realimentacion">
+<path id="leva-perfil" class="levaPerfil" d=""/>
+</g>
 
 <g id="pistonServo">
 
@@ -1233,196 +1317,313 @@ class="pistonServoVisual"
 
 </g>
 
+</g>
 
-<!-- =====================================================
-     LEVA
-===================================================== -->
 
-<g id="levaRetro">
+<!-- Pivote trasero del servomotor y su apoyo fijo
+     (base al mismo nivel que la de la palanca de
+     reenvío, y = 613) -->
+
+<g id="apoyo-servomotor">
 
 <path
-d="
-M430 515
-L430 505
-C485 505
-555 483
-610 483
-L610 515
-Z
-"
-class="levaRetro"
+id="soporte-servomotor"
+d="M968 515 L952 613 L984 613 Z"
+class="soporteReenvio"
 />
 
+<g class="baseApoyo">
+
+<line class="lineaBaseApoyo" x1="945" y1="613" x2="991" y2="613"/>
+
+<line x1="947" y1="621" x2="954" y2="613"/>
+<line x1="953" y1="621" x2="960" y2="613"/>
+<line x1="959" y1="621" x2="966" y2="613"/>
+<line x1="965" y1="621" x2="972" y2="613"/>
+<line x1="971" y1="621" x2="978" y2="613"/>
+<line x1="977" y1="621" x2="984" y2="613"/>
+<line x1="983" y1="621" x2="990" y2="613"/>
+
+</g>
+
+<circle
+id="pivote-servomotor"
+cx="968"
+cy="515"
+r="6.5"
+class="pivoteReenvio"
+/>
+
+<circle
+cx="968"
+cy="515"
+r="2"
+class="centroPivoteReenvio"
+/>
+
+</g>
+
+
+<!-- Etapa 8: seguidor DIRECTO de rodillo, guiado en vertical
+     (eje x = 625). Guía fija (absorbe la reacción lateral de la
+     leva), resorte de compresión guía → collar (mantiene el
+     contacto; fuerzas no modeladas) y varilla V–B de longitud
+     fija hasta el apoyo móvil B. Posiciones: watt_integracion.js -->
+<g id="seguidor-leva">
+<line id="varilla-vb" class="varillaRealimentacion" x1="625" y1="420" x2="625" y2="110"/>
+<line id="vastago-seguidor" class="vastagoSeguidor" x1="625" y1="420" x2="625" y2="500"/>
+<path id="resorte-seguidor" class="resorteSeguidor" d=""/>
+<rect id="collar-seguidor" class="collarSeguidor" x="618" y="489" width="14" height="4"/>
+<g id="guia-seguidor" class="guiaSeguidor">
+<rect class="bujeGuia" x="618" y="428" width="5" height="18"/>
+<rect class="bujeGuia" x="627" y="428" width="5" height="18"/>
+<line class="lineaBaseApoyo" x1="604" y1="437" x2="618" y2="437"/>
+<line x1="606" y1="437" x2="602" y2="443"/>
+<line x1="610" y1="437" x2="606" y2="443"/>
+<line x1="614" y1="437" x2="610" y2="443"/>
+</g>
+<circle id="rodillo-seguidor" class="rodilloSeguidor" cx="625" cy="500" r="5"/>
+<text id="rotulo-f" x="637" y="490" class="textoSVG textoMini rotuloVarillaje">F</text>
+<!-- Etapa 19 (18-oct-2026): AMORTIGUADOR DE COMPENSACIÓN
+     (realimentación transitoria). Cilindro receptor intercalado en
+     la varilla V–B (cuerpo con el tramo inferior, émbolo centrado
+     por resortes con el tramo superior), cilindro primario fijo
+     movido por una escuadra del tramo inferior, tubo de aceite y
+     válvula de aguja al depósito. Posiciones: watt_integracion.js -->
+<g id="amortiguador-compensacion">
+<line id="amort-vastago-sup" class="varillaRealimentacion" x1="625" y1="139" x2="625" y2="280"/>
+<path id="amort-tubo-borde" class="amortTuboBorde" d=""/>
+<path id="amort-tubo" class="amortTubo" d=""/>
+<path id="amort-aguja-tubo-borde" class="amortTuboBorde" d="M663 312 L690 312 L690 322"/>
+<path id="amort-aguja-tubo" class="amortTubo" d="M663 312 L690 312 L690 322"/>
+<g id="amort-valvula-aguja" class="amortAguja">
+<circle cx="678" cy="312" r="4.2"/>
+<line x1="673.5" y1="317" x2="682.5" y2="307"/>
+<path d="M682.5 307 L679.2 307.6 L681.9 310.3 Z"/>
+</g>
+<path class="simboloTanque" d="M682 318 L682 328 L698 328 L698 318"/>
+<rect id="amort-cuerpo" class="amortCuerpo" x="616" y="258" width="18" height="44" rx="1.5"/>
+<rect id="amort-aceite" class="amortAceite" x="619" y="261" width="12" height="38"/>
+<path id="amort-resorte-sup" class="amortResorte" d=""/>
+<path id="amort-resorte-inf" class="amortResorte" d=""/>
+<rect id="amort-embolo" class="amortEmbolo" x="618.5" y="278" width="13" height="4"/>
+<rect class="amortCuerpo" x="650" y="330" width="26" height="28" rx="1.5"/>
+<rect class="amortAceite" x="653" y="333" width="20" height="22"/>
+<rect id="amort-embolo-primario" class="amortEmbolo" x="652.5" y="338" width="21" height="4"/>
+<line id="amort-vastago-primario" class="amortVastago" x1="663" y1="340" x2="663" y2="370"/>
+<line id="amort-escuadra" class="amortVastago" x1="625" y1="370" x2="663" y2="370"/>
+<g class="guiaSeguidor">
+<line class="lineaBaseApoyo" x1="676" y1="344" x2="690" y2="344"/>
+<line x1="690" y1="338" x2="690" y2="350"/>
+<line x1="690" y1="340" x2="695" y2="336"/>
+<line x1="690" y1="345" x2="695" y2="341"/>
+<line x1="690" y1="350" x2="695" y2="346"/>
+</g>
+<!-- Título conservado en la cabecera del detalle ampliado. -->
+</g>
+<!-- =====================================================
+     PROPUESTA VISUAL DASHOPT (20-oct-2026)
+     CORTE DIDÁCTICO AMPLIADO DEL AMORTIGUADOR DE COMPENSACIÓN
+     Integración: recuadro al 80 % del tamaño de la propuesta; K = 8 sin cambios.
+     Vista de detalle del amortiguador de la varilla V–B (el de la
+     escena, a escala 1:1, queda donde estaba y se señala con la
+     llamada discontinua). Solo presentación: las posiciones las fija
+     js/dashpot_detalle.js a partir de estadoVarillaje (V, yd) y
+     amortiguador (G, Td), sin escribir en el modelo.
+     Desplazamientos dentro del detalle = K × desplazamientos de la
+     escena (K en DASHPOT_DETALLE.K). Dimensiones esquemáticas;
+     diámetros interiores primario / receptor = 2 (áreas 4 = G).
+===================================================== -->
+<g id="dashpot-llamada" class="ddLlamada" pointer-events="none">
+<rect x="610" y="250" width="30" height="62" rx="3"/>
+<line x1="640" y1="281" x2="704" y2="281"/>
+</g>
+<g id="dashpot-detalle" transform="translate(602.6 208) scale(0.8)" pointer-events="none">
+<defs>
+<clipPath id="dd-recorte"><rect x="0" y="0" width="144" height="246" rx="4"/></clipPath>
+</defs>
+<rect class="ddMarco" x="0" y="0" width="144" height="246" rx="4"/>
+<g id="dd-interior">
+
+<!-- Fijo al bastidor: cilindro primario, depósito, válvula de aguja y tubería
+     (ronda 2: K = 8, dimensionado para |yd| ≤ 6 px de escena; ver dashpot_detalle.js) -->
+<g id="dd-fijo">
+<rect class="ddCuerpo" x="72" y="141" width="56" height="53" rx="1.5"/>
+<rect id="dd-pri-camara" class="ddAceite" x="76" y="145" width="48" height="10"/>
+<rect id="dd-pri-inferior" class="ddInactivo" x="76" y="163" width="48" height="27"/>
+<g class="ddAnclaje">
+<line class="ddBase" x1="128" y1="150" x2="128" y2="186"/>
+<line x1="128" y1="154" x2="134" y2="149"/><line x1="128" y1="162" x2="134" y2="157"/>
+<line x1="128" y1="170" x2="134" y2="165"/><line x1="128" y1="178" x2="134" y2="173"/>
+<line x1="128" y1="186" x2="134" y2="181"/>
+</g>
+<path class="ddTuboBorde" d="M100 141 L100 122 L60 122"/>
+<path class="ddTubo"      d="M100 141 L100 122 L60 122"/>
+<path class="ddTuboBorde" d="M100 122 L100 80"/>
+<path class="ddTubo"      d="M100 122 L100 80"/>
+<path class="ddDeposito" d="M88 68 L88 80 L112 80 L112 68"/>
+<rect class="ddAceiteDeposito" x="89.5" y="74" width="21" height="4.5"/>
+<g class="ddAguja">
+<circle cx="100" cy="97" r="4.6"/>
+<line x1="95" y1="102.5" x2="105" y2="91.5"/>
+<path d="M105 91.5 L101.4 92.2 L104.4 95.1 Z"/>
+</g>
+<circle class="ddTe" cx="100" cy="122" r="2"/>
+</g>
+
+<!-- Conducto flexible hasta la cámara inferior del receptor (extremo móvil) -->
+<path id="dd-manguera-borde" class="ddTuboBorde" d=""/>
+<path id="dd-manguera" class="ddTubo" d=""/>
+
+<!-- Tramo inferior: cuerpo receptor, varilla hacia V, escuadra y émbolo primario (K·ΔV) -->
+<g id="dd-movil-v">
+<line id="dd-varilla-v" class="ddVarilla" x1="28" y1="185" x2="28" y2="265"/>
+<rect class="ddCuerpo" x="12" y="51" width="32" height="134" rx="1.5"/>
+<rect class="ddEscuadraUnion" x="25" y="194" width="6" height="6"/>
+<text x="54" y="209" class="anotacion textoSVG ddNota">escuadra</text>
+<text x="8" y="180" class="anotacion textoSVG ddNota" transform="rotate(-90 8 180)">receptor</text>
+<line class="ddEscuadra" x1="28" y1="197" x2="100" y2="197"/>
+<line class="ddVastagoPri" x1="100" y1="163" x2="100" y2="197"/>
+<rect class="ddEmbolo" x="76.5" y="155" width="47" height="8"/>
+<circle class="ddPasador" cx="100" cy="197" r="2.6"/>
+<line class="ddRefCentro" x1="5" y1="118" x2="12" y2="118"/>
+<line class="ddRefCentro" x1="44" y1="118" x2="51" y2="118"/>
+</g>
+
+<!-- Cámaras del receptor y resortes (coordenadas absolutas del detalle) -->
+<rect id="dd-rec-superior" class="ddAceiteDeposito" x="16" y="55" width="24" height="60"/>
+<rect id="dd-rec-inferior" class="ddAceite" x="16" y="121" width="24" height="60"/>
+<path id="dd-resorte-sup" class="ddResorte" d=""/>
+<path id="dd-resorte-inf" class="ddResorte" d=""/>
+<g id="dd-embolo-rec">
+<rect class="ddEmbolo" x="16.5" y="115" width="23" height="6"/>
+</g>
+<line id="dd-varilla-b" class="ddVarilla" x1="28" y1="0" x2="28" y2="115"/>
+<!-- Indicador de exceso del rango del detalle (oculto salvo |yd| > ydVisible) -->
+<path id="dd-exceso" class="ddExceso" d="M-4 2 L0 -3 L4 2 M-4 7 L0 2 L4 7" display="none"/>
+
+<!-- Flechas de circulación (caudal reducido inferido; ver dashpot_detalle.js) -->
+<path id="dd-flecha-pri" class="ddFlecha" d="M-4.2 -3.6 L4.2 0 L-4.2 3.6 Z"/>
+<path id="dd-flecha-rec" class="ddFlecha" d="M-4.2 -3.6 L4.2 0 L-4.2 3.6 Z"/>
+<path id="dd-flecha-ag"  class="ddFlecha" d="M-4.2 -3.6 L4.2 0 L-4.2 3.6 Z"/>
+</g>
+
+<!-- Cabecera: tapa la varilla superior y lleva el título visible -->
+<rect class="ddCabecera" x="0.75" y="0.75" width="142.5" height="37" rx="3.5"/>
+<text x="60" y="25" class="textoSVG tituloComponente">Amortiguador</text>
+<text x="60" y="42" class="textoSVG tituloComponente">de compensación</text>
+<path class="ddCorte" d="M22 40.5 L26 37.5 L30 40.5 L34 37.5"/>
+<text x="33" y="49" class="textoSVG ddLetra">B</text>
+<text x="34" y="241" class="textoSVG ddLetra">V</text>
+<text id="dd-escala" x="138" y="49" text-anchor="end" class="textoSVG ddEscala">×8</text>
+<text id="dd-fuera-escala" x="50" y="231" class="textoSVG ddAviso" display="none">yd fuera del detalle</text>
+<text id="dd-tope-modelo" x="50" y="221" class="textoSVG ddAviso" display="none">tope del modelo ±ydMax</text>
+
+<!-- Capa de anotaciones (ocultas por defecto) -->
+<g class="anotacion ddNotas">
+<text x="85" y="77" text-anchor="end" class="anotacion textoSVG ddNota">depósito</text>
+<text x="107" y="100" class="anotacion textoSVG ddNota">aguja</text>
+<text x="140" y="192" class="anotacion textoSVG ddNota" transform="rotate(-90 140 192)">primario (fijo)</text>
+<text id="dd-nota-escala" x="46" y="241" class="anotacion textoSVG ddNota">×8 · flechas cualitativas</text>
+</g>
+</g>
+<text id="lectura-amortiguador" x="0" y="153" class="anotacion textoSVG textoMini">amortiguador: –</text>
+<circle id="pasador-v" class="pasadorVarillaje" cx="625" cy="420" r="2.5"/>
+<text x="612" y="470" text-anchor="end" class="anotacion textoSVG textoMini">seguidor guiado · resorte de retorno</text>
 </g>
 
 
 <text
 x="825"
-y="600"
+y="606"
 text-anchor="middle"
-class="textoSVG etiquetaSVG">
-Servomotor
+class="textoSVG tituloComponente">
+Servomotor principal
 </text>
 
 
-<!-- =====================================================
-     PARTÍCULAS DE ACEITE
-===================================================== -->
-
-<g id="animEntradaPresion" visibility="hidden">
-
-<circle r="6" class="particulaPresion">
-<animateMotion
-dur=".9s"
-repeatCount="indefinite"
-path="M1170 380 H1062"
-/>
-</circle>
-
-<circle r="6" class="particulaPresion">
-<animateMotion
-begin=".3s"
-dur=".9s"
-repeatCount="indefinite"
-path="M1170 380 H1062"
-/>
-</circle>
-
-<circle r="6" class="particulaPresion">
-<animateMotion
-begin=".6s"
-dur=".9s"
-repeatCount="indefinite"
-path="M1170 380 H1062"
-/>
-</circle>
-
 </g>
+<!-- fin conjunto-mecanico -->
 
-
-<g id="animSuperiorHaciaServo" visibility="hidden">
-
-<circle r="6" class="particulaPresion">
-<animateMotion
-dur="1.5s"
-repeatCount="indefinite"
-path="M998 338 H718 V461"
-/>
-</circle>
-
-<circle r="6" class="particulaPresion">
-<animateMotion
-begin=".5s"
-dur="1.5s"
-repeatCount="indefinite"
-path="M998 338 H718 V461"
-/>
-</circle>
-
+<!-- Conexión explicativa estática, fuera de los grupos animados. -->
+<g id="transmision-velocidad" transform="translate(20 33)" pointer-events="none"
+    aria-label="Dispositivo de medición de velocidad conectado a la turbina y al soporte del Watt">
+    <g fill="none" stroke="#000000" stroke-width="2" stroke-dasharray="10 8">
+        <path d="M86.55 257.55 V145"/>
+        <path d="M131.55 117.5 H242"
+            marker-end="url(#flecha-transmision-velocidad)"/>
+    </g>
+    <rect x="41.55" y="90" width="90" height="55"
+        fill="#ffffff" stroke="#000000" stroke-width="2"/>
+    <circle cx="86.55" cy="117.5" r="17.2"
+        fill="#ffffff" stroke="#000000" stroke-width="2"/>
+    <text x="86.55" y="117.5" text-anchor="middle" dominant-baseline="central"
+        class="textoSVG tituloComponente">ST</text>
+    <text x="86.55" y="58" text-anchor="middle" class="textoSVG tituloComponente">
+        <tspan x="86.55">Dispositivo de medición</tspan>
+        <tspan x="86.55" dy="18">de velocidad</tspan>
+    </text>
 </g>
-
-
-<g id="animSuperiorRetorno" visibility="hidden">
-
-<circle r="5" class="particulaRetorno">
-<animateMotion
-dur="1.5s"
-repeatCount="indefinite"
-path="M718 461 V338 H998"
-/>
-</circle>
-
-</g>
-
-
-<g id="animInferiorHaciaServo" visibility="hidden">
-
-<circle r="6" class="particulaPresion">
-<animateMotion
-dur="1.1s"
-repeatCount="indefinite"
-path="M998 424 H932 V461"
-/>
-</circle>
-
-</g>
-
-
-<g id="animInferiorRetorno" visibility="hidden">
-
-<circle r="5" class="particulaRetorno">
-<animateMotion
-dur="1.1s"
-repeatCount="indefinite"
-path="M932 461 V424 H998"
-/>
-</circle>
-
-</g>
-
-
-<g id="animRetornoSuperior" visibility="hidden">
-
-<circle r="5" class="particulaRetorno">
-<animateMotion
-dur=".85s"
-repeatCount="indefinite"
-path="M1062 300 H1170"
-/>
-</circle>
-
-</g>
-
-
-<g id="animRetornoInferior" visibility="hidden">
-
-<circle r="5" class="particulaRetorno">
-<animateMotion
-dur=".85s"
-repeatCount="indefinite"
-path="M1062 466 H1170"
-/>
-</circle>
-
-</g>
-
 
 <!-- =====================================================
      INDICADOR
 ===================================================== -->
 
+<!-- Etapa 8: indicador trasladado sobre la palanca (capa de anotaciones) -->
+<g id="indicador-accion" transform="translate(5 50) scale(0.85) translate(-885 -55)">
 <rect
-x="865"
+x="885"
 y="55"
-width="270"
-height="65"
+width="305"
+height="80"
 rx="10"
-class="accionBox"
+class="anotacion accionBox"
 />
 
 <circle
 id="luzAccion"
-cx="895"
+cx="911"
 cy="87"
 r="12"
-class="luz"
+class="anotacion luz"
 />
 
 <text
 id="accionTexto"
-x="920"
+x="935"
 y="82"
-class="textoSVG etiquetaSVG">
-SISTEMA ESTABLE
+class="anotacion textoSVG etiquetaSVG">
+SERVOMOTOR DETENIDO
 </text>
 
 <text
 id="accionSubtexto"
-x="920"
+x="935"
 y="104"
-class="textoSVG textoPeq">
-Ambos puertos cerrados
+class="anotacion textoSVG textoPeq">
+Lumbreras cerradas
 </text>
+
+<text
+id="accionPresiones"
+x="935"
+y="122"
+class="anotacion textoSVG textoMini">
+</text>
+</g>
+
+<!-- Leyenda del código de colores (Vickers) -->
+<g id="leyenda-vickers" class="anotacion leyendaVickers" transform="translate(298 234)">
+<text x="100" y="54" class="anotacion textoSVG textoMini tituloLeyenda">Código de colores Vickers</text>
+<text x="100" y="66" class="anotacion textoSVG textoMini tituloLeyenda">(verde y morado: no representados)</text>
+<rect class="muestra vk-presion"    x="100" y="72" width="14" height="9"/><text x="119" y="80" class="anotacion textoSVG textoMini">Presión de sistema (funcionamiento)</text>
+<rect class="muestra vk-controlado" x="100" y="85" width="14" height="9"/><text x="119" y="93" class="anotacion textoSVG textoMini">Flujo controlado</text>
+<rect class="muestra vk-retorno"    x="100" y="98" width="14" height="9"/><text x="119" y="106" class="anotacion textoSVG textoMini">Flujo de retorno (puede tener contrapresión)</text>
+<rect class="muestra vk-carga"      x="100" y="111" width="14" height="9"/><text x="119" y="119" class="anotacion textoSVG textoMini">Presión reducida, piloto o de carga</text>
+<rect class="muestra vk-inactivo"   x="100" y="124" width="14" height="9"/><text x="119" y="132" class="anotacion textoSVG textoMini">Fluido inactivo</text>
+<path class="flechaAceite" transform="translate(107 142) rotate(-90)" d="M-5 -4 L5 -4 L0 5 Z" style="display:inline"/><text x="119" y="145" class="anotacion textoSVG textoMini">Circula aceite (sentido del caudal)</text>
+<rect class="muestra" x="100" y="150" width="14" height="9" fill="url(#rayadoSinCirculacion)"/><text x="119" y="158" class="anotacion textoSVG textoMini">Cámara sin circulación (conserva su presión)</text>
+</g>
 
 
 </svg>
@@ -1439,58 +1640,60 @@ Ambos puertos cerrados
 
 <section class="indicadores-inferiores">
 
+<!-- Etapa 10: orden de lectura y estado inicial de reposo -->
 
-<div class="indicador">
+<div class="indicador indicador-carrera">
+    <div class="titulo">APERTURA DISTRIBUIDOR</div>
+    <div class="valor">
+        <span id="apertura">0.0</span>
+        <span class="unidad">%</span>
+    </div>
+</div>
+
+<div class="indicador indicador-velocidad">
+    <div class="titulo">VELOCIDAD</div>
+    <div class="valor">
+        <span id="velocidad">0.0</span>
+        <span class="unidad">rpm</span>
+    </div>
+</div>
+
+<div class="indicador indicador-frecuencia">
 
 <div class="titulo">FRECUENCIA</div>
 
 <div class="valor">
-<span id="frecuencia">60.00</span>
+<span id="frecuencia">0.00</span>
 <span class="unidad">Hz</span>
 </div>
 
 </div>
 
+<div class="indicador indicador-pe">
 
-<div class="indicador">
-
-<div class="titulo">POTENCIA ELÉCTRICA</div>
+<div class="titulo">POT. ELÉCTRICA</div>
 
 <div class="valor">
-<span id="peBalance">80.0</span>
+<span id="peBalance">0.0</span>
 <span class="unidad">%</span>
 </div>
 
 </div>
 
+<div class="indicador indicador-pm">
 
-<div class="indicador">
-
-<div class="titulo">POTENCIA MECÁNICA</div>
+<div class="titulo">POT. MECÁNICA</div>
 
 <div class="valor">
-<span id="pmBalance">80.0</span>
+<span id="pmBalance">0.0</span>
 <span class="unidad">%</span>
 </div>
 
 </div>
 
+<div class="indicador indicador-balance">
 
-<div class="indicador">
-
-<div class="titulo">APERTURA DEL DISTRIBUIDOR</div>
-
-<div class="valor">
-<span id="apertura">60.1</span>
-<span class="unidad">%</span>
-</div>
-
-</div>
-
-
-<div class="indicador">
-
-<div class="titulo">BALANCE DE POTENCIA</div>
+<div class="titulo">BALANCE</div>
 
 <div class="valor">
 P<sub>m</sub>
@@ -1502,15 +1705,170 @@ P<sub>e</sub>
 
 </div>
 
-
 </section>
 
 
 
+<!-- =========================================================
+     ETAPA 20: VENTANAS LATERALES (copia de 06_CALDERA_PIROTUBULAR)
+     Izquierda: procedimientos de operación (botón ☰).
+     Derecha: panel vacío (indicador redondo junto a Operación),
+     reservado para el sincronoscopio.
+========================================================= -->
+
+<!-- PANEL LATERAL DERECHO: sincronoscopio y sincronizador 25A (etapa 27) -->
+<section id="pantallaAlarmas" class="pantalla" hidden>
+    <header>
+        <h2 id="tituloAlarmas">SINCRONOSCOPIO</h2>
+        <button type="button" id="btnCerrarAlarmas" aria-label="Cerrar sincronoscopio">×</button>
+    </header>
+    <!-- Etapa 27: sincronoscopio, 25A y toma inicial (js/sincronizacion.js).
+         Solo lectura del modelo único del RVTH; abrir o cerrar la ventana
+         no inicia, detiene ni reinicia el proceso. -->
+    <div id="contenidoPanelDerecho"></div>
+</section>
+
+<!-- PANEL LATERAL IZQUIERDO — PROCEDIMIENTOS -->
+<aside id="panelProcedimientos" class="panel-procedimientos" aria-labelledby="tituloProcedimientos">
+    <header>
+        <h2 id="tituloProcedimientos">Procedimientos de operación</h2>
+        <button type="button" id="btnCerrarProcedimientos" aria-label="Cerrar procedimientos">×</button>
+    </header>
+    <p class="guia-introduccion">Esta guía muestra una secuencia didáctica básica de arranque y paro de la unidad hidráulica. En instalaciones reales se deben conocer y seguir los procedimientos específicos del equipo instalado.</p>
+    <div class="guia-selector">
+        <label for="selectorProcedimiento">Procedimiento</label>
+        <select id="selectorProcedimiento">
+            <option value="arranque" selected>Arranque</option>
+            <option value="paro">Paro</option>
+        </select>
+    </div>
+    <div id="guiaPestanasArranque" class="guia-pestanas" role="tablist" aria-label="Pasos del procedimiento de arranque">
+        <button type="button" id="guia-tab-0" role="tab" aria-controls="guia-paso-0" aria-selected="true" tabindex="0">Paso 0</button>
+        <button type="button" id="guia-tab-1" role="tab" aria-controls="guia-paso-1" aria-selected="false" tabindex="-1">Paso 1</button>
+        <button type="button" id="guia-tab-2" role="tab" aria-controls="guia-paso-2" aria-selected="false" tabindex="-1">Paso 2</button>
+        <button type="button" id="guia-tab-3" role="tab" aria-controls="guia-paso-3" aria-selected="false" tabindex="-1">Paso 3</button>
+        <button type="button" id="guia-tab-4" role="tab" aria-controls="guia-paso-4" aria-selected="false" tabindex="-1">Paso 4</button>
+        <button type="button" id="guia-tab-5" role="tab" aria-controls="guia-paso-5" aria-selected="false" tabindex="-1">Paso 5</button>
+    </div>
+    <div id="guiaPestanasParo" class="guia-pestanas" role="tablist" aria-label="Pasos del procedimiento de paro" hidden>
+        <button type="button" id="guia-paro-tab-0" role="tab" aria-controls="guia-paro-paso-0" aria-selected="true" tabindex="0">Paso 0</button>
+        <button type="button" id="guia-paro-tab-1" role="tab" aria-controls="guia-paro-paso-1" aria-selected="false" tabindex="-1">Paso 1</button>
+        <button type="button" id="guia-paro-tab-2" role="tab" aria-controls="guia-paro-paso-2" aria-selected="false" tabindex="-1">Paso 2</button>
+        <button type="button" id="guia-paro-tab-3" role="tab" aria-controls="guia-paro-paso-3" aria-selected="false" tabindex="-1">Paso 3</button>
+        <button type="button" id="guia-paro-tab-4" role="tab" aria-controls="guia-paro-paso-4" aria-selected="false" tabindex="-1">Paso 4</button>
+        <button type="button" id="guia-paro-tab-5" role="tab" aria-controls="guia-paro-paso-5" aria-selected="false" tabindex="-1">Paso 5</button>
+    </div>
+    <div id="contenidoProcedimiento" class="guia-contenido">
+        <section id="guia-paso-0" role="tabpanel" aria-labelledby="guia-tab-0" tabindex="0">
+            <h3>Paso 0 — Verificaciones previas</h3>
+            <label class="guia-actividad" for="guia-check-0-0"><input type="checkbox" id="guia-check-0-0"> <span>Verificar que el interruptor del generador esté ABIERTO.</span></label>
+            <label class="guia-actividad" for="guia-check-0-1"><input type="checkbox" id="guia-check-0-1"> <span>Verificar el gobernador en modo MANUAL con el limitador de apertura en 0 %.</span></label>
+            <label class="guia-actividad" for="guia-check-0-2"><input type="checkbox" id="guia-check-0-2"> <span>Abrir la ventana SINCRONOSCOPIO (indicador redondo junto a Operación) para seguir la secuencia.</span></label>
+            <label class="guia-actividad" for="guia-check-0-3"><input type="checkbox" id="guia-check-0-3"> <span>Informar al personal involucrado que se realizará el arranque de la unidad.</span></label>
+            <p class="guia-contador" aria-live="polite">0 de 4 actividades marcadas</p>
+        </section>
+        <section id="guia-paso-1" role="tabpanel" aria-labelledby="guia-tab-1" tabindex="0" hidden>
+            <h3>Paso 1 — Inicio de la simulación</h3>
+            <label class="guia-actividad" for="guia-check-1-0"><input type="checkbox" id="guia-check-1-0"> <span>Pulsar APLICAR para habilitar los mandos de operación.</span></label>
+            <p class="guia-contador" aria-live="polite">0 de 1 actividades marcadas</p>
+        </section>
+        <section id="guia-paso-2" role="tabpanel" aria-labelledby="guia-tab-2" tabindex="0" hidden>
+            <h3>Paso 2 — Arranque en MANUAL</h3>
+            <label class="guia-actividad" for="guia-check-2-0"><input type="checkbox" id="guia-check-2-0"> <span>Con el botón + abrir el limitador de apertura hasta la apertura de arranque (≈ 4 %).</span></label>
+            <label class="guia-actividad" for="guia-check-2-1"><input type="checkbox" id="guia-check-2-1"> <span>Observar el aumento de velocidad del eje y la apertura de las bolas del regulador de Watt.</span></label>
+            <label class="guia-actividad" for="guia-check-2-2"><input type="checkbox" id="guia-check-2-2"> <span>Esperar a que la velocidad supere 100 rpm (se habilita el botón AUTO).</span></label>
+            <p class="guia-contador" aria-live="polite">0 de 3 actividades marcadas</p>
+        </section>
+        <section id="guia-paso-3" role="tabpanel" aria-labelledby="guia-tab-3" tabindex="0" hidden>
+            <h3>Paso 3 — Paso a AUTO y velocidad nominal</h3>
+            <label class="guia-actividad" for="guia-check-3-0"><input type="checkbox" id="guia-check-3-0"> <span>Seleccionar el modo AUTO.</span></label>
+            <label class="guia-actividad" for="guia-check-3-1"><input type="checkbox" id="guia-check-3-1"> <span>Observar la secuencia automática: el motor lleva el ajuste del resorte a 360 rpm y el limitador abre lentamente.</span></label>
+            <label class="guia-actividad" for="guia-check-3-2"><input type="checkbox" id="guia-check-3-2"> <span>Verificar la velocidad estable en 360 rpm (60 Hz) en los indicadores y en la gráfica de frecuencia.</span></label>
+            <p class="guia-nota">Durante la secuencia los botones + y − no actúan; al terminar mueven el ajuste del resorte (velocidad / carga).</p>
+            <p class="guia-contador" aria-live="polite">0 de 3 actividades marcadas</p>
+        </section>
+        <section id="guia-paso-4" role="tabpanel" aria-labelledby="guia-tab-4" tabindex="0" hidden>
+            <h3>Paso 4 — Sincronización automática y toma inicial</h3>
+            <label class="guia-actividad" for="guia-check-4-0"><input type="checkbox" id="guia-check-4-0"> <span>Con la unidad en AUTO regulando en vacío, pulsar INICIAR SINCRONIZACIÓN en la ventana SINCRONOSCOPIO y observar la excitación y la igualación automáticas (pulsos del 25A al AVR y a M1).</span></label>
+            <label class="guia-actividad" for="guia-check-4-1"><input type="checkbox" id="guia-check-4-1"> <span>Observar en el sincronoscopio el cierre del 52G por el 25A con el ángulo de adelanto.</span></label>
+            <label class="guia-actividad" for="guia-check-4-2"><input type="checkbox" id="guia-check-4-2"> <span>Observar la toma automática del 5 % mediante M1 hasta su confirmación.</span></label>
+            <p class="guia-nota">El botón del interruptor no cierra: el cierre lo realiza solo el sincronizador 25A con la verificación 25. CANCELAR SINCRONIZACIÓN detiene la secuencia mientras la orden de cierre sea cancelable. Abrir siempre se permite; cualquier nuevo intento requiere INICIAR SINCRONIZACIÓN.</p>
+            <p class="guia-contador" aria-live="polite">0 de 3 actividades marcadas</p>
+        </section>
+        <section id="guia-paso-5" role="tabpanel" aria-labelledby="guia-tab-5" tabindex="0" hidden>
+            <h3>Paso 5 — Operación con carga</h3>
+            <label class="guia-actividad" for="guia-check-5-0"><input type="checkbox" id="guia-check-5-0"> <span>Aumentar o reducir la carga con + y − (ajuste del resorte mediante M1, modo AUTO).</span></label>
+            <label class="guia-actividad" for="guia-check-5-1"><input type="checkbox" id="guia-check-5-1"> <span>Observar que la frecuencia la fija la red y que cambia la potencia eléctrica.</span></label>
+            <label class="guia-actividad" for="guia-check-5-2"><input type="checkbox" id="guia-check-5-2"> <span>Analizar la respuesta en las gráficas de frecuencia y de apertura del distribuidor.</span></label>
+            <p class="guia-contador" aria-live="polite">0 de 3 actividades marcadas</p>
+        </section>
+    </div>
+    <div id="contenidoProcedimientoParo" class="guia-contenido" hidden>
+        <section id="guia-paro-paso-0" role="tabpanel" aria-labelledby="guia-paro-tab-0" tabindex="0">
+            <h3>Paso 0 — Preparación</h3>
+            <label class="guia-actividad" for="guia-paro-check-0-0"><input type="checkbox" id="guia-paro-check-0-0"> <span>Informar al personal involucrado que se realizará el paro de la unidad.</span></label>
+            <p class="guia-contador" aria-live="polite">0 de 1 actividades marcadas</p>
+        </section>
+        <section id="guia-paro-paso-1" role="tabpanel" aria-labelledby="guia-paro-tab-1" tabindex="0" hidden>
+            <h3>Paso 1 — Reducción de carga</h3>
+            <label class="guia-actividad" for="guia-paro-check-1-0"><input type="checkbox" id="guia-paro-check-1-0"> <span>Reducir la carga con − (M1) hasta una potencia eléctrica próxima a 0 %.</span></label>
+            <label class="guia-actividad" for="guia-paro-check-1-1"><input type="checkbox" id="guia-paro-check-1-1"> <span>Esperar a que la potencia se estabilice.</span></label>
+            <p class="guia-contador" aria-live="polite">0 de 2 actividades marcadas</p>
+        </section>
+        <section id="guia-paro-paso-2" role="tabpanel" aria-labelledby="guia-paro-tab-2" tabindex="0" hidden>
+            <h3>Paso 2 — Apertura del interruptor</h3>
+            <label class="guia-actividad" for="guia-paro-check-2-0"><input type="checkbox" id="guia-paro-check-2-0"> <span>Abrir el interruptor del generador.</span></label>
+            <label class="guia-actividad" for="guia-paro-check-2-1"><input type="checkbox" id="guia-paro-check-2-1"> <span>Observar el aumento transitorio de velocidad (rechazo de carga) y la acción del gobernador.</span></label>
+            <p class="guia-contador" aria-live="polite">0 de 2 actividades marcadas</p>
+        </section>
+        <section id="guia-paro-paso-3" role="tabpanel" aria-labelledby="guia-paro-tab-3" tabindex="0" hidden>
+            <h3>Paso 3 — Paso a MANUAL</h3>
+            <label class="guia-actividad" for="guia-paro-check-3-0"><input type="checkbox" id="guia-paro-check-3-0"> <span>Seleccionar el modo MANUAL (el limitador queda en la apertura actual, sin salto).</span></label>
+            <p class="guia-contador" aria-live="polite">0 de 1 actividades marcadas</p>
+        </section>
+        <section id="guia-paro-paso-4" role="tabpanel" aria-labelledby="guia-paro-tab-4" tabindex="0" hidden>
+            <h3>Paso 4 — Cierre del distribuidor</h3>
+            <label class="guia-actividad" for="guia-paro-check-4-0"><input type="checkbox" id="guia-paro-check-4-0"> <span>Con el botón − bajar el limitador de apertura hasta 0 %.</span></label>
+            <label class="guia-actividad" for="guia-paro-check-4-1"><input type="checkbox" id="guia-paro-check-4-1"> <span>Observar la desaceleración hasta la detención del eje (0 rpm).</span></label>
+            <p class="guia-contador" aria-live="polite">0 de 2 actividades marcadas</p>
+        </section>
+        <section id="guia-paro-paso-5" role="tabpanel" aria-labelledby="guia-paro-tab-5" tabindex="0" hidden>
+            <h3>Paso 5 — Unidad en reposo</h3>
+            <label class="guia-actividad" for="guia-paro-check-5-1"><input type="checkbox" id="guia-paro-check-5-1"> <span>Pulsar REINICIAR para dejar el conjunto en su estado inicial.</span></label>
+            <p class="guia-contador" aria-live="polite">0 de 1 actividades marcadas</p>
+        </section>
+    </div>
+    <p class="guia-aclaracion">Las marcas corresponden al alumno; no son una validación automática.</p>
+    <div class="guia-navegacion">
+        <button type="button" id="guiaAnterior" class="boton-simulador" disabled>Anterior</button>
+        <button type="button" id="guiaSiguiente" class="boton-simulador">Siguiente</button>
+    </div>
+    <div class="guia-limpieza"><button type="button" id="guiaLimpiar" class="boton-simulador">Limpiar checklist</button></div>
+</aside>
+
+
 <script src="js/modelo.js"></script>
 <script src="js/distribuidor.js"></script>
-<script src="js/regulador.js"></script>
+<script src="js/servomotor.js"></script>
+<!-- Etapa 5: regulador de Watt (módulo de soportes, sin cambios) y varillaje A–B–C -->
+<script src="js/watt/geometria.js"></script>
+<script src="js/watt/cinematica.js"></script>
+<script src="js/watt/dibujo.js"></script>
+<script src="js/watt/interfaz.js"></script>
+<!-- Etapa 12: regulador centrífugo con resorte (módulo corregido) -->
+<script src="js/watt_resorte/parametros_resorte.js"></script>
+<script src="js/watt_resorte/ajuste_geometria.js"></script>
+<script src="js/watt_resorte/fisica.js"></script>
+<script src="js/watt_resorte/dibujo_resorte.js"></script>
+<script src="js/watt_integracion.js"></script>
+<script src="js/watt_resorte_integracion.js"></script>
+<script src="js/sincronizacion.js"></script>
+<!-- Detalle de presentación: no sustituye el modelo ni el sincronizador. -->
+<script src="js/dashpot_detalle.js"></script>
 <script src="js/simulador.js"></script>
+<!-- Etapa 20: ventanas laterales (procedimientos y panel derecho) -->
+<script src="js/guia_procedimientos.js"></script>
+<script src="js/ventanas_laterales.js"></script>
 
 </body>
 

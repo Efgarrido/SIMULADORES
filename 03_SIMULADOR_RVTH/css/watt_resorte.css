@@ -1,0 +1,106 @@
+/* =====================================================
+   SIMULADOR RVTH — Regulador centrífugo con resorte
+   (etapa 12, 18-oct-2026)
+   Piezas nuevas del dibujo (limitadas a #watt-regulador)
+   y panel «Gobernador de carga» con RÁPIDO / LENTO.
+===================================================== */
+
+#watt-regulador{
+    --resorte:#d07a1c; --resorte-atras:#e8b77e; --asiento:#7a5ea8; --fc:#c62828;
+}
+
+#watt-regulador .resorte{ fill:none; stroke-linecap:round; stroke-linejoin:round; }
+#watt-regulador .resorte-atras{ stroke:var(--resorte-atras); }
+#watt-regulador .resorte-delante{ stroke:var(--resorte); }
+#watt-regulador .resorte-delante.alerta{ stroke:#c62828; }
+#watt-regulador .platillo,
+#watt-regulador .asiento{ fill:var(--asiento); stroke:var(--acero); stroke-width:1.2; }
+#watt-regulador .pasador-transversal{ fill:var(--panel); stroke:var(--acero); stroke-width:2; }
+#watt-regulador .corte-fondo{ fill:var(--fondo); stroke:var(--acero); stroke-width:1; }
+#watt-regulador .ranura-contorno{ fill:none; stroke:var(--acero); stroke-width:.8; stroke-dasharray:3 2; }
+#watt-regulador .tornillo{ fill:var(--fijo); stroke:none; }
+#watt-regulador .rosca-linea{ stroke:var(--acero); stroke-width:1; opacity:.55; }
+#watt-regulador .empujador{ fill:var(--acero); opacity:.85; }
+#watt-regulador .rodamiento-caja{ fill:var(--panel); stroke:var(--acero); stroke-width:.8; }
+#watt-regulador .rodamiento{ fill:var(--panel); stroke:var(--acero); stroke-width:1; }
+#watt-regulador .collar-leva{ fill:var(--cabezal); stroke:var(--acero); stroke-width:1.2; }
+#watt-regulador .final-carrera{ fill:#707070; stroke:var(--acero); stroke-width:.8; }
+#watt-regulador .final-carrera.activo{ fill:var(--fc); }
+#watt-regulador .motor{ fill:var(--fijo); stroke:var(--acero); stroke-width:1.5; }
+#watt-regulador #rr-motor.en-marcha .motor{ fill:var(--salida); }
+/* Etapa 24: el motorreductor del bastidor y su eje discontinuo se
+   representan ahora con el símbolo esquemático M1 de la escena. */
+#watt-regulador #rr-motor,
+#watt-regulador #rr-bastidor .eje-oculto{ display:none; }
+#watt-regulador .eje-oculto{ stroke:var(--acero); stroke-width:1.2; stroke-dasharray:6 4; opacity:.6; }
+#watt-regulador .dial{ fill:var(--panel); stroke:var(--acero); stroke-width:1.5; }
+#watt-regulador .aguja{ stroke:#c62828; stroke-width:2; stroke-linecap:round; }
+
+/* ---------- Panel «Gobernador de carga» ---------- */
+
+.grupo-gobernador .gob-fila{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+}
+.grupo-gobernador .gob-motor{
+    min-width:84px; font-weight:bold; touch-action:none;
+    user-select:none; -webkit-user-select:none;
+}
+.grupo-gobernador .gob-motor.pulsado{
+    background:linear-gradient(#f2a43a,#e08a12); color:#fff; border-color:#b56d08;
+}
+.grupo-gobernador .gob-lectura{
+    min-width:150px; text-align:center; font-size:13px; font-weight:bold; line-height:1.15;
+}
+.grupo-gobernador .gob-sub{ font-size:10px; font-weight:normal; color:#555; }
+.grupo-gobernador .gob-tope{ font-size:9px; font-weight:normal; color:#b56d08; }
+.grupo-gobernador .gob-carrera{
+    display:flex; align-items:center; gap:6px; margin-top:4px; font-size:9px;
+}
+.grupo-gobernador .gob-barra{
+    flex:1; height:7px; border:1px solid #bbb; border-radius:4px; overflow:hidden; background:#f3f3f3;
+}
+.grupo-gobernador #gobBarraAjuste{ height:100%; width:50%; background:#7a5ea8; }
+.grupo-gobernador .gob-fc{
+    padding:0 5px; border:1px solid #ccc; border-radius:7px; color:#777; white-space:nowrap;
+}
+.grupo-gobernador .gob-fc.activo{ background:#c62828; border-color:#c62828; color:#fff; }
+.grupo-gobernador .texto-ayuda-control.gob-piloto{ margin-top:2px; }
+.grupo-gobernador .gob-aviso{
+    height:11px; font-size:9px; color:#c62828; text-align:center; line-height:11px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.grupo-gobernador .texto-ayuda-control.gob-hipotesis{ margin-top:1px; }
+
+/* Etapa 13: mandos bloqueados hasta APLICAR (PAUSA conserva
+   este aspecto). Los botones + / − del gobernador siguen el
+   estándar de la caldera (css/botonera_estandar.css). */
+body.operacion-bloqueada #interruptorGenerador,
+body.operacion-bloqueada #pausa,
+body.operacion-bloqueada #carga{ opacity:.45; cursor:not-allowed; }
+
+/* Etapa 14 (18-oct-2026): interfaz del alumno.
+   Se ocultan las leyendas técnicas del panel (piloto
+   solicitada/aplicada, aviso de limitación numérica,
+   F_L y texto de ayuda). Los elementos siguen en el DOM
+   y se actualizan igual: los diagnósticos quedan
+   disponibles para las pruebas (textContent y
+   diagnosticoGobernador). No cambia el funcionamiento. */
+.grupo-gobernador #gobPiloto,
+.grupo-gobernador #gobAvisoPiloto,
+.grupo-gobernador .gob-hipotesis{ display:none; }
+
+/* Etapa 16: limitador de apertura (escena) */
+.palancaLimitadora{ stroke-width:3; }
+.empujadorLimitador.limitando{ stroke:#c94f4f; }
+
+/* Etapa 19: amortiguador de compensación (escena) */
+.amortCuerpo{ fill:#9aa9b2; stroke:#263640; stroke-width:1.5; }
+.amortAceite{ fill:#f6e7a6; stroke:none; }
+.amortEmbolo{ fill:#d1d9de; stroke:#4a5c66; stroke-width:1.2; }
+.amortResorte{ fill:none; stroke:#657985; stroke-width:1.1; stroke-linejoin:round; }
+.amortVastago{ stroke:#263640; stroke-width:2.5; stroke-linecap:round; }
+.amortTuboBorde{ fill:none; stroke:#263640; stroke-width:4.5; stroke-linejoin:round; }
+.amortTubo{ fill:none; stroke:#f2c500; stroke-width:2.2; stroke-linejoin:round; }
+.amortAguja circle{ fill:#ffffff; stroke:#263640; stroke-width:1.2; }
+.amortAguja line{ stroke:#263640; stroke-width:1.2; }
+.amortAguja path{ fill:#263640; }
