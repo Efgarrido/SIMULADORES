@@ -939,7 +939,7 @@
     display: grid;
 
     grid-template-columns:
-        repeat(5, 1fr);
+        repeat(6, 1fr);
 
     gap: 8px;
 
@@ -1062,6 +1062,37 @@
 
 
 /* ============================================================
+   24 bis. SELECTOR DE TIPO DE ROTOR
+   Recuadro superpuesto en .escena (mismo formato que los
+   grupos de control superiores). La posición (left/top) y la
+   escala se asignan en js/simulador.js según el diagrama.
+   ============================================================ */
+
+.selector-rotor{
+    position:absolute;
+
+    left:0;
+    top:0;
+
+    z-index:2;
+
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+
+    padding:2px 10px 6px;
+
+    transform-origin:50% 0;
+
+    white-space:nowrap;
+}
+
+.selector-rotor legend{
+    padding:0 4px;
+}
+
+
+/* ============================================================
    25. RESPONSIVIDAD
    ============================================================ */
 
@@ -1086,7 +1117,7 @@
 
     .indicadores-inferiores{
         grid-template-columns:
-            repeat(5,minmax(0,1fr));
+            repeat(6,minmax(0,1fr));
     }
 }
 

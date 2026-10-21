@@ -4,6 +4,12 @@
 
    Archivo: simulador.js
 
+   Interfaz migrada a la plantilla maestra
+   (controles superiores, gráficas a la izquierda,
+   conjunto mecánico a la derecha, indicadores abajo).
+   Botones de operación: APLICAR, PAUSA, REINICIAR
+   (estándar del simulador AVR).
+
    Responsabilidades:
    - Elementos generales de la interfaz
    - Gráficas
@@ -43,11 +49,14 @@ document.getElementById("balanceSigno");
 const balanceEstado =
 document.getElementById("balanceEstado");
 
-const estadoTxt =
-document.getElementById("estado");
 
-const explicacionTxt =
-document.getElementById("explicacion");
+
+/*
+   La franja explicativa inferior (#estado, #explicacion)
+   se eliminó en la migración a la plantilla maestra.
+   El estado de la válvula se sigue mostrando en el
+   recuadro del SVG (#accionTexto, #accionSubtexto).
+*/
 
 
 /* =====================================================
@@ -835,9 +844,14 @@ function dibujarGrafica(
 
     ctx.save();
 
+    /*
+       Etiqueta vertical junto al borde izquierdo
+       (x = 2) para no encimarse con los valores
+       del eje.
+    */
 
     ctx.translate(
-        9,
+        2,
         margenSup + alto / 2
     );
 
@@ -1376,9 +1390,14 @@ function dibujarGraficaFrecuenciaCompleta(){
 
     ctx.save();
 
+    /*
+       Etiqueta vertical junto al borde izquierdo
+       (x = 2) para no encimarse con los valores
+       del eje.
+    */
 
     ctx.translate(
-        9,
+        2,
         margenSup + alto / 2
     );
 
@@ -1507,11 +1526,7 @@ function(){
 
     limpiarGraficas();
 
-
-    document
-    .getElementById("pausa")
-    .innerText =
-    "⏸ Pausa";
+    actualizarBotonesOperacion();
 
 });
 
@@ -1529,13 +1544,7 @@ function(){
     pausado =
     !pausado;
 
-
-    this.innerText =
-    pausado
-    ?
-    "▶ Continuar"
-    :
-    "⏸ Pausa";
+    actualizarBotonesOperacion();
 
 });
 
@@ -1598,18 +1607,94 @@ function(){
     "0";
 
 
-    document
-    .getElementById("pausa")
-    .innerText =
-    "⏸ Pausa";
-
-
     limpiarGraficas();
 
+    actualizarBotonesOperacion();
 
     actualizarVisual();
 
 });
+
+
+/* =====================================================
+   ESTADO DEL BOTÓN PAUSA
+
+   Igual que en el simulador AVR:
+   el texto alterna entre PAUSA y CONTINUAR.
+===================================================== */
+
+const botonPausa =
+document.getElementById("pausa");
+
+
+function actualizarBotonesOperacion(){
+
+    botonPausa.textContent =
+    pausado
+    ?
+    "CONTINUAR"
+    :
+    "PAUSA";
+
+}
+
+
+/* =====================================================
+   TAMAÑO DE LAS GRÁFICAS
+
+   La resolución interna de cada canvas se ajusta al
+   tamaño con que se muestra. Las funciones de dibujo
+   leen canvas.width y canvas.height, por lo que
+   escalas, datos e historial no cambian.
+===================================================== */
+
+function ajustarTamanoGraficas(){
+
+    [
+        graficaFrecuencia,
+        graficaFrecuenciaCompleta,
+        graficaApertura
+    ]
+    .forEach(
+        function(canvas){
+
+            const ancho =
+            Math.max(
+                1,
+                Math.round(
+                    canvas.clientWidth
+                )
+            );
+
+            const alto =
+            Math.max(
+                1,
+                Math.round(
+                    canvas.clientHeight
+                )
+            );
+
+            if(
+                canvas.width !== ancho
+                ||
+                canvas.height !== alto
+            ){
+                canvas.width = ancho;
+                canvas.height = alto;
+            }
+
+        }
+    );
+
+    dibujarGraficas();
+
+}
+
+
+window.addEventListener(
+    "resize",
+    ajustarTamanoGraficas
+);
 
 
 /* =====================================================
@@ -1707,12 +1792,8 @@ function actualizarTexto(){
             .015
         ){
 
-            estadoTxt.innerText =
-            "Sistema estable";
 
 
-            explicacionTxt.innerText =
-            "La retroalimentación ha regresado la válvula de control al neutro. El servomotor permanece en su nueva posición, el anillo mantiene la apertura requerida y el flujo de agua se distribuye de manera estable hacia el rotor.";
 
 
             accionTexto.textContent =
@@ -1726,12 +1807,8 @@ function actualizarTexto(){
 
         else{
 
-            estadoTxt.innerText =
-            "Retroalimentación → válvula centrada";
 
 
-            explicacionTxt.innerText =
-            "La leva y el rodillo llevan nuevamente el punto C hacia la zona neutra mientras el servomotor, el distribuidor y el flujo de agua alcanzan su nueva condición.";
 
 
             accionTexto.textContent =
@@ -1774,12 +1851,8 @@ function actualizarTexto(){
         "Presión en cámara derecha";
 
 
-        estadoTxt.innerText =
-        "Cierre → disminuye el flujo de agua";
 
 
-        explicacionTxt.innerText =
-        "El pistón se desplaza hacia la izquierda y mueve el anillo de regulación. Los álabes guía reducen su apertura, disminuyendo el flujo hacia el rotor.";
 
     }
 
@@ -1809,12 +1882,8 @@ function actualizarTexto(){
         "Presión en cámara izquierda";
 
 
-        estadoTxt.innerText =
-        "Apertura → aumenta el flujo de agua";
 
 
-        explicacionTxt.innerText =
-        "El pistón se desplaza hacia la derecha y mueve el anillo de regulación. Los álabes guía aumentan su apertura y permiten que un mayor flujo alcance el rotor.";
 
     }
 
@@ -1828,39 +1897,27 @@ function actualizarTexto(){
 function actualizarVisual(){
 
     frecuenciaTxt.innerText =
-    frecuencia.toFixed(2)
-    +
-    " Hz";
+    frecuencia.toFixed(2);
 
 
     aperturaTxt.innerText =
-    apertura.toFixed(1)
-    +
-    " %";
+    apertura.toFixed(1);
 
 
     pmBalance.innerText =
-    "Pm "
-    +
     (
         potenciaMecanica
         *
         100
-    ).toFixed(1)
-    +
-    " %";
+    ).toFixed(1);
 
 
     peBalance.innerText =
-    "Pe "
-    +
     (
         cargaElectrica
         *
         100
-    ).toFixed(1)
-    +
-    " %";
+    ).toFixed(1);
 
 
     /*
@@ -1970,7 +2027,11 @@ function animar(tiempo){
 
 limpiarGraficas();
 
+actualizarBotonesOperacion();
+
 actualizarVisual();
+
+ajustarTamanoGraficas();
 
 requestAnimationFrame(
     animar

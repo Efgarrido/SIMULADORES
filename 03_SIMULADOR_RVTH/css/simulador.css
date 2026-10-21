@@ -1,251 +1,405 @@
-*{
-    box-sizing:border-box;
-}
+/* =====================================================
+   SIMULADOR RVTH — ESTILOS PROPIOS
 
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#edf2f7;
-    color:#1f2937;
-}
+   Los componentes generales (body, tipografía, título,
+   sliders, botones, estados deshabilitados) provienen de
+   css/estilos.css, copia de PLANTILLA_ORIGINAL.
+
+   Distribución tomada como referencia del simulador AVR:
+   controles arriba, gráficas a la izquierda, conjunto
+   mecánico a la derecha e indicadores abajo, ocupando
+   todo el ancho del navegador.
+===================================================== */
 
 
 /* =====================================================
-   CABECERA
+   01–04. PANEL SUPERIOR DE CONTROLES
+
+   Reglas copiadas del simulador AVR (estándar HMI
+   aprobado), con los mismos nombres de clase y
+   valores. Única diferencia necesaria: la fila tiene
+   4 bloques en lugar de 6.
 ===================================================== */
 
-header{
-    background:#123f60;
-    color:white;
-    padding:9px 30px;
+.panel-controles{
+    margin:8px 12px 0;
+    padding:7px 10px 9px;
+    background:#f5f5f5;
+    border:1px solid #b8b8b8;
+    border-radius:5px;
 }
 
-header h1{
-    margin:0;
-    font-size:20px;
-}
+/* El bloque Operación toma exactamente el ancho que
+   tiene en el AVR (columna minmax(250px,1.15fr) de una
+   fila de 6 columnas con 5 separaciones de 8 px), para
+   que los botones midan lo mismo. El espacio restante
+   se reparte entre los otros tres bloques. */
 
-
-/* =====================================================
-   ESTRUCTURA GENERAL
-===================================================== */
-
-.layout{
+.fila-controles{
     display:grid;
-    grid-template-columns:260px 1fr;
-    gap:16px;
-    padding:16px;
+    grid-template-columns:
+        minmax(0,1fr)
+        minmax(0,1fr)
+        minmax(0,1.12fr)
+        max(250px, calc((100% - 40px) * 1.15 / 6.27));
+    gap:8px;
+    align-items:stretch;
 }
 
-.panel,
-.simulador{
-    background:white;
-    border-radius:14px;
-    box-shadow:0 3px 12px rgba(0,0,0,.10);
+.grupo-control{
+    min-width:0;
+    margin:0;
+    padding:8px 10px 6px;
+    border:1px solid #b7b7b7;
+    border-radius:4px;
+    background:#f7f7f7;
 }
 
-.panel{
-    padding:16px;
-}
-
-.simulador{
-    padding:14px;
-}
-
-
-/* =====================================================
-   CONDICIÓN
-===================================================== */
-
-.modo{
-    padding:8px 10px;
-    background:#eef6fc;
-    border-radius:8px;
-    margin-bottom:11px;
+.grupo-control legend{
+    padding:0 5px;
     font-size:13px;
-}
-
-.modo strong{
-    color:#0d6da3;
-}
-
-
-/* =====================================================
-   PERTURBACIÓN
-===================================================== */
-
-.tituloPerturbacion{
-    margin-top:6px;
-    margin-bottom:14px;
-    text-align:center;
-    font-size:19px;
-}
-
-
-/* =====================================================
-   CONTROL
-===================================================== */
-
-.control{
-    margin-bottom:14px;
-}
-
-.control label{
-    display:block;
     font-weight:bold;
-    margin-bottom:9px;
+    font-style:italic;
+    color:#303030;
+}
+
+.etiqueta-variable{
+    height:17px;
+    margin-bottom:2px;
     text-align:center;
-    font-size:13px;
-}
-
-input[type="range"]{
-    width:100%;
-}
-
-.valorCarga{
-    text-align:center;
-    font-size:27px;
-    font-weight:bold;
-    color:#123f60;
-    margin-top:5px;
-}
-
-
-/* =====================================================
-   BOTONES
-===================================================== */
-
-.botonesControl{
-    display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:6px;
-    margin-bottom:12px;
-}
-
-button{
-    width:100%;
-    border:0;
-    padding:9px 4px;
-    border-radius:7px;
     font-size:12px;
+    font-weight:bold;
+    color:#404040;
+}
+
+.graduaciones-porcentaje{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin:0 7px 0 7px;
+    height:7px;
+    pointer-events:none;
+}
+
+.graduaciones-porcentaje span{
+    display:block;
+    width:1px;
+    height:5px;
+    margin:0;
+    padding:0;
+    background:#777777;
+}
+
+.graduaciones-porcentaje span:first-child,
+.graduaciones-porcentaje span:nth-child(6),
+.graduaciones-porcentaje span:last-child{
+    height:7px;
+    background:#555555;
+}
+
+.grupo-control .escala-slider{
+    position:relative;
+    display:block;
+    width:100%;
+    height:12px;
+    margin-top:0;
+    padding:0 7px;
+}
+
+.grupo-control .escala-slider span{
+    position:absolute;
+}
+
+.grupo-control .escala-slider span:first-child{
+    left:7px;
+    transform:translateX(-50%);
+}
+
+.grupo-control .escala-slider span:nth-child(2){
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.grupo-control .escala-slider span:last-child{
+    right:7px;
+    transform:translateX(50%);
+}
+
+/* Bloques con texto (AVR: "Modo de excitación";
+   RVTH: gobernador y limitador reservados) */
+
+.grupo-modo{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.texto-ayuda-control{
+    margin-top:7px;
+    text-align:center;
+    font-size:9px;
+    color:#707070;
+}
+
+/* Operación */
+
+.grupo-operacion{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+
+.controles-botones{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+    width:100%;
+    height:100%;
+    margin:0;
+}
+
+.controles-botones button{
+    flex:1;
+    min-width:0;
+    height:27px;
+    padding:2px 12px;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:11px;
+    font-weight:normal;
+    color:#222222;
+    background:linear-gradient(#ffffff,#dddddd);
+    border:1px solid #888888;
+    border-radius:2px;
+    box-shadow:0 1px 1px rgba(0,0,0,0.20);
     cursor:pointer;
     white-space:nowrap;
 }
 
-.accion{
-    background:#1684ce;
-    color:white;
+/*
+   Los tres botones utilizan exactamente
+   el mismo formato visual (igual que el AVR).
+*/
+
+.controles-botones #aplicar,
+.controles-botones #pausa,
+.controles-botones #reiniciar{
+    color:#222222;
+    background:linear-gradient(#ffffff,#dddddd);
+    border-color:#888888;
 }
 
-.pausa{
-    background:#f0b429;
-    color:#1f2937;
+.controles-botones button:hover{
+    background:linear-gradient(#ffffff,#eeeeee);
 }
 
-.reset{
-    background:#dce4ea;
-    color:#1f2937;
+.controles-botones button:active{
+    transform:none;
+    background:linear-gradient(#cccccc,#eeeeee);
+    box-shadow:inset 0 1px 2px rgba(0,0,0,0.30);
 }
 
+/* Slider con indicador lateral (AVR: potencias demandadas) */
 
-/* =====================================================
-   GRÁFICAS
-===================================================== */
-
-.graficaPanel{
-    margin-top:9px;
-    padding:7px;
-    background:#f8fafc;
-    border:1px solid #d7e0e6;
-    border-radius:9px;
-}
-
-.graficaTitulo{
-    font-size:12px;
-    font-weight:bold;
-    text-align:center;
-    margin-bottom:5px;
-    color:#263640;
-}
-
-.graficaCanvas{
-    display:block;
-    width:100%;
-    height:135px;
-    background:white;
-    border:1px solid #d5dde5;
-    border-radius:5px;
-}
-
-
-/* =====================================================
-   INDICADORES
-===================================================== */
-
-.indicadoresSuperiores{
+.grupo-potencia-demandada .control-potencia-con-valor{
     display:grid;
-    grid-template-columns:1fr 1.7fr 1fr;
-    gap:10px;
-    margin-bottom:12px;
-}
-
-.instrumento{
-    background:#f6f9fb;
-    border:1px solid #dbe3e9;
-    padding:5px 12px;
-    border-radius:10px;
-    text-align:center;
-}
-
-.instrumento .titulo{
-    font-size:13px;
-    color:#000;
-}
-
-.instrumento .numero{
-    margin-top:2px;
-    font-size:18px;
-    font-weight:bold;
-    color:#000;
-}
-
-.balanceSuperior{
-    background:#f8fafc;
-    border:1px solid #d7e0e6;
-    border-radius:10px;
-    padding:4px 12px;
-    text-align:center;
-}
-
-.balanceTitulo{
-    font-size:13px;
-    color:#000;
-    margin-bottom:1px;
-}
-
-.balanceLinea{
-    display:flex;
-    justify-content:center;
+    grid-template-columns:minmax(0,1fr) 44px;
+    gap:8px;
     align-items:center;
-    gap:13px;
-    font-size:17px;
+    width:100%;
+}
+
+.grupo-potencia-demandada .zona-control-potencia{
+    min-width:0;
+    width:100%;
+}
+
+.grupo-potencia-demandada .indicador-potencia-demandada{
+    width:44px;
+    height:42px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background:#ffffff;
+    border:1px solid #8f8f8f;
+    border-radius:3px;
+    box-shadow:
+        inset 0 1px 2px rgba(0,0,0,0.08),
+        0 1px 1px rgba(0,0,0,0.10);
+    color:#222222;
+    font-size:15px;
+    line-height:16px;
     font-weight:bold;
 }
 
-.balanceDato{
-    min-width:74px;
+
+/* =====================================================
+   05. ZONA CENTRAL
+   Gráficas 20 % · Conjunto mecánico 80 %
+===================================================== */
+
+.contenedor{
+    display:grid;
+    grid-template-columns:
+        minmax(220px,20fr)
+        minmax(0,80fr);
+    gap:10px;
+    padding:8px 12px 0;
+    align-items:stretch;
 }
 
-.balanceSigno{
-    font-size:18px;
-    font-weight:bold;
-    min-width:18px;
+.panel{
+    min-width:0;
+    background:#ffffff;
+    border:1px solid #999999;
+    border-radius:3px;
 }
 
-.balanceEstado{
-    margin-top:1px;
+.panel-graficas{
+    display:grid;
+    grid-template-rows:repeat(3,minmax(0,1fr));
+    gap:6px;
+    padding:6px;
+}
+
+
+/* =====================================================
+   06. MARCOS DE GRÁFICAS
+===================================================== */
+
+.marco-grafica{
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+    border:1px solid #b5b5b5;
+    border-radius:3px;
+    background:#ffffff;
+}
+
+.marco-grafica h2{
+    margin:0;
+    padding:4px 6px;
+    font-size:11px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    text-align:center;
+    color:#222222;
+    background:#f5f5f5;
+    border-bottom:1px solid #b5b5b5;
+}
+
+/* El canvas ocupa el espacio disponible; simulador.js
+   ajusta su resolución interna al tamaño mostrado. */
+
+.zona-canvas{
+    position:relative;
+    flex:1;
+    min-height:100px;
+}
+
+.zona-canvas canvas{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+}
+
+
+/* =====================================================
+   07. INDICADORES INFERIORES (formato de la plantilla)
+===================================================== */
+
+.indicadores-inferiores{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:8px;
+    margin:8px 12px 10px;
+}
+
+.indicadores-inferiores .indicador{
+    display:block;
+    min-width:0;
+    height:44px;
+    padding:4px 7px;
+    text-align:center;
+    background:#f5f5f5;
+    border:1px solid #999999;
+    border-radius:3px;
+}
+
+.indicadores-inferiores .indicador .titulo{
     font-size:12px;
     font-weight:bold;
+    font-style:italic;
+    color:#222222;
+}
+
+.indicadores-inferiores .indicador .valor{
+    margin-top:2px;
+    padding:2px 4px;
+    font-size:12px;
+    font-weight:bold;
+    color:#111111;
+    background:#e3e3e3;
+    border:1px inset #b5b5b5;
+    border-radius:2px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.indicadores-inferiores .indicador .unidad{
+    font-weight:normal;
+    color:#555555;
+}
+
+.indicadores-inferiores sub{
+    line-height:0;
+}
+
+
+/* =====================================================
+   08. PANTALLAS ESTRECHAS
+===================================================== */
+
+/* Por debajo de 1350 px el AVR pasa a varias filas;
+   el RVTH conserva una sola fila con el bloque
+   Operación en su ancho estándar mínimo (250 px).
+   ≤850 px y ≤560 px: mismas columnas que el AVR. */
+
+@media(max-width:850px){
+
+    .fila-controles{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+}
+
+@media(max-width:560px){
+
+    .fila-controles{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:900px){
+
+    .contenedor{
+        grid-template-columns:1fr;
+    }
+
+    .panel-graficas{
+        grid-template-rows:none;
+    }
+
+    .indicadores-inferiores{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
 }
 
 
@@ -254,13 +408,14 @@ button{
 ===================================================== */
 
 .escena{
-    border:1px solid #d5dde5;
-    border-radius:12px;
-    background:#fafcfd;
+    min-width:0;
+    background:#ffffff;
+    border:1px solid #999999;
+    border-radius:3px;
     overflow:hidden;
 }
 
-svg{
+.escena > svg{
     display:block;
     width:100%;
     height:auto;
@@ -290,151 +445,13 @@ svg{
 
 
 /* =====================================================
-   VOLUTA / FLUJO DE AGUA
+   PUNTO D (acoplamiento vástago–palanca de reenvío)
 ===================================================== */
-
-.volutaExterior{
-    fill:none;
-    stroke:#8ed5f2;
-    stroke-width:52;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-    opacity:.42;
-}
-
-.volutaBorde{
-    fill:none;
-    stroke:#455b67;
-    stroke-width:4;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-    opacity:.85;
-}
-
-.flujoVoluta{
-    fill:none;
-    stroke:#279dd6;
-    stroke-width:8;
-    stroke-linecap:round;
-    stroke-dasharray:26 18;
-    animation:movimientoVoluta 1.15s linear infinite;
-}
-
-.flujoCircular{
-    fill:none;
-    stroke:#279dd6;
-    stroke-width:6;
-    stroke-linecap:round;
-    stroke-dasharray:18 14;
-    opacity:.72;
-    animation:movimientoCircular 1s linear infinite;
-}
-
-
-/* =====================================================
-   FLUJO HACIA EL ROTOR - VERSIÓN EF
-
-   La trayectoria permanece fija.
-   Las partículas siempre viajan:
-
-   PERIFERIA -> ROTOR
-===================================================== */
-
-.flujoRadialGuia{
-    fill:none;
-    stroke:#7bc8e8;
-    stroke-width:4;
-    stroke-linecap:round;
-    opacity:.30;
-}
-
-.particulaAgua{
-    fill:#279dd6;
-    stroke:#147cad;
-    stroke-width:1;
-}
-
-
-@keyframes movimientoVoluta{
-
-    from{
-        stroke-dashoffset:44;
-    }
-
-    to{
-        stroke-dashoffset:0;
-    }
-
-}
-
-
-@keyframes movimientoCircular{
-
-    from{
-        stroke-dashoffset:32;
-    }
-
-    to{
-        stroke-dashoffset:0;
-    }
-
-}
-
-
-/* =====================================================
-   DISTRIBUIDOR
-===================================================== */
-
-.anilloRegulacion{
-    fill:none;
-    stroke:#f39a18;
-    stroke-width:23;
-}
-
-.bielaAlabe{
-    stroke:#b8872e;
-    stroke-width:5;
-    stroke-linecap:round;
-}
-
-.pivoteAlabe{
-    fill:#ffd21f;
-    stroke:#8c6b14;
-    stroke-width:2;
-}
-
-.alabeFink{
-    fill:#f08a2b;
-    stroke:#c66816;
-    stroke-width:2;
-}
 
 .acopleAnillo{
     fill:#9ed4c7;
     stroke:#263640;
     stroke-width:3;
-}
-
-
-/* =====================================================
-   ROTOR
-===================================================== */
-
-.rotor{
-    transform-origin:250px 340px;
-    animation:girar 1s linear infinite;
-}
-
-@keyframes girar{
-
-    from{
-        transform:rotate(0deg);
-    }
-
-    to{
-        transform:rotate(360deg);
-    }
-
 }
 
 
@@ -650,36 +667,179 @@ svg{
 
 
 /* =====================================================
-   MENSAJE
+   DISTRIBUIDOR FINK V8 — ETAPA 1 (integración gráfica)
+
+   Estilos tomados sin cambios de
+   soportes/V8_DESARROLLO/css/estilos.css,
+   limitados al conjunto #distribuidor-fink.
+   El anillo usa el gradiente metalAnillo9A,
+   idéntico al metalAnillo del V8.
 ===================================================== */
 
-.mensaje{
-    margin-top:12px;
-    padding:10px 12px;
-    border-left:5px solid #1684ce;
-    background:#edf7ff;
-    min-height:58px;
+#distribuidor-fink .alimentacion-agua{
+    fill:url(#gradiente-alimentacion);
+    stroke:none;
 }
 
-.estado{
-    font-weight:bold;
-    margin-bottom:4px;
-    font-size:14px;
+#gradiente-alimentacion .parada-agua{
+    stop-color:#b9cfe3;
 }
 
-.explicacion{
-    font-size:13px;
+#distribuidor-fink .admision-agua{
+    /* 0 = blanco, 1 = azul claro (etapa 2: apertura real) */
+    fill:#b9cfe3;
+    fill-opacity:var(--intensidad-admision, 0);
+    stroke:none;
+}
+
+#distribuidor-fink .camara-espiral{
+    fill:#b9cfe3;              /* azul claro */
+    stroke:#343c41;
+    stroke-width:5;
+    stroke-linejoin:round;
+}
+
+#distribuidor-fink .circulo-pivotes{
+    fill:none;
+    stroke:none;
+}
+
+#distribuidor-fink .marca-escala{
+    stroke:#343c41;
+    stroke-width:1.5;
+}
+
+#distribuidor-fink .texto-escala{
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:17px;
+    fill:#343c41;
+    text-anchor:middle;
+}
+
+#perfil-fink-v4.perfil-directriz{
+    fill:#c9a66b;              /* bronce satinado */
+    stroke:#35424a;
+    stroke-width:1.4;
+    stroke-linejoin:round;
+    vector-effect:non-scaling-stroke;
+}
+
+#distribuidor-fink .anillo-cuerpo{
+    fill:none;
+    stroke:url(#metalAnillo9A);  /* gris metálico */
+}
+
+#distribuidor-fink .anillo-borde{
+    fill:none;
+    stroke:#343d42;
+    stroke-width:1.5;
+}
+
+#distribuidor-fink .orejeta{
+    fill:#7f898f;
+    stroke:#2f363a;
+    stroke-width:1.5;
+}
+
+#distribuidor-fink .indicador-anillo{
+    fill:#8b2525;
+    stroke:#3a1a1a;
+    stroke-width:1;
+}
+
+#distribuidor-fink .palanca{
+    stroke:#343c41;
+    stroke-width:9;
+    stroke-linecap:round;
+}
+
+#distribuidor-fink .biela{
+    stroke:#6b767d;
+    stroke-width:6;
+    stroke-linecap:round;
+}
+
+#distribuidor-fink .eje{
+    fill:#343c41;
+    stroke:#171c1f;
+    stroke-width:2.5;
+}
+
+#distribuidor-fink .pasador{
+    stroke-width:2;
+}
+
+#distribuidor-fink .pasador-palanca{
+    fill:#d7dde0;
+    stroke:#343c41;
+}
+
+#distribuidor-fink .pasador-anillo{
+    fill:#8b2525;
+    stroke:#3a1a1a;
 }
 
 
-@media(max-width:1000px){
+/* =====================================================
+   ETAPA 2A — ACOPLAMIENTO SERVOMOTOR–ANILLO
+   (gris metálico, como el mecanismo del distribuidor)
+===================================================== */
 
-    .layout{
-        grid-template-columns:1fr;
-    }
+#distribuidor-fink .oreja-servo{
+    fill:#7f898f;
+    stroke:#2f363a;
+    stroke-width:4;
+}
 
-    .indicadoresSuperiores{
-        grid-template-columns:1fr;
-    }
+#distribuidor-fink .pasador-oreja{
+    fill:#d7dde0;
+    stroke:#343c41;
+    stroke-width:4;
+}
 
+.palancaReenvio{
+    stroke:#343c41;
+    stroke-width:6;
+    stroke-linecap:round;
+}
+
+.bielaConexion{
+    stroke:#6b767d;
+    stroke-width:4.5;
+    stroke-linecap:round;
+}
+
+.pivoteReenvio{
+    fill:#d7dde0;
+    stroke:#171c1f;
+    stroke-width:2.5;
+}
+
+.centroPivoteReenvio{
+    fill:#343c41;
+}
+
+/* Base del apoyo fijo: línea de suelo + rayado */
+
+.baseApoyo line{
+    stroke:#263640;
+    stroke-width:1.6;
+    stroke-linecap:round;
+}
+
+.baseApoyo .lineaBaseApoyo{
+    stroke-width:2.5;
+}
+
+.pasadorAcople{
+    fill:#d7dde0;
+    stroke:#343c41;
+    stroke-width:2;
+}
+
+.soporteReenvio{
+    fill:#9da7ad;
+    stroke:#263640;
+    stroke-width:2;
+    stroke-linejoin:round;
 }

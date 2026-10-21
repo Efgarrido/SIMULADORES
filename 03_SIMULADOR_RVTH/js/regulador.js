@@ -210,6 +210,16 @@ SERVO_RECORRIDO_TOTAL
 (100 - 45);
 
 
+/*
+   Apertura a la que el pistón ocupa PISTON_X_BASE.
+   Es una referencia geométrica fija del servomotor
+   (topes 0 % y 100 % y acoplamiento de la etapa 2A),
+   independiente de la apertura inicial del modelo.
+*/
+
+const SERVO_APERTURA_REFERENCIA = 75;
+
+
 /* =====================================================
    LEVA
 ===================================================== */
@@ -383,26 +393,22 @@ function actualizarRegulador(){
     (
         apertura
         -
-        APERTURA_BASE
+        SERVO_APERTURA_REFERENCIA
     )
     *
     SERVO_X_POR_PORCENTAJE;
 
 
-    movimientoServo =
-    Math.max(
-        (45 - APERTURA_BASE)
-        *
-        SERVO_X_POR_PORCENTAJE,
+    /*
+       ETAPA 2A:
+       Se elimina el límite visual inferior del 45 %
+       (introducido en 9B3). Los límites físicos 0–100 %
+       los impone modelo.js sobre "apertura" y se
+       representan con los topes del servomotor.
 
-        Math.min(
-            (100 - APERTURA_BASE)
-            *
-            SERVO_X_POR_PORCENTAJE,
-
-            movimientoServo
-        )
-    );
+       Esta única posición del servomotor mueve el
+       pistón, la leva y el distribuidor.
+    */
 
 
     /* =================================================
@@ -410,7 +416,9 @@ function actualizarRegulador(){
     ================================================= */
 
     const estadoDistribuidor =
-    actualizarDistribuidor();
+    actualizarDistribuidor(
+        movimientoServo
+    );
 
 
     const Dx =

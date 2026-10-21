@@ -6,8 +6,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SIMULADOR RVTH - Migración modular 9C</title>
+<title>SIMULADOR RVTH - Migración modular 14</title>
 
+<!-- Estilos generales de la plantilla maestra (copia sin cambios) -->
+<link rel="stylesheet" href="css/estilos.css">
+
+<!-- Estilos propios del simulador RVTH -->
 <link rel="stylesheet" href="css/simulador.css">
 
 
@@ -17,48 +21,72 @@
 <body>
 
 
-<header>
+<!-- =========================================================
+     CONTROLES SUPERIORES — PLANTILLA MAESTRA
+     (distribución de referencia: simulador AVR)
+========================================================= -->
+
+<section class="panel-controles">
+
+<div class="titulo-simulador">
 
 <h1>
-SIMULADOR REGULADOR DE VELOCIDAD DE UNA TURBINA HIDRÁULICA
+SIMULADOR RVTH – REGULADOR DE VELOCIDAD DE UNA TURBINA HIDRÁULICA
 </h1>
 
-</header>
-
-
-<div class="layout">
-
-
-<!-- =====================================================
-     PANEL IZQUIERDO
-===================================================== -->
-
-<div class="panel">
-
-
-<div class="modo">
-
-Condición:
-
-<br>
-
-<strong>
-● UNIDAD LIBRE
-</strong>
+<p>
+Unidad libre – Regulador centrífugo de Watt – Servomotor hidráulico – Distribuidor Fink – Turbina Francis
+</p>
 
 </div>
 
 
-<h2 class="tituloPerturbacion">
-PERTURBACIÓN
-</h2>
+<div class="fila-controles">
 
 
-<div class="control">
+<!-- GOBERNADOR DE CARGA (reservado; sin control funcional) -->
 
-<label>
-Variación de carga eléctrica
-</label>
+<fieldset class="grupo-control grupo-modo">
+
+<legend>Gobernador de carga</legend>
+
+<div class="texto-ayuda-control">
+Disponible en una etapa posterior
+</div>
+
+</fieldset>
+
+
+<!-- LIMITADOR DE CARGA (reservado; sin control funcional) -->
+
+<fieldset class="grupo-control grupo-modo">
+
+<legend>Limitador de carga</legend>
+
+<div class="texto-ayuda-control">
+Disponible en una etapa posterior
+</div>
+
+</fieldset>
+
+
+<!-- PERTURBACIÓN DE CARGA
+     Mismo componente que "Potencia activa demandada" del AVR:
+     slider + graduaciones de 11 marcas + escala + indicador lateral. -->
+
+<fieldset class="grupo-control grupo-potencia-demandada">
+
+<legend>Perturbación de carga</legend>
+
+<div class="control-potencia-con-valor">
+
+<div class="zona-control-potencia">
+
+<div class="etiqueta-variable">
+ΔP<sub>e</sub> (%)
+</div>
+
+<div class="slider-simulador">
 
 <input
 id="carga"
@@ -67,153 +95,114 @@ min="-20"
 max="20"
 value="0"
 step="1"
+aria-label="Variación de carga eléctrica (%)"
 >
 
-<div class="valorCarga">
-
-<span id="valorCarga">0</span> %
-
+<div class="graduaciones-porcentaje" aria-hidden="true">
+<span></span><span></span><span></span><span></span><span></span>
+<span></span><span></span><span></span><span></span><span></span>
+<span></span>
 </div>
 
 </div>
 
+<div class="escala-slider escala-tres" aria-hidden="true">
+<span>-20</span>
+<span>0</span>
+<span>+20</span>
+</div>
 
-<div class="botonesControl">
+</div>
 
-<button id="aplicar" class="accion">
-Aplicar
+<div class="indicador-potencia-demandada">
+<span id="valorCarga">0</span>
+</div>
+
+</div>
+
+</fieldset>
+
+
+<!-- OPERACIÓN -->
+
+<fieldset class="grupo-control grupo-operacion">
+
+<legend>Operación</legend>
+
+<div class="botones controles-botones">
+
+<button id="aplicar">
+APLICAR
 </button>
 
-<button id="pausa" class="pausa">
-⏸ Pausa
+<button id="pausa" class="secundario">
+PAUSA
 </button>
 
-<button id="reiniciar" class="reset">
-Reiniciar
+<button id="reiniciar" class="reinicio">
+REINICIAR
 </button>
 
 </div>
 
-<div class="graficaPanel">
-
-<div class="graficaTitulo">
-FRECUENCIA
-</div>
-
-<canvas
-id="graficaFrecuencia"
-class="graficaCanvas"
-width="240"
-height="145">
-</canvas>
-
-</div>
-
-<div class="graficaPanel">
- 
-<div class="graficaTitulo">
-FRECUENCIA — RESPUESTA COMPLETA
-</div>
-
-<canvas
-id="graficaFrecuenciaCompleta"
-width="220"
-height="120">
-</canvas>
-
-</div>
-
-<div class="graficaPanel">
-
-<div class="graficaTitulo">
-APERTURA DEL DISTRIBUIDOR
-</div>
-
-<canvas
-id="graficaApertura"
-class="graficaCanvas"
-width="240"
-height="145">
-</canvas>
-
-</div>
+</fieldset>
 
 
 </div>
 
-
-<!-- =====================================================
-     SIMULADOR
-===================================================== -->
-
-<div class="simulador">
+</section>
 
 
-<div class="indicadoresSuperiores">
+<!-- =========================================================
+     ZONA CENTRAL
+     Izquierda: gráficas · Derecha: conjunto mecánico
+========================================================= -->
+
+<div class="contenedor">
 
 
-<div class="instrumento">
+<aside class="panel panel-graficas" aria-label="Gráficas">
 
-<div class="titulo">
-Frecuencia
+
+<section class="marco-grafica">
+
+<h2>FRECUENCIA</h2>
+
+<div class="zona-canvas">
+<canvas id="graficaFrecuencia" class="graficaCanvas" width="400" height="140"></canvas>
 </div>
 
-<div id="frecuencia" class="numero">
-60.00 Hz
+</section>
+
+
+<section class="marco-grafica">
+
+<h2>FRECUENCIA — RESPUESTA COMPLETA</h2>
+
+<div class="zona-canvas">
+<canvas id="graficaFrecuenciaCompleta" class="graficaCanvas" width="400" height="140"></canvas>
 </div>
 
+</section>
+
+
+<section class="marco-grafica">
+
+<h2>APERTURA DEL DISTRIBUIDOR</h2>
+
+<div class="zona-canvas">
+<canvas id="graficaApertura" class="graficaCanvas" width="400" height="140"></canvas>
 </div>
 
-
-<div class="balanceSuperior">
-
-<div class="balanceTitulo">
-Balance de potencia
-</div>
-
-<div class="balanceLinea">
-
-<span id="pmBalance" class="balanceDato">
-Pm 80.0 %
-</span>
-
-<span id="balanceSigno" class="balanceSigno">
-=
-</span>
-
-<span id="peBalance" class="balanceDato">
-Pe 80.0 %
-</span>
-
-</div>
-
-<div id="balanceEstado" class="balanceEstado">
-EQUILIBRIO
-</div>
-
-</div>
+</section>
 
 
-<div class="instrumento">
-
-<div class="titulo">
-Apertura distribuidor
-</div>
-
-<div id="apertura" class="numero">
-75.0 %
-</div>
-
-</div>
+</aside>
 
 
-</div>
+<main class="escena">
 
-
-<div class="escena">
-
-
-<svg viewBox="0 55 1200 560">
+<svg viewBox="0 45 1200 590" role="img" aria-label="Conjunto mecánico del regulador de velocidad">
 
 
 <defs>
@@ -272,65 +261,508 @@ stroke-width="2.5"
 <radialGradient id="fondoInterno9A" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="#566168"/><stop offset="55%" stop-color="#343e44"/><stop offset="100%" stop-color="#20272b"/></radialGradient>
 <linearGradient id="metalAnillo9A" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d9dee1"/><stop offset="25%" stop-color="#9da7ad"/><stop offset="55%" stop-color="#69747b"/><stop offset="80%" stop-color="#adb5ba"/><stop offset="100%" stop-color="#4b555b"/></linearGradient>
 <filter id="sombraAlabe9A" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="1.5" dy="2" stdDeviation="1.8" flood-color="#000" flood-opacity=".22"/></filter>
-<filter id="sombraAnillo9A" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="1.5" dy="2" stdDeviation="2" flood-color="#000" flood-opacity=".25"/></filter>
 <path id="alabeRodete9A" d="M311.8 133.3 A220 220 0 0 1 388.2 133.3 C381.7 175.3 382.1 218 404.5 272.1 A95 95 0 0 0 374.6 258.2 C335 215 320 175 311.8 133.3 Z"/>
-<g id="alabeDirectriz9A"><path d="M350 145 C370 151 388 174 393 207 C399 246 397 286 391 326 C384 371 374 413 361 450 C349 484 336 510 324 528 C318 537 313 543 308 546 C302 549 297 547 294 542 C291 537 292 531 295 525 C304 505 311 482 316 456 C323 420 325 381 323 342 C321 302 317 263 318 229 C319 196 327 167 341 152 C344 149 347 147 350 145 Z" fill="#bfc5c9" stroke="#343c41" stroke-width="4" stroke-linejoin="round"/><circle cx="350" cy="180" r="18" fill="#4a5257" stroke="#252b2f" stroke-width="4"/><circle cx="350" cy="180" r="7" fill="#242a2e"/></g>
+
+<!-- =====================================================
+     FINK V8: definiciones del distribuidor aprobado
+     (soportes/V8_DESARROLLO). Los gradientes, la sombra y
+     el álabe del rodete del V8 son idénticos a los 9A ya
+     existentes, por lo que se reutilizan (sin duplicar).
+===================================================== -->
+<radialGradient id="gradiente-alimentacion" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="469">
+                            <stop class="parada-agua" offset="0.6716" stop-opacity="0"></stop>
+                            <stop class="parada-agua" offset="0.6866" stop-opacity="0.12"></stop>
+                            <stop class="parada-agua" offset="0.7036" stop-opacity="0.4"></stop>
+                            <stop class="parada-agua" offset="0.7207" stop-opacity="0.7"></stop>
+                            <stop class="parada-agua" offset="0.7335" stop-opacity="0.9"></stop>
+                            <stop class="parada-agua" offset="0.7463" stop-opacity="1"></stop>
+                        </radialGradient>
+<path id="perfil-fink-v4" class="perfil-directriz" d="M 12 5 C 28 6, 36 10, 52 16 C 84 28, 116 44, 145 63 C 177 84, 204 108, 228 135 C 251 162, 269 192, 283 222 C 299 255, 309 290, 314 322 C 319 350, 321 374, 322 397 C 324 414, 318 428, 308 439 C 298 450, 287 457, 275 459 C 262 461, 249 458, 237 451 C 225 444, 215 433, 207 419 C 199 406, 197 396, 194 387 C 188 357, 170 315, 148 270 C 128 225, 92 155, 48 92 C 28 60, 10 28, 6 13 C 5 9, 6 5, 12 5 Z"></path>
 
 </defs>
 
 
 <!-- =====================================================
-     9B1 - VOLUTA Y FLUJOS DE AGUA RETIRADOS TEMPORALMENTE
+     TURBINA HIDRÁULICA · DISTRIBUIDOR FINK V8
+     ETAPA 1 — INTEGRACIÓN GRÁFICA Y ESTRUCTURAL
 
-     Se conserva únicamente el conjunto Fink–Francis.
-     La voluta se rediseñará posteriormente.
+     Conjunto aprobado en soportes/V8_DESARROLLO,
+     integrado sin modificar su geometría:
+     - Coordenadas internas del V8: origen (0, 0) en el
+       eje del rodete (rodete y distribuidor concéntricos).
+     - Ubicación en el simulador: translate(197 368),
+       escala uniforme 0.32 (sin deformación).
+
+     POSICIÓN GRÁFICA FIJA (etapa 1):
+     calculada con el modelo cinemático del propio V8
+     para un mando del 75 % (condición inicial RVTH):
+       giro del anillo       ψ = -7.755°
+       giro de directrices   = -36.84° desde el cierre
+       abertura a₀           = 46.87 u (86.8 % del máximo)
+     Esta posición NO está conectada todavía al modelo
+     dinámico (etapa 2).
+
+     Orden de dibujo (igual que el V8):
+       cámara espiral → agua → bastidor → rodete →
+       directrices → anillo → palancas → bielas →
+       articulaciones
 ===================================================== -->
+<g id="turbinaHidraulicaV8" transform="translate(197 368) scale(0.32)">
+
+<g id="distribuidor-fink">
+
+<!-- CÁMARA ESPIRAL (estática) -->
+<g id="camara-espiral">
+
+                        <path id="camara-espiral-cuerpo" class="camara-espiral" fill-rule="evenodd" d="M -596 -640
+                               L -596 0
+                               C -596 52.01, -588.52 104.01, -573.91 153.78
+                               C -567.48 175.67, -559.68 197.14, -550.59 217.99
+                               C -539.01 244.53, -525.51 270.16, -510.25 294.6
+                               C -483.01 338.24, -450.14 378.08, -412.86 412.86
+                               C -375.58 447.64, -333.89 477.33, -289.28 501.04
+                               C -244.67 524.75, -197.14 542.47, -148.36 553.7
+                               C -99.59 564.94, -49.56 569.69, 0 567.91
+                               C 49.56 566.14, 98.65 557.85, 145.61 543.43
+                               C 192.57 529.01, 237.41 508.47, 278.64 482.62
+                               C 319.87 456.76, 357.49 425.61, 390.29 390.29
+                               C 423.1 354.98, 451.09 315.52, 473.4 273.32
+                               C 495.72 231.12, 512.36 186.19, 522.87 140.1
+                               C 533.39 94.02, 537.77 46.77, 536 0
+                               C 534.23 -46.77, 526.3 -93.08, 512.6 -137.35
+                               C 498.9 -181.62, 479.44 -223.86, 454.98 -262.68
+                               C 430.52 -301.5, 401.07 -336.89, 367.73 -367.73
+                               C 334.38 -398.56, 297.15 -424.84, 257.36 -445.76
+                               C 217.57 -466.69, 175.24 -482.25, 131.84 -492.05
+                               C 88.45 -501.84, 43.99 -505.86, 0 -504.09
+                               C -43.99 -502.31, -87.51 -494.75, -129.09 -481.77
+                               C -170.67 -468.79, -210.32 -450.4, -246.72 -427.34
+                               C -283.13 -404.27, -316.29 -376.53, -345.16 -345.16
+                               C -374.03 -313.78, -398.59 -278.78, -418.12 -241.4
+                               C -429.06 -220.47, -438.43 -198.8, -446.13 -176.64
+                               C -452.19 -159.22, -457.34 -141.54, -461.56 -123.68
+                               C -471.17 -83.08, -476 -41.54, -476 0
+                               L -476 -640
+                               Z
+                                 M 466 0 A 466 466 0 1 0 -466 0 A 466 466 0 1 0 466 0 Z"></path>
+
+                    </g>
+
+<!-- AGUA
+     alimentacion-agua: azul permanente antes de las directrices.
+     admision-agua: región entre directrices y rodete; su
+     intensidad (--intensidad-admision, 0 = blanco, 1 = azul)
+     queda preparada para vincularse con la apertura real en
+     la etapa 2. Valor fijo actual = el que el V8 calcula para
+     la misma posición gráfica (75 %). -->
+<g id="agua">
+
+                        <g id="admision-agua">
+                            <path id="admision-agua-region" class="admision-agua" fill-rule="evenodd" d="M 472 0 A 472 472 0 1 0 -472 0 A 472 472 0 1 0 472 0 Z
+                                 M 255 0 A 255 255 0 1 0 -255 0 A 255 255 0 1 0 255 0 Z" style="--intensidad-admision: 0.8660;"></path>
+                        </g>
+
+                        <g id="alimentacion-agua">
+                            <path id="alimentacion-agua-region" class="alimentacion-agua" fill-rule="evenodd" d="M 472 0 A 472 472 0 1 0 -472 0 A 472 472 0 1 0 472 0 Z
+                                 M 300 0 A 300 300 0 1 0 -300 0 A 300 300 0 1 0 300 0 Z"></path>
+                        </g>
+
+                    </g>
+
+<!-- BASTIDOR (escala graduada de giro del anillo) -->
+<g id="grupo-estatico">
+
+                        <circle id="circulo-pivotes" class="circulo-pivotes" cx="0" cy="0" r="340"></circle>
+
+                        <g id="escala-giro-anillo" class="escala-giro-anillo"><line class="marca-escala" x1="-30.772" y1="-466.987" x2="-31.561" y2="-478.961"></line><text class="texto-escala" x="-32.284" y="-485.937">0°</text><line class="marca-escala" x1="-38.917" y1="-466.379" x2="-39.499" y2="-473.355"></line><line class="marca-escala" x1="-47.051" y1="-465.629" x2="-47.754" y2="-472.593"></line><line class="marca-escala" x1="-55.170" y1="-464.737" x2="-55.995" y2="-471.688"></line><line class="marca-escala" x1="-63.272" y1="-463.703" x2="-64.218" y2="-470.639"></line><line class="marca-escala" x1="-71.355" y1="-462.528" x2="-73.185" y2="-474.388"></line><text class="texto-escala" x="-74.862" y="-481.259">5°</text><line class="marca-escala" x1="-79.417" y1="-461.213" x2="-80.604" y2="-468.111"></line><line class="marca-escala" x1="-87.454" y1="-459.756" x2="-88.762" y2="-466.633"></line><line class="marca-escala" x1="-95.464" y1="-458.160" x2="-96.892" y2="-465.013"></line><line class="marca-escala" x1="-103.446" y1="-456.424" x2="-104.993" y2="-463.251"></line><line class="marca-escala" x1="-111.396" y1="-454.549" x2="-114.252" y2="-466.204"></line><text class="texto-escala" x="-116.870" y="-472.888">10°</text><line class="marca-escala" x1="-119.312" y1="-452.536" x2="-121.096" y2="-459.305"></line><path class="marca-escala" fill="none" d="M -30.772 -466.987 A 468 468 0 0 0 -119.312 -452.536"></path></g>
+
+                    </g>
+
+<!-- RODETE FRANCIS (geometría original; #rotor-francis
+     conserva el giro visual de simulador.js) -->
+<g id="rodete-francis" transform="translate(-350 -350)">
+
+                <g id="rotor-francis">
+
+
+                  <circle cx="350" cy="350" r="255" fill="#8e979d" stroke="#242b2f" stroke-width="8"></circle>
+
+
+                  <circle cx="350" cy="350" r="235" fill="#59636a" stroke="#aeb6bb" stroke-width="5"></circle>
+
+
+                  <circle cx="350" cy="350" r="222" fill="url(#fondoInterno9A)" stroke="#252d31" stroke-width="4"></circle>
+
+
+                  <!-- =================================================
+                       18 ÁLABES DEL RODETE
+                  ================================================== -->
+
+                  <g fill="url(#metalAlabe9A)" stroke="#343c41" stroke-width="3.5" stroke-linejoin="round" filter="url(#sombraAlabe9A)">
+
+                    <use href="#alabeRodete9A" transform="rotate(0 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(20 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(40 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(60 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(80 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(100 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(120 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(140 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(160 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(180 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(200 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(220 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(240 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(260 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(280 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(300 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(320 350 350)"></use>
+
+                    <use href="#alabeRodete9A" transform="rotate(340 350 350)"></use>
+
+                  </g>
+
+
+                  <!-- CORONA -->
+
+                  <circle cx="350" cy="350" r="92" fill="#545e64" stroke="#242b2f" stroke-width="6"></circle>
+
+
+                  <!-- CUBO -->
+
+                  <circle cx="350" cy="350" r="70" fill="url(#metalCubo9A)" stroke="#1c2226" stroke-width="6"></circle>
+
+
+                  <!-- EJE -->
+
+                  <circle cx="350" cy="350" r="30" fill="#aeb7bc" stroke="#202629" stroke-width="5"></circle>
+
+
+                  <circle cx="350" cy="350" r="11" fill="#333b40"></circle>
+
+
+                </g>
+
+                    </g>
+
+<!-- 20 DIRECTRICES FINK V4 -->
+<g id="directrices">
+
+                        <use id="directriz-01" class="directriz" href="#perfil-fink-v4" transform="translate(0.000 -340.000) rotate(-112.046) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-02" class="directriz" href="#perfil-fink-v4" transform="translate(105.066 -323.359) rotate(-94.046) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-03" class="directriz" href="#perfil-fink-v4" transform="translate(199.847 -275.066) rotate(-76.046) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-04" class="directriz" href="#perfil-fink-v4" transform="translate(275.066 -199.847) rotate(-58.046) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-05" class="directriz" href="#perfil-fink-v4" transform="translate(323.359 -105.066) rotate(-40.046) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-06" class="directriz" href="#perfil-fink-v4" transform="translate(340.000 0.000) rotate(-22.046) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-07" class="directriz" href="#perfil-fink-v4" transform="translate(323.359 105.066) rotate(-4.046) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-08" class="directriz" href="#perfil-fink-v4" transform="translate(275.066 199.847) rotate(13.954) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-09" class="directriz" href="#perfil-fink-v4" transform="translate(199.847 275.066) rotate(31.954) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-10" class="directriz" href="#perfil-fink-v4" transform="translate(105.066 323.359) rotate(49.954) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-11" class="directriz" href="#perfil-fink-v4" transform="translate(0.000 340.000) rotate(67.954) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-12" class="directriz" href="#perfil-fink-v4" transform="translate(-105.066 323.359) rotate(85.954) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-13" class="directriz" href="#perfil-fink-v4" transform="translate(-199.847 275.066) rotate(103.954) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-14" class="directriz" href="#perfil-fink-v4" transform="translate(-275.066 199.847) rotate(121.954) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-15" class="directriz" href="#perfil-fink-v4" transform="translate(-323.359 105.066) rotate(139.954) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-16" class="directriz" href="#perfil-fink-v4" transform="translate(-340.000 0.000) rotate(157.954) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-17" class="directriz" href="#perfil-fink-v4" transform="translate(-323.359 -105.066) rotate(175.954) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-18" class="directriz" href="#perfil-fink-v4" transform="translate(-275.066 -199.847) rotate(193.954) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-19" class="directriz" href="#perfil-fink-v4" transform="translate(-199.847 -275.066) rotate(211.954) scale(0.25) translate(-214.3 -243.6)"></use>
+                        <use id="directriz-20" class="directriz" href="#perfil-fink-v4" transform="translate(-105.066 -323.359) rotate(-130.046) scale(0.25) translate(-214.3 -243.6)"></use>
+
+                    </g>
+
+<!-- ANILLO DE REGULACIÓN -->
+<g id="anillo-regulacion" transform="rotate(-7.755)">
+
+                        <!-- ETAPA 2A: oreja de accionamiento solidaria al anillo
+                             (placa unida a la llanta, dibujada bajo el anillo
+                             y las orejetas). Pasador a radio 560.9 (local);
+                             posición angular 95.5249° en el sistema del anillo. -->
+                        <g id="oreja-servomotor" transform="rotate(95.5249)">
+                            <path id="oreja-servomotor-cuerpo" class="oreja-servo" d="M 442.6 -46.5 L 560.9 -16 A 16 16 0 0 1 560.9 16 L 442.6 46.5 Z"></path>
+                            <circle id="pasador-oreja-servomotor" class="pasador-oreja" cx="560.9" cy="0" r="11"></circle>
+                        </g>
+
+
+                        <circle id="anillo-cuerpo" class="anillo-cuerpo" cx="0" cy="0" r="440" stroke-width="24"></circle>
+                        <circle id="anillo-borde-exterior" class="anillo-borde" cx="0" cy="0" r="452"></circle>
+                        <circle id="anillo-borde-interior" class="anillo-borde" cx="0" cy="0" r="428"></circle>
+
+                        <g id="orejetas">
+
+                            <rect id="orejeta-01" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(-84.770)"></rect>
+                            <rect id="orejeta-02" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(-66.770)"></rect>
+                            <rect id="orejeta-03" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(-48.770)"></rect>
+                            <rect id="orejeta-04" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(-30.770)"></rect>
+                            <rect id="orejeta-05" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(-12.770)"></rect>
+                            <rect id="orejeta-06" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(5.230)"></rect>
+                            <rect id="orejeta-07" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(23.230)"></rect>
+                            <rect id="orejeta-08" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(41.230)"></rect>
+                            <rect id="orejeta-09" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(59.230)"></rect>
+                            <rect id="orejeta-10" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(77.230)"></rect>
+                            <rect id="orejeta-11" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(95.230)"></rect>
+                            <rect id="orejeta-12" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(113.230)"></rect>
+                            <rect id="orejeta-13" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(131.230)"></rect>
+                            <rect id="orejeta-14" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(149.230)"></rect>
+                            <rect id="orejeta-15" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(167.230)"></rect>
+                            <rect id="orejeta-16" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(185.230)"></rect>
+                            <rect id="orejeta-17" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(203.230)"></rect>
+                            <rect id="orejeta-18" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(221.230)"></rect>
+                            <rect id="orejeta-19" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(239.230)"></rect>
+                            <rect id="orejeta-20" class="orejeta" rx="5" x="420.000" y="-11" width="40" height="22" transform="rotate(257.230)"></rect>
+
+                        </g>
+
+                        <polygon id="indicador-anillo" class="indicador-anillo" points="453,0 465,-6 465,6" transform="rotate(-93.770)"></polygon>
+
+                    </g>
+
+<!-- PALANCAS -->
+<g id="palancas">
+
+                        <line id="palanca-01" class="palanca" x1="0.000" y1="-340.000" x2="-53.479" y2="-367.202"></line>
+                        <line id="palanca-02" class="palanca" x1="105.066" y1="-323.359" x2="62.610" y2="-365.756"></line>
+                        <line id="palanca-03" class="palanca" x1="199.847" y1="-275.066" x2="172.570" y2="-328.507"></line>
+                        <line id="palanca-04" class="palanca" x1="275.066" y1="-199.847" x2="265.638" y2="-259.102"></line>
+                        <line id="palanca-05" class="palanca" x1="323.359" y1="-105.066" x2="332.704" y2="-164.334"></line>
+                        <line id="palanca-06" class="palanca" x1="340.000" y1="0.000" x2="367.202" y2="-53.479"></line>
+                        <line id="palanca-07" class="palanca" x1="323.359" y1="105.066" x2="365.756" y2="62.610"></line>
+                        <line id="palanca-08" class="palanca" x1="275.066" y1="199.847" x2="328.507" y2="172.570"></line>
+                        <line id="palanca-09" class="palanca" x1="199.847" y1="275.066" x2="259.102" y2="265.638"></line>
+                        <line id="palanca-10" class="palanca" x1="105.066" y1="323.359" x2="164.334" y2="332.704"></line>
+                        <line id="palanca-11" class="palanca" x1="0.000" y1="340.000" x2="53.479" y2="367.202"></line>
+                        <line id="palanca-12" class="palanca" x1="-105.066" y1="323.359" x2="-62.610" y2="365.756"></line>
+                        <line id="palanca-13" class="palanca" x1="-199.847" y1="275.066" x2="-172.570" y2="328.507"></line>
+                        <line id="palanca-14" class="palanca" x1="-275.066" y1="199.847" x2="-265.638" y2="259.102"></line>
+                        <line id="palanca-15" class="palanca" x1="-323.359" y1="105.066" x2="-332.704" y2="164.334"></line>
+                        <line id="palanca-16" class="palanca" x1="-340.000" y1="0.000" x2="-367.202" y2="53.479"></line>
+                        <line id="palanca-17" class="palanca" x1="-323.359" y1="-105.066" x2="-365.756" y2="-62.610"></line>
+                        <line id="palanca-18" class="palanca" x1="-275.066" y1="-199.847" x2="-328.507" y2="-172.570"></line>
+                        <line id="palanca-19" class="palanca" x1="-199.847" y1="-275.066" x2="-259.102" y2="-265.638"></line>
+                        <line id="palanca-20" class="palanca" x1="-105.066" y1="-323.359" x2="-164.334" y2="-332.704"></line>
+
+                    </g>
+
+<!-- BIELAS -->
+<g id="bielas">
+
+                        <line id="biela-01" class="biela" x1="-53.479" y1="-367.202" x2="-19.384" y2="-439.573"></line>
+                        <line id="biela-02" class="biela" x1="62.610" y1="-365.756" x2="117.400" y2="-424.049"></line>
+                        <line id="biela-03" class="biela" x1="172.570" y1="-328.507" x2="242.692" y2="-367.016"></line>
+                        <line id="biela-04" class="biela" x1="265.638" y1="-259.102" x2="344.228" y2="-274.057"></line>
+                        <line id="biela-05" class="biela" x1="332.704" y1="-164.334" x2="412.068" y2="-154.271"></line>
+                        <line id="biela-06" class="biela" x1="367.202" y1="-53.479" x2="439.573" y2="-19.384"></line>
+                        <line id="biela-07" class="biela" x1="365.756" y1="62.610" x2="424.049" y2="117.400"></line>
+                        <line id="biela-08" class="biela" x1="328.507" y1="172.570" x2="367.016" y2="242.692"></line>
+                        <line id="biela-09" class="biela" x1="259.102" y1="265.638" x2="274.057" y2="344.228"></line>
+                        <line id="biela-10" class="biela" x1="164.334" y1="332.704" x2="154.271" y2="412.068"></line>
+                        <line id="biela-11" class="biela" x1="53.479" y1="367.202" x2="19.384" y2="439.573"></line>
+                        <line id="biela-12" class="biela" x1="-62.610" y1="365.756" x2="-117.400" y2="424.049"></line>
+                        <line id="biela-13" class="biela" x1="-172.570" y1="328.507" x2="-242.692" y2="367.016"></line>
+                        <line id="biela-14" class="biela" x1="-265.638" y1="259.102" x2="-344.228" y2="274.057"></line>
+                        <line id="biela-15" class="biela" x1="-332.704" y1="164.334" x2="-412.068" y2="154.271"></line>
+                        <line id="biela-16" class="biela" x1="-367.202" y1="53.479" x2="-439.573" y2="19.384"></line>
+                        <line id="biela-17" class="biela" x1="-365.756" y1="-62.610" x2="-424.049" y2="-117.400"></line>
+                        <line id="biela-18" class="biela" x1="-328.507" y1="-172.570" x2="-367.016" y2="-242.692"></line>
+                        <line id="biela-19" class="biela" x1="-259.102" y1="-265.638" x2="-274.057" y2="-344.228"></line>
+                        <line id="biela-20" class="biela" x1="-164.334" y1="-332.704" x2="-154.271" y2="-412.068"></line>
+
+                    </g>
+
+<!-- ARTICULACIONES Y PIVOTES -->
+<g id="articulaciones">
+
+                        <g id="ejes">
+                            <circle id="eje-01" class="eje" r="7" cx="0.000" cy="-340.000"></circle>
+                            <circle id="eje-02" class="eje" r="7" cx="105.066" cy="-323.359"></circle>
+                            <circle id="eje-03" class="eje" r="7" cx="199.847" cy="-275.066"></circle>
+                            <circle id="eje-04" class="eje" r="7" cx="275.066" cy="-199.847"></circle>
+                            <circle id="eje-05" class="eje" r="7" cx="323.359" cy="-105.066"></circle>
+                            <circle id="eje-06" class="eje" r="7" cx="340.000" cy="0.000"></circle>
+                            <circle id="eje-07" class="eje" r="7" cx="323.359" cy="105.066"></circle>
+                            <circle id="eje-08" class="eje" r="7" cx="275.066" cy="199.847"></circle>
+                            <circle id="eje-09" class="eje" r="7" cx="199.847" cy="275.066"></circle>
+                            <circle id="eje-10" class="eje" r="7" cx="105.066" cy="323.359"></circle>
+                            <circle id="eje-11" class="eje" r="7" cx="0.000" cy="340.000"></circle>
+                            <circle id="eje-12" class="eje" r="7" cx="-105.066" cy="323.359"></circle>
+                            <circle id="eje-13" class="eje" r="7" cx="-199.847" cy="275.066"></circle>
+                            <circle id="eje-14" class="eje" r="7" cx="-275.066" cy="199.847"></circle>
+                            <circle id="eje-15" class="eje" r="7" cx="-323.359" cy="105.066"></circle>
+                            <circle id="eje-16" class="eje" r="7" cx="-340.000" cy="0.000"></circle>
+                            <circle id="eje-17" class="eje" r="7" cx="-323.359" cy="-105.066"></circle>
+                            <circle id="eje-18" class="eje" r="7" cx="-275.066" cy="-199.847"></circle>
+                            <circle id="eje-19" class="eje" r="7" cx="-199.847" cy="-275.066"></circle>
+                            <circle id="eje-20" class="eje" r="7" cx="-105.066" cy="-323.359"></circle>
+                        </g>
+
+                        <g id="pasadores-palanca">
+                            <circle id="pasador-palanca-01" class="pasador pasador-palanca" r="5" cx="-53.479" cy="-367.202"></circle>
+                            <circle id="pasador-palanca-02" class="pasador pasador-palanca" r="5" cx="62.610" cy="-365.756"></circle>
+                            <circle id="pasador-palanca-03" class="pasador pasador-palanca" r="5" cx="172.570" cy="-328.507"></circle>
+                            <circle id="pasador-palanca-04" class="pasador pasador-palanca" r="5" cx="265.638" cy="-259.102"></circle>
+                            <circle id="pasador-palanca-05" class="pasador pasador-palanca" r="5" cx="332.704" cy="-164.334"></circle>
+                            <circle id="pasador-palanca-06" class="pasador pasador-palanca" r="5" cx="367.202" cy="-53.479"></circle>
+                            <circle id="pasador-palanca-07" class="pasador pasador-palanca" r="5" cx="365.756" cy="62.610"></circle>
+                            <circle id="pasador-palanca-08" class="pasador pasador-palanca" r="5" cx="328.507" cy="172.570"></circle>
+                            <circle id="pasador-palanca-09" class="pasador pasador-palanca" r="5" cx="259.102" cy="265.638"></circle>
+                            <circle id="pasador-palanca-10" class="pasador pasador-palanca" r="5" cx="164.334" cy="332.704"></circle>
+                            <circle id="pasador-palanca-11" class="pasador pasador-palanca" r="5" cx="53.479" cy="367.202"></circle>
+                            <circle id="pasador-palanca-12" class="pasador pasador-palanca" r="5" cx="-62.610" cy="365.756"></circle>
+                            <circle id="pasador-palanca-13" class="pasador pasador-palanca" r="5" cx="-172.570" cy="328.507"></circle>
+                            <circle id="pasador-palanca-14" class="pasador pasador-palanca" r="5" cx="-265.638" cy="259.102"></circle>
+                            <circle id="pasador-palanca-15" class="pasador pasador-palanca" r="5" cx="-332.704" cy="164.334"></circle>
+                            <circle id="pasador-palanca-16" class="pasador pasador-palanca" r="5" cx="-367.202" cy="53.479"></circle>
+                            <circle id="pasador-palanca-17" class="pasador pasador-palanca" r="5" cx="-365.756" cy="-62.610"></circle>
+                            <circle id="pasador-palanca-18" class="pasador pasador-palanca" r="5" cx="-328.507" cy="-172.570"></circle>
+                            <circle id="pasador-palanca-19" class="pasador pasador-palanca" r="5" cx="-259.102" cy="-265.638"></circle>
+                            <circle id="pasador-palanca-20" class="pasador pasador-palanca" r="5" cx="-164.334" cy="-332.704"></circle>
+                        </g>
+
+                        <g id="pasadores-anillo">
+                            <circle id="pasador-anillo-01" class="pasador pasador-anillo" r="5" cx="-19.384" cy="-439.573"></circle>
+                            <circle id="pasador-anillo-02" class="pasador pasador-anillo" r="5" cx="117.400" cy="-424.049"></circle>
+                            <circle id="pasador-anillo-03" class="pasador pasador-anillo" r="5" cx="242.692" cy="-367.016"></circle>
+                            <circle id="pasador-anillo-04" class="pasador pasador-anillo" r="5" cx="344.228" cy="-274.057"></circle>
+                            <circle id="pasador-anillo-05" class="pasador pasador-anillo" r="5" cx="412.068" cy="-154.271"></circle>
+                            <circle id="pasador-anillo-06" class="pasador pasador-anillo" r="5" cx="439.573" cy="-19.384"></circle>
+                            <circle id="pasador-anillo-07" class="pasador pasador-anillo" r="5" cx="424.049" cy="117.400"></circle>
+                            <circle id="pasador-anillo-08" class="pasador pasador-anillo" r="5" cx="367.016" cy="242.692"></circle>
+                            <circle id="pasador-anillo-09" class="pasador pasador-anillo" r="5" cx="274.057" cy="344.228"></circle>
+                            <circle id="pasador-anillo-10" class="pasador pasador-anillo" r="5" cx="154.271" cy="412.068"></circle>
+                            <circle id="pasador-anillo-11" class="pasador pasador-anillo" r="5" cx="19.384" cy="439.573"></circle>
+                            <circle id="pasador-anillo-12" class="pasador pasador-anillo" r="5" cx="-117.400" cy="424.049"></circle>
+                            <circle id="pasador-anillo-13" class="pasador pasador-anillo" r="5" cx="-242.692" cy="367.016"></circle>
+                            <circle id="pasador-anillo-14" class="pasador pasador-anillo" r="5" cx="-344.228" cy="274.057"></circle>
+                            <circle id="pasador-anillo-15" class="pasador pasador-anillo" r="5" cx="-412.068" cy="154.271"></circle>
+                            <circle id="pasador-anillo-16" class="pasador pasador-anillo" r="5" cx="-439.573" cy="19.384"></circle>
+                            <circle id="pasador-anillo-17" class="pasador pasador-anillo" r="5" cx="-424.049" cy="-117.400"></circle>
+                            <circle id="pasador-anillo-18" class="pasador pasador-anillo" r="5" cx="-367.016" cy="-242.692"></circle>
+                            <circle id="pasador-anillo-19" class="pasador pasador-anillo" r="5" cx="-274.057" cy="-344.228"></circle>
+                            <circle id="pasador-anillo-20" class="pasador pasador-anillo" r="5" cx="-154.271" cy="-412.068"></circle>
+                        </g>
+
+                    </g>
+
+</g>
+
+</g>
 
 <!-- =====================================================
-     TURBINA HIDRÁULICA FINK–FRANCIS · VERSIÓN 9B6
+     ETAPA 2A — ACOPLAMIENTO SERVOMOTOR–ANILLO
+
+     vástago → D → palanca de reenvío (pivote fijo)
+     → G → biela de conexión → oreja del anillo.
+
+     Geometría (coordenadas del SVG principal):
+       pivote fijo           (320, 595)
+       brazo a (pivote–D)    80
+       brazo b (pivote–G)    47.5
+       biela de conexión     123.0
+       vástago (D–pistón)    468.3448
+     Posiciones dinámicas: js/distribuidor.js
 ===================================================== -->
-<!-- 9B3: conjunto Fink–Francis conservado; conexión directa servomotor–anillo -->
-<g id="turbinaHidraulica9A" transform="translate(40 200) scale(0.42)">
-  <g id="anillo-regulacion" filter="url(#sombraAnillo9A)">
-  <circle cx="350" cy="350" r="372" fill="none" stroke="url(#metalAnillo9A)" stroke-width="20"/>
-  <circle cx="350" cy="350" r="382" fill="none" stroke="#343d42" stroke-width="3"/>
-  <circle cx="350" cy="350" r="362" fill="none" stroke="#d7dde0" stroke-width="3"/>
+<g id="acoplamiento-servomotor">
 
-  <!-- 9B5: oreja esquemática solidaria al anillo; D coincide con su perno -->
-  <path id="orejaAnillo"
-    d="M328 718 L328 744 A22 22 0 0 0 372 744 L372 718 Z"
-    fill="url(#metalAnillo9A)"
-    stroke="#343d42"
-    stroke-width="5"
-    stroke-linejoin="round"/>
+<!-- Apoyo fijo de la palanca de reenvío (solo dibujo;
+     el centro de la articulación sigue en 320, 595) -->
 
-  <!-- orificio para el perno -->
-  <circle id="orificioOreja"
-    cx="350" cy="744" r="11"
-    fill="#fafcfd"
-    stroke="#343d42"
-    stroke-width="4"/>
+<path
+id="soporte-reenvio"
+d="M320 595 L305 613 L335 613 Z"
+class="soporteReenvio"
+/>
+
+<g id="base-reenvio" class="baseApoyo">
+
+<line class="lineaBaseApoyo" x1="297" y1="613" x2="343" y2="613"/>
+
+<line x1="299" y1="621" x2="306" y2="613"/>
+<line x1="305" y1="621" x2="312" y2="613"/>
+<line x1="311" y1="621" x2="318" y2="613"/>
+<line x1="317" y1="621" x2="324" y2="613"/>
+<line x1="323" y1="621" x2="330" y2="613"/>
+<line x1="329" y1="621" x2="336" y2="613"/>
+<line x1="335" y1="621" x2="342" y2="613"/>
+
 </g>
-  <g id="distribuidor-fink"><g transform="rotate(0 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(15 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(30 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(45 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(60 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(75 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(90 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(105 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(120 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(135 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(150 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(165 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(180 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(195 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(210 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(225 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(240 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(255 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(270 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(285 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(300 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(315 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(330 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g><g transform="rotate(345 350 350)"><g class="directriz9A" transform="translate(350 3) rotate(0) scale(0.23) translate(-350 -180)"><use href="#alabeDirectriz9A"/></g></g></g>
-  <g id="mecanismoMaestro9A"><line id="biela-prueba" x1="363.77" y1="22.66" x2="388.88" y2="-19.96" stroke="#59636a" stroke-width="7" stroke-linecap="round"/><line id="palanca-prueba" x1="350" y1="3" x2="363.77" y2="22.66" stroke="#343c41" stroke-width="9" stroke-linecap="round"/><circle cx="350" cy="3" r="7" fill="#343c41" stroke="#171c1f" stroke-width="3"/><circle id="pasador-palanca" cx="363.77" cy="22.66" r="6" fill="#d7dde0" stroke="#343c41" stroke-width="3"/><circle id="pasador-anillo" cx="388.88" cy="-19.96" r="6" fill="#8b2525" stroke="#3a1a1a" stroke-width="3"/></g><use href="#mecanismoMaestro9A" transform="rotate(15 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(30 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(45 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(60 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(75 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(90 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(105 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(120 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(135 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(150 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(165 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(180 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(195 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(210 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(225 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(240 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(255 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(270 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(285 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(300 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(315 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(330 350 350)"/><use href="#mecanismoMaestro9A" transform="rotate(345 350 350)"/>
-  <g id="rotor-francis"><circle cx="350" cy="350" r="255" fill="#8e979d" stroke="#242b2f" stroke-width="8"/><circle cx="350" cy="350" r="235" fill="#59636a" stroke="#aeb6bb" stroke-width="5"/><circle cx="350" cy="350" r="222" fill="url(#fondoInterno9A)" stroke="#252d31" stroke-width="4"/><g fill="url(#metalAlabe9A)" stroke="#343c41" stroke-width="3.5" stroke-linejoin="round" filter="url(#sombraAlabe9A)"><use href="#alabeRodete9A" transform="rotate(0 350 350)"/><use href="#alabeRodete9A" transform="rotate(20 350 350)"/><use href="#alabeRodete9A" transform="rotate(40 350 350)"/><use href="#alabeRodete9A" transform="rotate(60 350 350)"/><use href="#alabeRodete9A" transform="rotate(80 350 350)"/><use href="#alabeRodete9A" transform="rotate(100 350 350)"/><use href="#alabeRodete9A" transform="rotate(120 350 350)"/><use href="#alabeRodete9A" transform="rotate(140 350 350)"/><use href="#alabeRodete9A" transform="rotate(160 350 350)"/><use href="#alabeRodete9A" transform="rotate(180 350 350)"/><use href="#alabeRodete9A" transform="rotate(200 350 350)"/><use href="#alabeRodete9A" transform="rotate(220 350 350)"/><use href="#alabeRodete9A" transform="rotate(240 350 350)"/><use href="#alabeRodete9A" transform="rotate(260 350 350)"/><use href="#alabeRodete9A" transform="rotate(280 350 350)"/><use href="#alabeRodete9A" transform="rotate(300 350 350)"/><use href="#alabeRodete9A" transform="rotate(320 350 350)"/><use href="#alabeRodete9A" transform="rotate(340 350 350)"/></g><circle cx="350" cy="350" r="92" fill="#545e64" stroke="#242b2f" stroke-width="6"/><circle cx="350" cy="350" r="70" fill="url(#metalCubo9A)" stroke="#1c2226" stroke-width="6"/><circle cx="350" cy="350" r="30" fill="#aeb7bc" stroke="#202629" stroke-width="5"/><circle cx="350" cy="350" r="11" fill="#333b40"/></g>
+
+<line
+id="biela-conexion"
+x1="324.79"
+y1="547.74"
+x2="205.12"
+y2="547.32"
+class="bielaConexion"
+/>
+
+<line
+id="palanca-reenvio"
+x1="320"
+y1="595"
+x2="328.07"
+y2="515.41"
+class="palancaReenvio"
+/>
+
+<circle
+id="pivote-reenvio"
+cx="320"
+cy="595"
+r="6.5"
+class="pivoteReenvio"
+/>
+
+<circle
+cx="320"
+cy="595"
+r="2"
+class="centroPivoteReenvio"
+/>
+
+<circle
+id="pasador-reenvio-g"
+cx="324.79"
+cy="547.74"
+r="4.5"
+class="pasadorAcople"
+/>
+
 </g>
+
 <!-- =====================================================
      D
 ===================================================== -->
 
+<!-- Etapa 2A: D = articulación vástago–palanca de reenvío
+     (posición calculada en js/distribuidor.js) -->
 <circle
 id="puntoD"
-cx="187"
-cy="512.48"
+cx="197"
+cy="512.64"
 r="8"
 class="acopleAnillo"
 />
 
 <text
 id="textoD"
-x="172"
-y="542"
+x="330.51"
+y="502.08"
 class="textoSVG etiquetaSVG">
 D
 </text>
@@ -781,8 +1213,8 @@ class="camaraBase"
 
 <line
 id="vastagoServo"
-x1="187"
-y1="512.48"
+x1="197"
+y1="512.64"
 x2="800"
 y2="515"
 class="mecanico"
@@ -995,25 +1427,83 @@ Ambos puertos cerrados
 
 </svg>
 
-</div>
-
-
-<div class="mensaje">
-
-<div id="estado" class="estado">
-Sistema estable
-</div>
-
-<div id="explicacion" class="explicacion">
-La unidad opera inicialmente al 80 % de potencia, con 75 % de apertura del distribuidor y frecuencia nominal de 60 Hz.
-</div>
-
-</div>
+</main>
 
 
 </div>
 
+
+<!-- =========================================================
+     INDICADORES INFERIORES
+========================================================= -->
+
+<section class="indicadores-inferiores">
+
+
+<div class="indicador">
+
+<div class="titulo">FRECUENCIA</div>
+
+<div class="valor">
+<span id="frecuencia">60.00</span>
+<span class="unidad">Hz</span>
 </div>
+
+</div>
+
+
+<div class="indicador">
+
+<div class="titulo">POTENCIA ELÉCTRICA</div>
+
+<div class="valor">
+<span id="peBalance">80.0</span>
+<span class="unidad">%</span>
+</div>
+
+</div>
+
+
+<div class="indicador">
+
+<div class="titulo">POTENCIA MECÁNICA</div>
+
+<div class="valor">
+<span id="pmBalance">80.0</span>
+<span class="unidad">%</span>
+</div>
+
+</div>
+
+
+<div class="indicador">
+
+<div class="titulo">APERTURA DEL DISTRIBUIDOR</div>
+
+<div class="valor">
+<span id="apertura">60.1</span>
+<span class="unidad">%</span>
+</div>
+
+</div>
+
+
+<div class="indicador">
+
+<div class="titulo">BALANCE DE POTENCIA</div>
+
+<div class="valor">
+P<sub>m</sub>
+<span id="balanceSigno">=</span>
+P<sub>e</sub>
+·
+<span id="balanceEstado">EQUILIBRIO</span>
+</div>
+
+</div>
+
+
+</section>
 
 
 

@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SIMULADOR RV - Versión 15</title>
+<title>SIMULADOR RV - Versión 17</title>
 
 <link rel="stylesheet" href="css/estilos.css">
 <link rel="stylesheet" href="css/simulador.css">
@@ -59,7 +59,7 @@
                     min="0"
                     max="100"
                     step="1"
-                    value="100"
+                    value="80"
                 >
 
                 <div class="graduaciones-porcentaje">
@@ -78,7 +78,7 @@
         </div>
 
         <div class="indicador-potencia-demandada">
-            <span id="valorP">100</span>
+            <span id="valorP">80</span>
         </div>
 
     </div>
@@ -368,7 +368,7 @@ Q (pu)
 
 <circle
 id="puntoOperacion"
-cx="135"
+cx="115"
 cy="110"
 r="3"
 class="puntoOperacion"
@@ -598,6 +598,30 @@ L105 380
 "
 class="lineaExcitacion"
 />
+
+
+<!-- =====================================================
+     ETAPA 1 — POLARIDAD DE Ve SOBRE EL DEVANADO DE CAMPO
+     DE LA EXCITATRIZ (solo referencias gráficas; no altera
+     la geometría ni las conexiones del devanado)
+====================================================== -->
+
+<g id="refPolaridadVe" pointer-events="none">
+
+<text x="53" y="303" text-anchor="middle" class="tituloBloque">+</text>
+
+<text x="117" y="303" text-anchor="middle" class="tituloBloque">−</text>
+
+<text x="85" y="287" text-anchor="middle" class="textoValor">V<tspan baseline-shift="sub" font-size="10">e</tspan></text>
+
+<path
+d="M71 293 Q71 298 77 298 L81 298 Q85 298 85 303 Q85 298 89 298 L93 298 Q99 298 99 293"
+fill="none"
+stroke="#263238"
+stroke-width="1.5"
+/>
+
+</g>
 
 
 
@@ -1153,287 +1177,37 @@ fill="#111"
 
 
         <!-- =================================================
-             GEOMETRÍA A — 0° / 180°
+             ROTOR — V16 ANIMACIÓN CONTINUA
+
+             Dos representaciones alternativas que comparten
+             el mismo ángulo de giro (js/simulador.js):
+
+               · rotor-salientes  — dos polos salientes
+                 (activo al cargar)
+               · rotor-cilindrico — rotor cilíndrico de dos
+                 polos (oculto)
+
+             Zapatas, núcleo, ranuras, devanado de campo y
+             letras N/S se generan en cada cuadro por
+             proyección geométrica. El eje de cada grupo es
+             idéntico al de la versión anterior.
+
+             Sustituye a las geometrías A, B, C y C-inversa
+             con sus vistas de 0° a 315°.
         ================================================== -->
-
-        <g id="geometria-A"
-           transform="translate(-100,-55)"
-           display="none">
-
-
-            <!-- NÚCLEO -->
-
-            <g id="nucleo-rotor">
-
-                <rect x="450"
-                      y="262"
-                      width="500"
-                      height="236"
-                      fill="url(#hierroGrad)"
-                      stroke="#50575c"
-                      stroke-width="3"/>
-
-            </g>
-
-
-            <!-- POLO SUPERIOR -->
-
-            <g id="polo-superior">
-
-                <path d="
-                    M430 203
-                    L970 203
-                    L970 253
-                    L950 280
-                    L450 280
-                    L430 253
-                    Z"
-                      fill="url(#hierroGrad)"
-                      stroke="#50575c"
-                      stroke-width="3"
-                      stroke-linejoin="round"/>
-
-            </g>
-
-
-            <!-- POLO INFERIOR -->
-
-            <g id="polo-inferior">
-
-                <path d="
-                    M450 480
-                    L950 480
-                    L970 507
-                    L970 557
-                    L430 557
-                    L430 507
-                    Z"
-                      fill="url(#hierroGrad)"
-                      stroke="#50575c"
-                      stroke-width="3"
-                      stroke-linejoin="round"/>
-
-            </g>
-
-
-            <!-- EJE -->
-
-            <g id="eje">
-
-                <rect x="140"
-                      y="332"
-                      width="1020"
-                      height="96"
-                      fill="url(#ejeGrad)"
-                      stroke="#444"
-                      stroke-width="3"/>
-
-                <line x1="140"
-                      y1="380"
-                      x2="1160"
-                      y2="380"
-                      stroke="#999"
-                      stroke-width="1"
-                      stroke-dasharray="7 7"/>
-
-            </g>
-
-
-            <!-- DEVANADO DE CAMPO -->
-
-            <g id="devanado-campo"
-               fill="url(#cobreGrad)"
-               stroke="#77300f"
-               stroke-width="1.4">
-
-                <rect x="430" y="285.5" width="540" height="18" rx="3"/>
-                <rect x="430" y="304.5" width="540" height="18" rx="3"/>
-                <rect x="430" y="323.5" width="540" height="18" rx="3"/>
-                <rect x="430" y="342.5" width="540" height="18" rx="3"/>
-                <rect x="430" y="361.5" width="540" height="18" rx="3"/>
-
-                <rect x="430" y="380.5" width="540" height="18" rx="3"/>
-                <rect x="430" y="399.5" width="540" height="18" rx="3"/>
-                <rect x="430" y="418.5" width="540" height="18" rx="3"/>
-                <rect x="430" y="437.5" width="540" height="18" rx="3"/>
-                <rect x="430" y="456.5" width="540" height="18" rx="3"/>
-
-            </g>
-
-
-            <!-- 0° -->
-
-            <g id="vista-0">
-
-                <text x="700"
-                      y="230"
-                      text-anchor="middle"
-                      dominant-baseline="middle"
-                      font-family="Arial, Helvetica, sans-serif"
-                      font-size="42"
-                      font-weight="700"
-                      fill="#2e8b3c"
-                      stroke="#163d1d"
-                      stroke-width="0.8">S</text>
-
-                <text x="700"
-                      y="530"
-                      text-anchor="middle"
-                      dominant-baseline="middle"
-                      font-family="Arial, Helvetica, sans-serif"
-                      font-size="42"
-                      font-weight="700"
-                      fill="#d62828"
-                      stroke="#671414"
-                      stroke-width="0.8">N</text>
-
-            </g>
-
-
-            <!-- 180° -->
-
-            <g id="vista-180"
-               display="none">
-
-                <text x="700"
-                      y="230"
-                      text-anchor="middle"
-                      dominant-baseline="middle"
-                      font-family="Arial, Helvetica, sans-serif"
-                      font-size="42"
-                      font-weight="700"
-                      fill="#d62828"
-                      stroke="#671414"
-                      stroke-width="0.8">N</text>
-
-                <text x="700"
-                      y="530"
-                      text-anchor="middle"
-                      dominant-baseline="middle"
-                      font-family="Arial, Helvetica, sans-serif"
-                      font-size="42"
-                      font-weight="700"
-                      fill="#2e8b3c"
-                      stroke="#163d1d"
-                      stroke-width="0.8">S</text>
-
-            </g>
-
-        </g>
 
 
         <!-- =================================================
-             GEOMETRÍA B — 90° / 270°
+             ROTOR DE DOS POLOS SALIENTES
         ================================================== -->
 
-        <g id="geometria-B"
-           transform="translate(-100,-55)"
-           display="none">
-
-
-            <!-- EJE -->
-
-            <g id="eje-B">
-
-                <rect x="140"
-                      y="332"
-                      width="1020"
-                      height="96"
-                      fill="url(#ejeGrad)"
-                      stroke="#444"
-                      stroke-width="3"/>
-
-                <line x1="140"
-                      y1="380"
-                      x2="1160"
-                      y2="380"
-                      stroke="#999"
-                      stroke-width="1"
-                      stroke-dasharray="7 7"/>
-
-            </g>
-
-
-            <!-- NÚCLEO -->
-
-            <g id="nucleo-rotor-B">
-
-                <rect x="450"
-                      y="315"
-                      width="500"
-                      height="130"
-                      fill="url(#hierroGrad)"
-                      stroke="#50575c"
-                      stroke-width="3"/>
-
-            </g>
-
-
-            <!-- POLO LATERAL -->
-
-            <g id="polo-lateral-B">
-
-                <rect x="430"
-                      y="280"
-                      width="540"
-                      height="200"
-                      fill="url(#hierroGrad)"
-                      stroke="#50575c"
-                      stroke-width="3"/>
-
-            </g>
-
-
-            <!-- 90° -->
-
-            <g id="vista-90">
-
-                <text x="700"
-                      y="380"
-                      text-anchor="middle"
-                      dominant-baseline="middle"
-                      font-family="Arial, Helvetica, sans-serif"
-                      font-size="42"
-                      font-weight="700"
-                      fill="#2e8b3c"
-                      stroke="#163d1d"
-                      stroke-width="0.8">S</text>
-
-            </g>
-
-
-            <!-- 270° -->
-
-            <g id="vista-270"
-            display="none">
-
-            <text x="700"
-                  y="380"
-                  text-anchor="middle"
-                  dominant-baseline="middle"
-                  font-family="Arial, Helvetica, sans-serif"
-                  font-size="42"
-                  font-weight="700"
-                  fill="#d62828"
-                  stroke="#671414"
-                  stroke-width="0.8">N</text>
-
-            </g>
-
-        </g>
-
-
-        <!-- =================================================
-             GEOMETRÍA C — 45° / 225°
-        ================================================== -->
-
-        <g id="geometria-C"
+        <g id="rotor-salientes"
            transform="translate(-100,-55)">
 
 
-            <!-- EJE -->
+            <!-- EJE (idéntico al de las geometrías originales) -->
 
-            <g id="eje-C">
+            <g id="eje-salientes">
 
                 <rect x="140"
                       y="332"
@@ -1454,164 +1228,35 @@ fill="#111"
             </g>
 
 
-            <!-- HIERRO SUPERIOR EXTERIOR -->
+            <!-- ZAPATAS Y NÚCLEO (generados) -->
 
-            <g id="hierro-superior-exterior-C">
-
-                <rect x="430"
-                      y="203"
-                      width="540"
-                      height="120"
-                      fill="url(#hierroGrad)"
-                      stroke="#50575c"
-                      stroke-width="3"/>
-
-            </g>
+            <g id="salientes-hierro"></g>
 
 
-            <!-- HIERRO SUPERIOR INTERIOR -->
+            <!-- DEVANADO DE CAMPO (generado) -->
 
-            <g id="hierro-superior-interior-C">
-
-                <rect x="430"
-                      y="323"
-                      width="540"
-                      height="19"
-                      fill="url(#hierroGrad)"
-                      stroke="#50575c"
-                      stroke-width="3"/>
-
-            </g>
+            <g id="salientes-cobre"></g>
 
 
-            <!-- DEVANADO DE CAMPO CENTRAL -->
+            <!-- IDENTIFICACIÓN N / S (generada) -->
 
-            <g id="devanado-campo-C"
-               fill="url(#cobreGrad)"
-               stroke="#77300f"
-               stroke-width="1.4">
-
-                <rect x="430" y="342" width="540" height="8" rx="2"/>
-                <rect x="430" y="351" width="540" height="15" rx="2"/>
-                <rect x="430" y="367" width="540" height="15" rx="2"/>
-                <rect x="430" y="383" width="540" height="15" rx="2"/>
-                <rect x="430" y="399" width="540" height="15" rx="2"/>
-                <rect x="430" y="415" width="540" height="15" rx="2"/>
-                <rect x="430" y="431" width="540" height="15" rx="2"/>
-                <rect x="430" y="447" width="540" height="15" rx="2"/>
-                <rect x="430" y="463" width="540" height="15" rx="2"/>
-                <rect x="430" y="479" width="540" height="15" rx="2"/>
-
-            </g>
-
-
-            <!-- HIERRO INFERIOR INTERIOR -->
-
-            <g id="hierro-inferior-interior-C">
-
-                <rect x="430"
-                      y="494"
-                      width="540"
-                      height="44"
-                      fill="url(#hierroGrad)"
-                      stroke="#50575c"
-                      stroke-width="3"/>
-
-            </g>
-
-
-            <!-- HIERRO INFERIOR EXTERIOR -->
-
-            <g id="hierro-inferior-exterior-C">
-
-                <rect x="430"
-                      y="538"
-                      width="540"
-                      height="19"
-                      fill="url(#hierroGrad)"
-                      stroke="#50575c"
-                      stroke-width="3"/>
-
-            </g>
-
-
-            <!-- VISTA 45° -->
-
-            <g id="vista-45">
-
-                <!-- POLO S ARRIBA -->
-                <text x="700"
-                    y="260"
-                    text-anchor="middle"
-                    dominant-baseline="middle"
-                    font-family="Arial, Helvetica, sans-serif"
-                    font-size="34"
-                    font-weight="700"
-                    fill="#2e8b3c"
-                    stroke="#163d1d"
-                    stroke-width="0.8">S</text>
-
-                <!-- POLO N ABAJO -->
-                <text x="700"
-                    y="518"
-                    text-anchor="middle"
-                    dominant-baseline="middle"
-                    font-family="Arial, Helvetica, sans-serif"
-                    font-size="34"
-                    font-weight="700"
-                    fill="#d62828"
-                    stroke="#671414"
-                    stroke-width="0.8">N</text>
-
-            </g>
-
-
-            <!-- VISTA 225° -->
-
-            <g id="vista-225"
-            display="none">
-
-                <!-- POLO N ARRIBA -->
-                <text x="700"
-                    y="260"
-                    text-anchor="middle"
-                    dominant-baseline="middle"
-                    font-family="Arial, Helvetica, sans-serif"
-                    font-size="34"
-                    font-weight="700"
-                    fill="#d62828"
-                    stroke="#671414"
-                    stroke-width="0.8">N</text>
-
-                <!-- POLO S ABAJO -->
-                <text x="700"
-                    y="518"
-                    text-anchor="middle"
-                    dominant-baseline="middle"
-                    font-family="Arial, Helvetica, sans-serif"
-                    font-size="34"
-                    font-weight="700"
-                    fill="#2e8b3c"
-                    stroke="#163d1d"
-                    stroke-width="0.8">S</text>
-
-            </g>
+            <g id="salientes-polos"></g>
 
         </g>
 
 
         <!-- =================================================
-             GEOMETRÍA C INVERSA — 135° / 315°
+             ROTOR CILÍNDRICO DE DOS POLOS
         ================================================== -->
 
-        <g id="geometria-C-inversa"
+        <g id="rotor-cilindrico"
            transform="translate(-100,-55)"
            display="none">
 
 
             <!-- EJE -->
 
-            <g id="eje-C-inversa">
+            <g id="eje-cilindrico">
 
                 <rect x="140"
                       y="332"
@@ -1632,14 +1277,14 @@ fill="#111"
             </g>
 
 
-            <!-- HIERRO SUPERIOR EXTERIOR -->
+            <!-- NÚCLEO CILÍNDRICO — diámetro constante 354, longitud 540 -->
 
-            <g id="hierro-superior-exterior-C-inversa">
+            <g id="nucleo-cilindrico">
 
                 <rect x="430"
-                      y="203"
+                      y="203.0"
                       width="540"
-                      height="19"
+                      height="354.0"
                       fill="url(#hierroGrad)"
                       stroke="#50575c"
                       stroke-width="3"/>
@@ -1647,139 +1292,40 @@ fill="#111"
             </g>
 
 
-            <!-- HIERRO SUPERIOR INTERIOR -->
+            <!-- RANURAS AXIALES (generadas) -->
 
-            <g id="hierro-superior-interior-C-inversa">
-
-                <rect x="430"
-                      y="222"
-                      width="540"
-                      height="44"
-                      fill="url(#hierroGrad)"
-                      stroke="#50575c"
-                      stroke-width="3"/>
-
-            </g>
+            <g id="ranuras-cilindrico"
+               fill="#4a5257"
+               stroke="#50575c"
+               stroke-width="1"></g>
 
 
-            <!-- DEVANADO DE CAMPO -->
+            <!-- DEVANADO DE CAMPO EN LAS RANURAS (generado) -->
 
-            <g id="devanado-campo-C-inversa"
+            <g id="devanado-cilindrico"
                fill="url(#cobreGrad)"
                stroke="#77300f"
-               stroke-width="1.4">
+               stroke-width="1"></g>
 
-                <rect x="430" y="266" width="540" height="15" rx="2"/>
-                <rect x="430" y="282" width="540" height="15" rx="2"/>
-                <rect x="430" y="298" width="540" height="15" rx="2"/>
-                <rect x="430" y="314" width="540" height="15" rx="2"/>
-                <rect x="430" y="330" width="540" height="15" rx="2"/>
-                <rect x="430" y="346" width="540" height="15" rx="2"/>
-                <rect x="430" y="362" width="540" height="15" rx="2"/>
-                <rect x="430" y="378" width="540" height="15" rx="2"/>
-                <rect x="430" y="394" width="540" height="15" rx="2"/>
 
-                <!-- MEDIA BOBINA -->
-                <rect x="430" y="410" width="540" height="8" rx="2"/>
+            <!-- ANILLOS DE RETENCIÓN -->
+
+            <g id="anillos-retencion"
+               fill="url(#hierroGrad)"
+               stroke="#50575c"
+               stroke-width="3">
+
+                <rect x="430" y="203.0" width="28" height="354.0"/>
+                <rect x="942" y="203.0" width="28" height="354.0"/>
 
             </g>
 
 
-            <!-- HIERRO INFERIOR INTERIOR -->
+            <!-- IDENTIFICACIÓN N / S (generada) -->
 
-            <g id="hierro-inferior-interior-C-inversa">
-
-                <rect x="430"
-                      y="418"
-                      width="540"
-                      height="19"
-                      fill="url(#hierroGrad)"
-                      stroke="#50575c"
-                      stroke-width="3"/>
-
-            </g>
-
-
-            <!-- POLO INFERIOR GRANDE -->
-
-            <g id="hierro-inferior-exterior-C-inversa">
-
-                <rect x="430"
-                      y="437"
-                      width="540"
-                      height="120"
-                      fill="url(#hierroGrad)"
-                      stroke="#50575c"
-                      stroke-width="3"/>
-
-            </g>
-
-
-            <!-- VISTA 135° -->
-
-            <g id="vista-135"
-            display="none">
-
-                <!-- POLO N ARRIBA -->
-                <text x="700"
-                    y="242"
-                    text-anchor="middle"
-                    dominant-baseline="middle"
-                    font-family="Arial, Helvetica, sans-serif"
-                    font-size="34"
-                    font-weight="700"
-                    fill="#d62828"
-                    stroke="#671414"
-                    stroke-width="0.8">N</text>
-
-                <!-- POLO S ABAJO -->
-                <text x="700"
-                    y="500"
-                    text-anchor="middle"
-                    dominant-baseline="middle"
-                    font-family="Arial, Helvetica, sans-serif"
-                    font-size="34"
-                    font-weight="700"
-                    fill="#2e8b3c"
-                    stroke="#163d1d"
-                    stroke-width="0.8">S</text>
-
-            </g>
-
-
-            <!-- VISTA 315° -->
-
-            <g id="vista-315"
-            display="none">
-
-                <!-- POLO S ARRIBA -->
-                <text x="700"
-                    y="242"
-                    text-anchor="middle"
-                    dominant-baseline="middle"
-                    font-family="Arial, Helvetica, sans-serif"
-                    font-size="34"
-                    font-weight="700"
-                    fill="#2e8b3c"
-                    stroke="#163d1d"
-                    stroke-width="0.8">S</text>
-
-                <!-- POLO N ABAJO -->
-                <text x="700"
-                    y="500"
-                    text-anchor="middle"
-                    dominant-baseline="middle"
-                    font-family="Arial, Helvetica, sans-serif"
-                    font-size="34"
-                    font-weight="700"
-                    fill="#d62828"
-                    stroke="#671414"
-                    stroke-width="0.8">N</text>
-
-            </g>
+            <g id="polos-cilindrico"></g>
 
         </g>
-
 
     </g>
 
@@ -1966,7 +1512,7 @@ y="85"
 text-anchor="middle"
 class="textoValor"
 >
-P = seleccionada
+PL = demandada
 </text>
 
 <text
@@ -1975,7 +1521,7 @@ y="105"
 text-anchor="middle"
 class="textoValor"
 >
-Q = variable
+QL = demandada
 </text>
 
 <text
@@ -1984,7 +1530,7 @@ y="122"
 text-anchor="middle"
 class="textoValor"
 >
-Halo = condición de Q
+Halo = condición de QG
 </text>
 
 
@@ -2100,7 +1646,7 @@ text-anchor="middle"
 class="textoValor"
 id="textoPCarga"
 >
-P = 100 %
+PL = 80.0 %
 </text>
 
 
@@ -2111,7 +1657,20 @@ text-anchor="middle"
 class="textoValor"
 id="textoQCarga"
 >
-Q = 0.0 %
+QL = 0.0 %
+</text>
+
+
+<!-- J-1: potencia reactiva GENERADA por el alternador (QG = Q·100),
+     junto a la demandada por la carga (QL = Qcarga·100). -->
+<text
+x="1150"
+y="318"
+text-anchor="middle"
+class="textoValor"
+id="textoQGen"
+>
+QG = 0.0 %
 </text>
 
 
@@ -2163,6 +1722,23 @@ y="435"
 class="tituloBloque"
 >
 −
+</text>
+
+
+<!-- =====================================================
+     ETAPA 1 — ECUACIÓN GRÁFICA DE LA ENTRADA DEL
+     AMPLIFICADOR (diagrama original: vi = e − vst)
+====================================================== -->
+
+<text
+x="185"
+y="458"
+text-anchor="middle"
+class="textoValor"
+id="ecuacionVi"
+pointer-events="none"
+>
+V<tspan baseline-shift="sub" font-size="10">i</tspan> = e − V<tspan baseline-shift="sub" font-size="10">st</tspan>
 </text>
 
 
@@ -2275,6 +1851,37 @@ class="lineaExcitacion"
 <circle cx="405" cy="370" r="5" fill="#b3261e"/>
 
 
+<!-- =====================================================
+     ETAPA 1 — REFERENCIAS DEL TRANSFORMADOR DE
+     ESTABILIZACIÓN
+     · Flecha i_est en el conductor izquierdo del primario
+     · Polaridad + / − del secundario y tensión Vst
+====================================================== -->
+
+<g id="refTransformadorEst" pointer-events="none">
+
+<!-- i_est: corriente del primario, sentido descendente -->
+<line x1="322" y1="292" x2="322" y2="322" stroke="#175a91" stroke-width="2"/>
+<polygon points="317,320 327,320 322,330" fill="#175a91"/>
+
+<text x="315" y="318" text-anchor="end" class="textoValor">
+<tspan font-style="italic">i</tspan><tspan baseline-shift="sub" font-size="10">est</tspan>
+</text>
+
+<!-- Polaridad del secundario -->
+<text x="322" y="438" text-anchor="middle" class="tituloBloque">+</text>
+<text x="418" y="438" text-anchor="middle" class="tituloBloque">−</text>
+
+<!-- Tensión del secundario -->
+<text x="370" y="434" text-anchor="middle" class="textoValor">∿</text>
+
+<text x="370" y="452" text-anchor="middle" class="textoValor">
+V<tspan baseline-shift="sub" font-size="10">st</tspan>
+</text>
+
+</g>
+
+
 <path
 d="
 M335 412
@@ -2316,25 +1923,47 @@ DE TENSIÓN
 </text>
 
 
+<!-- =====================================================
+     DETECTOR DE TENSIÓN — BLOQUE (reproducción del original)
+     Rectángulo azul claro con borde negro, símbolo V con
+     onda senoidal y dos terminales inferiores (+ / −).
+====================================================== -->
+
+<g id="bloqueDetectorV">
+
 <rect
 x="925"
 y="385"
 width="80"
 height="50"
-fill="white"
-stroke="#263238"
-stroke-width="2"
+fill="#cfe4f5"
+stroke="#111"
+stroke-width="2.5"
 />
-
 
 <text
 x="965"
-y="415"
+y="408"
 text-anchor="middle"
 class="tituloBloque"
+font-style="italic"
 >
-V∿
+V
 </text>
+
+<path
+d="M947 421 C953 412 959 412 965 421 C971 430 977 430 983 421"
+fill="none"
+stroke="#173f70"
+stroke-width="2.5"
+stroke-linecap="round"
+/>
+
+<!-- Polaridad de los terminales de salida -->
+<text x="933" y="455" text-anchor="middle" class="tituloBloque">+</text>
+<text x="998" y="455" text-anchor="middle" class="tituloBloque">−</text>
+
+</g>
 
 
 <!-- =====================================================
@@ -2432,72 +2061,100 @@ class="bloqueComparador"
 />
 
 
-<text
-x="820"
-y="565"
-class="texto"
->
-COMPARADOR
-</text>
+<!-- =====================================================
+     CONDUCTORES DETECTOR → COMPARADOR
+     Dos conductores negros, verticales y paralelos:
+     terminal + (x = 945) y terminal − (x = 985).
+====================================================== -->
+
+<g id="conductoresDetectorComparador" fill="none" stroke="#111" stroke-width="3">
+
+<path d="M945 435 L945 517"/>
+<path d="M985 435 L985 517"/>
+
+</g>
 
 
-<text
-x="820"
-y="585"
-class="texto"
->
-DE TENSIÓN
-</text>
+<!-- =====================================================
+     COMPARADOR DE TENSIÓN — BLOQUE (reproducción del original)
+     · Rectángulo azul claro, borde negro, Σ centrado
+     · Izquierda: dos terminales (+ arriba, − abajo) unidos
+       en la salida de error
+     · Derecha: referencia Vref = V⁰ con dos conductores,
+       terminales circulares abiertos, + arriba y − abajo
+====================================================== -->
 
+<g id="bloqueComparadorSigma">
 
-<circle
-cx="965"
-cy="545"
-r="28"
-fill="white"
-stroke="#263238"
-stroke-width="3"
+<rect
+x="925"
+y="517"
+width="80"
+height="56"
+fill="#cfe4f5"
+stroke="#111"
+stroke-width="2.5"
 />
-
 
 <text
 x="965"
-y="550"
+y="555"
 text-anchor="middle"
 class="tituloBloque"
+style="font-size:26px"
 >
 Σ
 </text>
 
 
-<path
-d="
-M1120 545
-L993 545
-"
-class="lineaControl"
-marker-end="url(#flechaAzul)"
-/>
+<!-- Terminales izquierdos y unión hacia la salida de error -->
+<g fill="none" stroke="#111" stroke-width="3" stroke-linejoin="round">
+
+<path d="M925 531 L907 531 Q900 531 900 538 L900 540 Q900 545 894 545"/>
+<path d="M925 559 L907 559 Q900 559 900 552 L900 550 Q900 545 894 545"/>
+
+</g>
+
+<text x="912" y="526" text-anchor="middle" class="tituloBloque">+</text>
+<text x="912" y="578" text-anchor="middle" class="tituloBloque">−</text>
 
 
+<!-- Referencia de tensión Vref = V⁰ -->
+<g fill="none" stroke="#111" stroke-width="3">
+
+<path d="M1005 531 L1034 531"/>
+<path d="M1005 559 L1034 559"/>
+
+</g>
+
+<circle cx="1039" cy="531" r="5" fill="white" stroke="#111" stroke-width="2"/>
+<circle cx="1039" cy="559" r="5" fill="white" stroke="#111" stroke-width="2"/>
+
+<text x="1054" y="530" text-anchor="middle" class="tituloBloque">+</text>
+<text x="1054" y="569" text-anchor="middle" class="tituloBloque">−</text>
+
+<text x="1066" y="550" class="textoValor">
+V<tspan baseline-shift="sub" font-size="10">ref</tspan> = V<tspan baseline-shift="super" font-size="10">0</tspan>
+</text>
+
+
+<!-- Rótulo del bloque, debajo del símbolo como en el original -->
+<text x="965" y="589" text-anchor="middle" class="texto">
+COMPARADOR DE TENSIÓN
+</text>
+
+</g>
+
+
+<!-- Valor numérico dinámico de Vref (actualizado por JS) -->
 <text
 x="1020"
-y="535"
+y="507"
 class="textoValor"
 id="textoVref"
 >
 Vref = 1.000 pu
 </text>
-
-
-<path
-d="
-M965 435
-L965 517
-"
-class="lineaControl"
-marker-end="url(#flechaAzul)"
-/>
 
 
 <path
@@ -2521,15 +2178,35 @@ fill="#175a91"
 d="
 M405 412
 L405 545
-L937 545
+L894 545
 "
 class="lineaControl"
 />
 
 
+<!-- =====================================================
+     ETAPA 1 — ECUACIÓN DEL ERROR
+     · e = Vref − V = −ΔV sobre el conductor de error
+     (los signos del comparador están ahora en
+      #bloqueComparadorSigma)
+====================================================== -->
+
+<g id="refComparador" pointer-events="none">
+
+<text x="640" y="537" text-anchor="middle" class="textoPeq">
+Error de tensión
+</text>
+
+<text x="640" y="566" text-anchor="middle" class="textoValor" id="ecuacionError">
+e = V<tspan baseline-shift="sub" font-size="10">ref</tspan> − V = −ΔV
+</text>
+
+</g>
+
+
 <text
-x="845"
-y="535"
+x="815"
+y="537"
 class="textoValor"
 id="textoError"
 >
@@ -2547,6 +2224,46 @@ id="estado"
 >
 TENSIÓN NOMINAL
 </div>
+
+
+<!-- =========================================================
+     SELECTOR DE TIPO DE ROTOR
+     Superpuesto en la escena, debajo del bloque GENERADOR
+     SÍNCRONO, en el espacio libre entre TRANSFORMADOR DE
+     ESTABILIZACIÓN y DETECTOR DE TENSIÓN. Su posición se
+     calcula en js/simulador.js a partir del diagrama.
+     Cambio exclusivamente gráfico (seleccionarRotor).
+========================================================= -->
+
+<fieldset
+class="grupo-control selector-rotor"
+id="selectorRotor"
+>
+
+<legend>Tipo de rotor</legend>
+
+<label class="opcion-radio">
+<input
+type="radio"
+name="tipoRotor"
+value="salientes"
+id="rotorSalientes"
+checked
+>
+<span>Polos salientes</span>
+</label>
+
+<label class="opcion-radio">
+<input
+type="radio"
+name="tipoRotor"
+value="cilindrico"
+id="rotorCilindrico"
+>
+<span>Cilíndrico</span>
+</label>
+
+</fieldset>
 
 
 </main>
@@ -2597,11 +2314,11 @@ TENSIÓN NOMINAL
     <div class="indicador">
 
         <div class="titulo">
-            POTENCIA ACTIVA REAL (P)
+            POT. ACTIVA GENERADA (PG)
         </div>
 
         <div class="valor">
-            <span id="displayP">100.0</span>
+            <span id="displayP">80.0</span>
             <span class="unidad">%</span>
         </div>
 
@@ -2613,11 +2330,27 @@ TENSIÓN NOMINAL
     <div class="indicador">
 
         <div class="titulo">
-            POTENCIA REACTIVA REAL (Q)
+            POT. REACTIVA GENERADA (QG)
         </div>
 
         <div class="valor">
             <span id="displayQ">0.0</span>
+            <span class="unidad">%</span>
+        </div>
+
+    </div>
+
+
+    <!-- POTENCIA REACTIVA DEMANDADA (QL = Qcarga·100) -->
+
+    <div class="indicador">
+
+        <div class="titulo">
+            POT. REACTIVA DEMANDADA (QL)
+        </div>
+
+        <div class="valor">
+            <span id="displayQL">0.0</span>
             <span class="unidad">%</span>
         </div>
 
