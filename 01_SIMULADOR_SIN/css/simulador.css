@@ -213,52 +213,91 @@
    DISTRIBUCIÓN DE LOS BOTONES
    ------------------------------------------------------------ */
 
+/*
+   Estándar AVR V15:
+   APLICAR | PAUSA | REINICIAR
+   Tres botones con exactamente el mismo formato
+   (definido en estilos.css → .boton-simulador)
+   y el mismo ancho.
+*/
+
 .buttons .boton-simulador {
+    flex: 1;
+
     min-width: 0;
+
     white-space: nowrap;
 }
 
 
 /* ------------------------------------------------------------
+   CONTROLES SOBRE EL DIAGRAMA
+
+   Posiciones expresadas como fracción del área interior
+   del SVG (viewBox 0 45 1300 360; se descuenta el borde
+   de 1 px), para que acompañen al dibujo al escalar.
+
+   x_frac = x / 1300
+   y_frac = (y - 45) / 360
+
+   Cada control se ancla por su borde inferior
+   (translate -100 %) justo encima del texto que gobierna.
+   ------------------------------------------------------------ */
+
+
+/* ------------------------------------------------------------
    INTERRUPTOR
-   Botón particular del simulador
+   Inmediatamente encima del texto INTERRUPTOR.
+
+   Texto:  centro x = 985, borde superior y = 180.5
+   Botón:  centro x = 985 → 0.757692
+           borde inferior y = 178 → 0.369444
    ------------------------------------------------------------ */
 
 #breakerBtn {
-    flex: 1.45;
+    position: absolute;
 
-    height: 26px;
+    top: calc(1px + (100% - 2px) * 0.369444);
+    left: calc(1px + (100% - 2px) * 0.757692);
 
-    padding: 0 8px;
+    transform: translate(-50%, -100%);
 
-    font-size: 11px;
+    z-index: 1;
+
+    width: 140px;
+    min-width: 0;
+
+    white-space: nowrap;
 }
 
 
 /* ------------------------------------------------------------
-   PAUSA
-   Botón particular del simulador
+   SELECTOR DE ROTOR
+   Centrado sobre el título GENERADOR SÍNCRONO.
+   Utiliza el estilo estándar .opcion-radio (estilos.css).
+
+   Título: centro x = 775, borde superior y = 88.3
+   Grupo:  centro x = 775 → 0.596154
+           borde inferior y = 86 → 0.113889
    ------------------------------------------------------------ */
 
-#pauseBtn {
-    flex: 0.8;
+.selector-rotor {
+    position: absolute;
 
-    height: 26px;
+    top: calc(1px + (100% - 2px) * 0.113889);
+    left: calc(1px + (100% - 2px) * 0.596154);
 
-    padding: 0 8px;
+    transform: translate(-50%, -100%);
 
-    font-size: 11px;
-}
+    z-index: 1;
 
+    display: flex;
 
-/* ------------------------------------------------------------
-   REINICIAR
-   Conserva directamente el formato definido
-   en estilos.css, igual que Fourier
-   ------------------------------------------------------------ */
+    align-items: center;
 
-#resetBtn {
-    flex: 0.9;
+    gap: 14px;
+
+    white-space: nowrap;
 }
 
 
@@ -301,6 +340,8 @@
    ============================================================ */
 
 .scene-wrap {
+    position: relative;
+
     width: 100%;
 
     margin-bottom: 12px;

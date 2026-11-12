@@ -18,11 +18,31 @@ const jSlider =
 const breakerBtn =
     document.getElementById("breakerBtn");
 
+const applyBtn =
+    document.getElementById("applyBtn");
+
 const pauseBtn =
     document.getElementById("pauseBtn");
 
 const resetBtn =
     document.getElementById("resetBtn");
+
+
+/* ---------------------------------------------------------
+   SELECTOR DE ROTOR
+--------------------------------------------------------- */
+
+const rotorSalientes =
+    document.getElementById("rotorSalientes");
+
+const rotorCilindrico =
+    document.getElementById("rotorCilindrico");
+
+const genRotorSalientes =
+    document.getElementById("genRotor");
+
+const genRotorCilindrico =
+    document.getElementById("genRotorCilindrico");
 
 
 /* =========================================================
@@ -31,7 +51,39 @@ const resetBtn =
 
 let breakerClosed = true;
 
+/*
+   running = true  → la simulación evoluciona.
+   running = false → la simulación está detenida
+                     (al cargar, tras PAUSA o tras REINICIAR).
+
+   paused  = true  → detenida mediante PAUSA
+                     (solo afecta al mensaje de estado).
+*/
+
+let running = false;
+
 let paused = false;
+
+
+/* ---------------------------------------------------------
+   VALORES APLICADOS
+
+   El modelo utiliza estos valores, no la posición
+   instantánea de los controles. Se actualizan al
+   pulsar APLICAR.
+--------------------------------------------------------- */
+
+const initialPm = 50;
+
+const initialLoad = 50;
+
+const initialJ = 80;
+
+let pmApplied = initialPm;
+
+let loadApplied = initialLoad;
+
+let jApplied = initialJ;
 
 let omega = 1.0;
 
@@ -76,7 +128,7 @@ breakerBtn.addEventListener(
                 "breakerBlade"
             ).setAttribute(
                 "x2",
-                "1040"
+                "1030"
             );
 
             document.getElementById(
@@ -123,6 +175,8 @@ breakerBtn.addEventListener(
 
             loadSlider.value = 0;
 
+            loadApplied = 0;
+
         }
 
     }
@@ -130,21 +184,142 @@ breakerBtn.addEventListener(
 
 
 /* =========================================================
-   PAUSA
+   SELECTOR DE ROTOR
+
+   Solo cambia la representación gráfica.
+   Ambos rotores reciben en cada cuadro la misma
+   transformación de giro; únicamente se alterna su
+   visibilidad, por lo que el cambio es inmediato y
+   conserva la posición angular y la velocidad,
+   incluso con la simulación detenida o en PAUSA.
+========================================================= */
+
+function mostrarRotor(tipo) {
+
+    if (tipo === "cilindrico") {
+
+        genRotorSalientes.setAttribute(
+            "display",
+            "none"
+        );
+
+        genRotorCilindrico.removeAttribute(
+            "display"
+        );
+
+    }
+
+    else {
+
+        genRotorCilindrico.setAttribute(
+            "display",
+            "none"
+        );
+
+        genRotorSalientes.removeAttribute(
+            "display"
+        );
+
+    }
+
+}
+
+
+function seleccionarRotorInicial() {
+
+    rotorSalientes.checked = true;
+
+    mostrarRotor("salientes");
+
+}
+
+
+rotorSalientes.addEventListener(
+    "change",
+    () => mostrarRotor("salientes")
+);
+
+rotorCilindrico.addEventListener(
+    "change",
+    () => mostrarRotor("cilindrico")
+);
+
+
+/* =========================================================
+   APLICAR
+
+   - Incorpora los valores de Pm, carga e inercia.
+   - Inicia la simulación o la reanuda desde el
+     estado conservado tras PAUSA.
+   - Si ya está en marcha, solo actualiza los valores
+     sin reiniciar la simulación.
+========================================================= */
+
+applyBtn.addEventListener(
+    "click",
+    () => {
+
+        pmApplied =
+            Number(pmSlider.value);
+
+        loadApplied =
+            Number(loadSlider.value);
+
+        jApplied =
+            Number(jSlider.value);
+
+
+        running = true;
+
+        paused = false;
+
+        pauseBtn.textContent =
+            "PAUSA";
+
+    }
+);
+
+
+/* =========================================================
+   PAUSA / CONTINUAR
+
+   PAUSA     → detiene la integración y congela la
+               animación conservando el estado.
+               El botón cambia a CONTINUAR.
+
+   CONTINUAR → reanuda desde el estado conservado,
+               sin reiniciar variables.
+               El botón vuelve a PAUSA.
+
+   Con la simulación detenida (inicio o REINICIAR)
+   el botón no actúa; se inicia con APLICAR.
 ========================================================= */
 
 pauseBtn.addEventListener(
     "click",
     () => {
 
-        paused =
-            !paused;
+        if (running) {
 
+            running = false;
 
-        pauseBtn.textContent =
-            paused
-                ? "CONTINUAR"
-                : "PAUSA";
+            paused = true;
+
+            pauseBtn.textContent =
+                "CONTINUAR";
+
+        }
+
+        else if (paused) {
+
+            running = true;
+
+            paused = false;
+
+            pauseBtn.textContent =
+                "PAUSA";
+
+        }
 
     }
 );
@@ -167,6 +342,20 @@ resetBtn.addEventListener(
         jSlider.value = 80;
 
 
+        /* Rotor de polos salientes */
+
+        seleccionarRotorInicial();
+
+
+        /* Valores aplicados */
+
+        pmApplied = initialPm;
+
+        loadApplied = initialLoad;
+
+        jApplied = initialJ;
+
+
         /* Estado dinámico */
 
         omega = 1.0;
@@ -174,7 +363,9 @@ resetBtn.addEventListener(
         angle = 0;
 
 
-        /* Pausa */
+        /* Simulación detenida hasta pulsar APLICAR */
+
+        running = false;
 
         paused = false;
 
@@ -197,7 +388,7 @@ resetBtn.addEventListener(
             "breakerBlade"
         ).setAttribute(
             "x2",
-            "1040"
+            "1030"
         );
 
         document.getElementById(
@@ -223,9 +414,7 @@ function simulate() {
     ----------------------------------------------------- */
 
     const pm =
-        Number(
-            pmSlider.value
-        ) / 100;
+        Number(pmSlider.value) / 100;
 
 
     /* -----------------------------------------------------
@@ -233,9 +422,7 @@ function simulate() {
     ----------------------------------------------------- */
 
     const load =
-        Number(
-            loadSlider.value
-        ) / 100;
+        Number(loadSlider.value) / 100;
 
     /* =====================================================
    CHORRO DE AGUA SEGÚN POTENCIA MECÁNICA
@@ -298,9 +485,7 @@ else {
     ----------------------------------------------------- */
 
     const J =
-        Number(
-            jSlider.value
-        );
+        Number(jSlider.value);
 
 
     /* -----------------------------------------------------
@@ -361,7 +546,7 @@ else {
        J · dω/dt = Tm − Te − Tloss
     ===================================================== */
 
-    if (!paused) {
+    if (running) {
 
         const domega =
 
@@ -521,6 +706,11 @@ else {
     ===================================================== */
 
     document.getElementById("genRotor").setAttribute(
+    "transform",
+    `rotate(${angle} 600 325)`
+);
+
+genRotorCilindrico.setAttribute(
     "transform",
     `rotate(${angle} 600 325)`
 );
@@ -719,10 +909,12 @@ bulbGlow.setAttribute(
     }
 
 
-    if (paused) {
+    if (!running) {
 
         status +=
-            " · SIMULACIÓN EN PAUSA";
+            paused
+                ? " · SIMULACIÓN EN PAUSA"
+                : " · SIMULACIÓN DETENIDA";
 
     }
 
@@ -747,5 +939,7 @@ bulbGlow.setAttribute(
 /* =========================================================
    INICIO
 ========================================================= */
+
+seleccionarRotorInicial();
 
 simulate();
